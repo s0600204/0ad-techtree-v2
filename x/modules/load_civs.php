@@ -30,6 +30,7 @@ foreach ($g_CivData as $civCode => $civInfo) {
 		,	"emblem"		=> $civInfo["Emblem"]
 		,	"sourceMod"		=> $civInfo["mod"]
 		,	"startBuilding"	=> ""
+		,	"buildList"		=> Array()
 		);
 	
 	foreach ($civInfo["StartEntities"] as $ents) {

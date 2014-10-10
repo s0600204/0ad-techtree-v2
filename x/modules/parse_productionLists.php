@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Parse Data : Expand tech pairs
+ * Parse Production Lists : Group by phase
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  */
 

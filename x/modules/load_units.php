@@ -12,7 +12,7 @@ global $g_UnitBuilds;
 $g_UnitBuilds = Array();
 $g_output["units"] = Array();
 
-/* Load Structure Data from Files */
+/* Load Unit Data from Files */
 foreach ($g_args["mods"] as $mod) {
 	$path = "../mods/".$mod."/simulation/templates/";
 	if (file_exists($path)) {
@@ -46,6 +46,10 @@ foreach ($g_UnitList as $unitCode) {
 	
 }
 
+foreach ($g_CivCodes as $civ) {
+	$g_UnitBuilds[$civ] = Array();
+};
+
 /* Interate through and aquire required info */
 foreach ($g_UnitList as $unitCode) {
 	
@@ -78,17 +82,15 @@ foreach ($g_UnitList as $unitCode) {
 	}
 	
 	foreach (fetchValue($unitInfo, "Builder/Entities", true) as $build) {
-		if (!in_array($build, $g_UnitBuilds)) {
+		if (!in_array($build, $g_UnitBuilds[$myCiv])) {
 			
 			if (strpos($build, "{civ}")) {
 				// keep these if statements separate
-				if (!in_array(str_ireplace("{civ}", $g_CivCodes[0], $build), $g_UnitBuilds)) {
-					foreach ($g_CivCodes as $civ) {
-						$g_UnitBuilds[] = str_ireplace("{civ}", $civ, $build);
-					}
+				if (!in_array(str_ireplace("{civ}", $myCiv, $build), $g_UnitBuilds[$myCiv])) {
+					$g_UnitBuilds[$myCiv][] = str_ireplace("{civ}", $myCiv, $build);
 				}
 			} else {
-				$g_UnitBuilds[] = $build;
+				$g_UnitBuilds[$myCiv][] = $build;
 			}
 		}
 	}

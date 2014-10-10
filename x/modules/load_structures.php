@@ -29,19 +29,21 @@ foreach ($g_args["mods"] as $mod) {
 }
 
 /* Add wall bits from wallsets to UnitBuilds */
-foreach ($g_UnitBuilds as $buildable) {
-	
-	if (!array_key_exists($buildable, $g_TemplateData)) {
-		report($buildable." does not exist in templates array!", "warn");
-		continue;
-	}
-	$buildInfo = $g_TemplateData[$buildable];
-	
-	if (array_key_exists("WallSet", $buildInfo))
-	{
-		foreach ($buildInfo["WallSet"]["Templates"] as $wCode)
+foreach ($g_CivCodes as $civ) {
+	foreach ($g_UnitBuilds[$civ] as $buildable) {
+		
+		if (!array_key_exists($buildable, $g_TemplateData)) {
+			report($buildable." does not exist in templates array!", "warn");
+			continue;
+		}
+		$buildInfo = $g_TemplateData[$buildable];
+		
+		if (array_key_exists("WallSet", $buildInfo))
 		{
-			$g_UnitBuilds[] = $wCode;
+			foreach ($buildInfo["WallSet"]["Templates"] as $wCode)
+			{
+				$g_UnitBuilds[$civ][] = $wCode;
+			}
 		}
 	}
 }
@@ -56,8 +58,10 @@ foreach ($g_StructureList as $structCode) {
 		continue;
 	}
 	
+	$myCiv = $structInfo["Identity"]["Civ"];
+	
 	/* Only include structure if it can actually be built by a unit */
-	if (!in_array("structures/".$structCode, $g_UnitBuilds)) {
+	if (!in_array("structures/".$structCode, $g_UnitBuilds[$myCiv])) {
 		continue;
 	}
 	
@@ -66,7 +70,7 @@ foreach ($g_StructureList as $structCode) {
 			"genericName"	=> fetchValue($structInfo, "Identity/GenericName")
 		,	"specificName"	=> $structInfo["Identity"]["SpecificName"]
 		,	"phase"			=> $g_phaseList[0]
-		,	"civ"			=> $structInfo["Identity"]["Civ"]
+		,	"civ"			=> $myCiv
 		,	"icon"			=> fetchValue($structInfo, "Identity/Icon")
 		,	"sourceMod"		=> $structInfo["mod"]
 		,	"production"	=> Array(
@@ -101,7 +105,6 @@ foreach ($g_StructureList as $structCode) {
 	
 	/* send to output */
 	$g_output["structures"][$structCode] = $structure;
-	
 }
 
 ?>

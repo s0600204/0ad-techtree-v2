@@ -390,13 +390,19 @@ function draw ()
 	});
 	
 	
+	var treeHeight = 0;
+	var treeWidth = 0;
+	var colGap = 32;
+	var fullWid = 0;
+	
+//	box_structure(g_civs[g_selectedCiv].startBuilding, 4, 4, colWid-colGap, g_canvasParts["tree"]);
+	
 	for (var phase in g_phaseList) {
 		var phaseStr = g_phaseList[phase];
-		g_canvasParts["tree"][phaseStr] = g_canvasParts["tree"].group().attr('id', 'tree__'+phaseStr);
+		g_canvasParts["tree"][phaseStr] = g_canvasParts["tree"].group().attr('id', 'tree__'+phaseStr).move(16, treeHeight);
 		g_canvasParts["tree"][phaseStr]["bands"] = [];
 		
-	//	var ui_bar = g_canvasParts["tree"][phaseStr].image("./ui/gui2/border.png").y(16);
-		
+		// phase icon
 		var phaseSep = phaseStr.indexOf("_");
 		phaseSep = phaseStr.slice(phaseSep+1) +"_"+ phaseStr.slice(0, phaseSep);
 		var phaseIcon = [ "0ad", "tech", phaseSep+".png" ];
@@ -409,7 +415,7 @@ function draw ()
 		for (var p = (+phase+1); p < g_phaseList.length; p++) {
 			g_canvasParts["tree"][phaseStr]["bands"].push(g_canvasParts["tree"][phaseStr].rect(1024, 28). attr({
 				'x': 40
-			,	'y': 99 + (p-phase) * 30
+			,	'y': 95 + (p-phase) * 30
 			,	'stroke-opacity': 0
 			,	'fill': '#888'
 			,	'fill-opacity': 0.3
@@ -421,64 +427,44 @@ function draw ()
 				var phaseIcon = [ "0ad", "tech", phaseSep+".png" ];
 				phaseIcon = g_canvasParts["tree"][phaseStr].icon(phaseIcon, 24, 'phase').move(
 					3 + 40
-				,	3 + (p-phase) * 30 + 99
+				,	3 + (p-phase) * 30 + 95
 				);
 		//	}
 		}
-	}
-	
-	var col = Array(0, 0, 0);
-	var colH = Array(0, 0, 0);
-	var colGap = 32;
-	
-//	box_structure(g_civs[g_selectedCiv].startBuilding, 4, 4, colWid-colGap, g_canvasParts["tree"]);
-	
-	for (var stru in g_structures) {
-		if (g_structures[stru].civ == g_selectedCiv || stru == "wallset_palisade") {
+		
+		var rowWidth = 0;
+		
+		// buildings
+		for (build in g_civs[g_selectedCiv].buildList[phaseStr]) {
+			build = g_civs[g_selectedCiv].buildList[phaseStr][build];
 			
-			var wallCheck = stru.indexOf("_wall");
-			if (wallCheck > -1 && stru.substr(wallCheck+1, 7) !== "wallset") {
+			var wallCheck = build.indexOf("_wall");
+			if (wallCheck > -1 && build.substr(wallCheck+1, 7) !== "wallset") {
 				continue;
 			}
 			
-			if (stru == g_civs[g_selectedCiv].startBuilding) {
+		/*	if (build == g_civs[g_selectedCiv].startBuilding) {
 				continue;
-			}
+			}	*/
 			
-			var phase = g_phaseList.indexOf(g_structures[stru].phase);
-			if (phase == -1) {
-				console.log(stru);
-				console.log(g_structures[stru].phase);
-				console.log(g_phaseList.indexOf(g_structures[stru].phase));
-				console.log(g_structures[stru]);
-			}
+			var box = g_canvasParts["tree"][phaseStr].building(build).move(rowWidth+80, 0);
 			
-			var box = g_canvasParts["tree"][g_structures[stru].phase].building(stru).move(col[phase]+80, 4);
-			
-			col[phase] += box.width + colGap;
-			colH[phase] = box.height + 48;	// kinda redundant, but meh
+			rowWidth += box.width + colGap;
 		}
-	}
-//	console.log(col);
-	
-	/* todo: no longer need this: */
-	var colH2 = Array(0, 0, 0);
-	var bandWidth = 0;
-	for (c in col) {
-		if (col[c] > bandWidth) {
-			bandWidth = col[c];
+		
+		if (rowWidth > treeWidth) {
+			treeWidth = rowWidth;
 		}
-		for (var ch = c; ch > 0; ch--) {
-			colH2[c] += colH[ch];
-		}
+		
+		treeHeight += box.height + 16;
 	}
 	
+	// set band widths
 	for (var phase in g_phaseList) {
-		g_canvasParts["tree"][g_phaseList[phase]].move(16, colH2[phase]);
 		
 		for (var band in g_canvasParts["tree"][g_phaseList[phase]]["bands"])
 		{
-			g_canvasParts["tree"][g_phaseList[phase]]["bands"][band].width(bandWidth+32);
+			g_canvasParts["tree"][g_phaseList[phase]]["bands"][band].width(treeWidth+32);
 		}
 	}
 	
