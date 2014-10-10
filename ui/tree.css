@@ -1,0 +1,144 @@
+body {
+	margin: 0;
+	padding: 0;
+	background: #000 url("./gui2/background.png");
+	font-family: sans-serif;
+	font-size: 14px;
+/*	box-shadow: inset 0 0 64px 0 #000;	*/
+}
+
+#svg_canvas {
+	width: 1024px;
+	height: 512px;
+	display: block;
+}
+
+#svg_canvas .building_title {
+	font-size: 1em;
+	fill: rgb(255, 255, 255);
+}
+
+#svg_canvas .building_subtitle {
+	font-size: 0.7em;
+	fill: rgb(255, 255, 255);
+	font-style: italic
+}
+
+#svg_canvas .building_frame {
+	/*fill: rgba(0, 0, 0, 0.3);	*/
+	stroke: rgb(0, 0, 0);
+}
+
+#svg_canvas .icon {
+	fill: none;
+	stroke-width: 2;
+}
+#svg_canvas .icon_tech		{ stroke: rgb(160, 160,   0); }
+#svg_canvas .icon_unit		{ stroke: rgb(  0,   0, 160); }
+#svg_canvas .icon_struct	{ stroke: rgb(128,   0, 128); }
+#svg_canvas .icon_phase		{ stroke: rgb(160, 160, 160); }
+#svg_canvas .icon_building	{ stroke: rgb(  0,   0,   0); }
+
+
+div {
+	position: fixed;
+}
+
+#selectDiv {
+	right: 4px;
+	top: 4px;
+	font-size: 0.8em;
+	display: none;
+}
+
+#modDiv, #attrDiv {
+	top: 32px;
+	right: 4px;
+	padding: 2px;
+	font-size: 0.8em;
+	border: solid rgb(136,136,136) 1px;
+	background: rgba(255, 255, 255, 0.9);
+	display: none;
+}
+#modDiv {
+	text-align: center;
+}
+#attrDiv {
+	max-width: 33%;
+}
+
+p {
+	padding: 0;
+	margin: 4px 2px;
+}
+
+a {
+	color: rgb(126, 126, 126);
+}
+
+fieldset {
+	border: solid rgb(136,136,136) 1px;
+	padding: 2px;
+	text-align: left;
+}
+
+fieldset, input[type=button] {
+	margin: 2px;
+}
+
+select, input[type=button] {
+	border: solid rgb(136,136,136) 1px;
+}
+
+input[type=button]:hover {
+	background: rgba(136, 136, 136, 0.2);
+}
+
+.ico {
+	font-size: 1.4em !important;
+	font-weight: bold;
+	color: rgba(136, 136, 136, 0.8);
+}
+.ico:hover {
+	color: rgb(255, 255, 255);
+}
+
+select {
+	background: rgba(136, 136, 136, 0.4);
+	color: rgb(196, 196, 196);
+}
+
+select:hover {
+	border-color: rgb(255, 255, 255);
+}
+
+select, .ico, input[type=checkbox] {
+	vertical-align: middle;
+}
+
+select, .ico, input, label {
+	cursor: pointer;
+}
+
+#license {
+	text-align: center;
+	display: block;
+	margin: 4px 0 2px;
+	font-size: 0.1em;
+}
+
+#renderBanner {
+	padding: 16px;
+	top: 128px;
+	left: 0;
+	right: 0;
+	color: rgb(196, 196, 196);
+	text-align: center;
+	border: solid rgb(136,136,136);
+	border-width: 1px 0;
+	background: -webkit-linear-gradient( 0deg, rgba(136,136,136,0.2), rgba(238,238,238,0.2), rgba(136,136,136,0.2));
+	background:    -moz-linear-gradient(90deg, rgba(136,136,136,0.2), rgba(238,238,238,0.2), rgba(136,136,136,0.2));
+	background:     -ms-linear-gradient(90deg, rgba(136,136,136,0.2), rgba(238,238,238,0.2), rgba(136,136,136,0.2));
+	background:      -o-linear-gradient( 0deg, rgba(136,136,136,0.2), rgba(238,238,238,0.2), rgba(136,136,136,0.2));
+	background:         linear-gradient(90deg, rgba(136,136,136,0.2), rgba(238,238,238,0.2), rgba(136,136,136,0.2));
+}
