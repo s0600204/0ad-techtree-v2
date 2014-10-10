@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Entity parent="template_unit_infantry_melee">
+  <Armour>
+    <Hack>3</Hack>
+    <Pierce>4</Pierce>
+    <Crush>3</Crush>
+  </Armour>
+  <Attack>
+    <Melee>
+      <Hack>12</Hack>
+      <Pierce>0</Pierce>
+    </Melee>
+    <Charge>
+      <Hack>24.0</Hack>
+    </Charge>
+  </Attack>
+  <Cost>
+    <Resources>
+      <wood>30</wood>
+      <metal>20</metal>
+    </Resources>
+  </Cost>
+  <Identity>
+    <VisibleClasses datatype="tokens">Sword</VisibleClasses>
+    <GenericName>Swordsman</GenericName>
+    <History>Weapon is basically a developed sickle. Probably from the club, to the axe, to the sickle to the sword. It was the Romans who used them to combat the long range of the sarissa. Their spears were so long they had to use two hands to wield them. In a formation they were almost impossible to maneuver. If flanked, they were easily cut down by a sword as demonstrated by the Romans at the battle of Cynoscephalae. Generally swordsmen were well armored, had shields, and tended to be nobles. A good sword was an expensive weapon.</History>
+  </Identity>
+  <Loot>
+    <metal>5</metal>
+  </Loot>
+  <UnitMotion>
+    <WalkSpeed>9.5</WalkSpeed>
+    <Run>
+      <Speed>16.0</Speed>
+    </Run>
+  </UnitMotion>
+  <Vision>
+    <Range>48</Range>
+  </Vision>
+</Entity>

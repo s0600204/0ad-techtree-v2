@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Entity parent="template_unit_cavalry_ranged">
+  <Attack>
+    <Ranged>
+      <Hack>0</Hack>
+      <Pierce>17.5</Pierce>
+      <Crush>0</Crush>
+      <MaxRange>56.0</MaxRange>
+      <ProjectileSpeed>75.0</ProjectileSpeed>
+      <PrepareTime>1000</PrepareTime>
+      <RepeatTime>1000</RepeatTime>
+    </Ranged>
+  </Attack>
+  <Cost>
+    <Resources>
+      <food>100</food>
+      <wood>60</wood>
+    </Resources>
+  </Cost>
+  <Health>
+    <Max>150</Max>
+  </Health>
+  <Identity>
+	<VisibleClasses datatype="tokens">Archer</VisibleClasses>
+    <GenericName>Cavalry Archer</GenericName>
+    <History>A very rare unit in Part 1. It was used by the Persians, but it didn't gain much traction until the Parthians, Huns, Mongols, and other people of the nomadic steeps introduced them to Western Europe. This was the most effective unit on the battlefield for several hundred years until the well armored knight came along. Therefore, this unit will gain much more prominence in Part 2.</History>
+  </Identity>
+  <Loot>
+    <xp>130</xp>
+    <food>10</food>
+    <wood>9</wood>
+    <stone>0</stone>
+    <metal>0</metal>
+  </Loot>
+  <UnitMotion>
+    <WalkSpeed>17.5</WalkSpeed>
+    <Run>
+      <Speed>28.0</Speed>
+    </Run>
+  </UnitMotion>
+</Entity>

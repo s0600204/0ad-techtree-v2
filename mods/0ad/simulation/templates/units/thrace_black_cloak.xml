@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Entity parent="template_unit_champion_infantry_swordsman">
+  <Attack>
+    <Melee>
+      <Hack>24.5</Hack>
+    </Melee>
+    <Charge>
+      <Hack>50.0</Hack>
+    </Charge>
+  </Attack>
+  <Cost>
+    <Resources>
+      <food>0</food>
+      <metal>125</metal>
+    </Resources>
+  </Cost>
+  <Identity>
+    <Civ>hele</Civ>
+    <GenericName>Thracian Black Cloak</GenericName>
+    <SpecificName>Rhomphaiaphoros</SpecificName>
+	<Tooltip>Classes: Mercenary Champion Melee Infantry Swordsman.
+Counters: 2x vs. Spearmen, 1.5x vs. Elephants.
+Countered by: Archers, Cavalry Spearmen, and Cavalry Archers.</Tooltip>
+    <History>Thracian tribesmen who wield the fiercesome rhomphaia polearm weapon in combat. They were ubiquitous mercenary swordsmen throughout Hellenistic times, sometimes even serving in two opposing armies.</History>
+    <Icon>units/sele_infantry_swordsman.png</Icon>
+	<RequiredTechnology>phase_city</RequiredTechnology>
+  </Identity>
+  <UnitMotion>
+    <WalkSpeed>9.5</WalkSpeed>
+    <Run>
+      <Speed>18.0</Speed>
+    </Run>
+  </UnitMotion>
+  <Vision>
+    <Range>88</Range>
+  </Vision>
+  <VisualActor>
+    <Actor>units/hellenes/thracian_blackcloak.xml</Actor>
+  </VisualActor>
+</Entity>

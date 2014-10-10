@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Entity parent="template_structure_civic_civil_centre">
+  <Health>
+    <SpawnEntityOnDeath>rubble/rubble_hele_cc</SpawnEntityOnDeath>
+  </Health>
+  <Identity>
+    <Civ>spart</Civ>
+    <SpecificName>Agorā́</SpecificName>
+    <History>The most important place in most Classical Greek poleis, the Agora served many purposes; it was a place for public speeches and was the stage for civic life and commercial interests.</History>
+  </Identity>
+  <ProductionQueue>
+    <Entities datatype="tokens">
+      units/spart_infantry_spearman_b
+      units/spart_infantry_javelinist_b
+      units/spart_cavalry_javelinist_b
+    </Entities>
+  </ProductionQueue>
+  <VisualActor>
+    <Actor>structures/spartans/civic_centre.xml</Actor>
+  </VisualActor>
+</Entity>

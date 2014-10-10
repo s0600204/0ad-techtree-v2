@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Entity parent="template_unit_champion_elephant">
+  <Attack>
+    <Melee>
+      <Hack>28</Hack>
+      <Pierce>0</Pierce>
+      <Crush>40.0</Crush>
+      <MaxRange>8.0</MaxRange>
+      <RepeatTime>1500</RepeatTime>
+    </Melee>
+    <Charge>
+      <Hack>80.0</Hack>
+      <Pierce>0.0</Pierce>
+      <Crush>80.0</Crush>
+      <MaxRange>8.0</MaxRange>
+      <MinRange>0.0</MinRange>
+    </Charge>
+  </Attack>
+  <Identity>
+    <VisibleClasses datatype="tokens">Melee</VisibleClasses>
+  </Identity>
+</Entity>

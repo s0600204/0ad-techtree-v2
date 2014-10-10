@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Entity parent="template_unit_mechanical_siege">
+  <Armour>
+    <Hack>2</Hack>
+    <Pierce>30</Pierce>
+    <Crush>1</Crush>
+  </Armour>
+  <Attack>
+    <Ranged>
+      <Hack>0.0</Hack>
+      <Pierce>100.0</Pierce>
+      <Crush>20.0</Crush>
+      <MaxRange>80</MaxRange>
+      <MinRange>8.0</MinRange>
+      <Spread>2.0</Spread>
+      <ProjectileSpeed>300.0</ProjectileSpeed>
+      <PrepareTime>3000</PrepareTime>
+      <RepeatTime>3000</RepeatTime>
+      <Splash>
+        <Shape>Linear</Shape>
+        <Range>8</Range>
+        <FriendlyFire>false</FriendlyFire>
+        <Hack>0.0</Hack>
+        <Pierce>30.0</Pierce>
+        <Crush>20.0</Crush>
+      </Splash>
+    </Ranged>
+  </Attack>
+  <Cost>
+    <BuildTime>18</BuildTime>
+    <Resources>
+      <wood>250</wood>
+      <metal>250</metal>
+    </Resources>
+    <Population>2</Population>
+  </Cost>
+  <Footprint replace="">
+    <Square width="5.0" depth="12.0"/>
+    <Height>2.0</Height>
+  </Footprint>
+  <Health>
+    <Max>200</Max>
+  </Health>
+  <Identity>
+    <GenericName>Bolt Shooter</GenericName>
+	<Classes datatype="tokens">BoltShooter Ranged</Classes>
+  </Identity>
+  <Loot>
+    <xp>200</xp>
+    <food>0</food>
+    <wood>10</wood>
+    <stone>0</stone>
+    <metal>10</metal>
+  </Loot>
+  <Selectable>
+    <Overlay>
+      <Texture>
+        <MainTexture>circle/256x256.png</MainTexture>
+        <MainTextureMask>circle/256x256_mask.png</MainTextureMask>
+      </Texture>
+    </Overlay>
+  </Selectable>
+  <UnitMotion>
+    <WalkSpeed>8</WalkSpeed>
+    <Run>
+      <Speed>12.0</Speed>
+    </Run>
+  </UnitMotion>
+  <Vision>
+    <Range>120</Range>
+  </Vision>
+</Entity>

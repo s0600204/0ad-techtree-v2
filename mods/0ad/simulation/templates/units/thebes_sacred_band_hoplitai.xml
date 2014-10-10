@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Entity parent="template_unit_champion_infantry_spearman">
+  <Identity>
+    <Civ>hele</Civ>
+	<GenericName>Theban Sacred Band Hoplite</GenericName>
+    <SpecificName>Hieros Lochos Hoplites</SpecificName>
+    <Tooltip>Champion Spearman.
+Counters Melee Units. Countered by Ranged Units. Extra Bonus vs. All Greek Units.</Tooltip>
+    <History>The Theban Sacred Band.</History>
+    <Icon>units/thebes_sacred_band_hoplitai.png</Icon>
+  </Identity>
+  <Vision>
+    <Range>66</Range>
+  </Vision>
+  <VisualActor>
+    <Actor>units/hellenes/champion_sacred_band.xml</Actor>
+  </VisualActor>
+</Entity>

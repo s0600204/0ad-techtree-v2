@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Entity parent="template_structure_civic_civil_centre">
+  <Footprint>
+    <Square width="40.0" depth="40.0"/>
+    <Height>8.0</Height>
+  </Footprint>
+  <Identity>
+    <Civ>rome</Civ>
+    <SpecificName>Forum</SpecificName>
+    <History>A Roman forum was the center of a city's commercial and public life. The most famous of which was in Rome herself, the Forum Romanum.</History>
+  </Identity>
+  <Health>
+	<SpawnEntityOnDeath>rubble/rubble_rome_cc</SpawnEntityOnDeath>
+  </Health>
+  <Obstruction>
+    <Static width="37.0" depth="37.0"/>
+  </Obstruction>
+  <ProductionQueue>
+    <Entities datatype="tokens">
+      units/rome_infantry_swordsman_b
+      units/rome_infantry_javelinist_b
+      units/rome_cavalry_spearman_b
+    </Entities>
+  </ProductionQueue>
+  <VisualActor>
+    <Actor>structures/romans/civic_centre.xml</Actor>
+    <FoundationActor>structures/fndn_8x8.xml</FoundationActor>
+  </VisualActor>
+</Entity>

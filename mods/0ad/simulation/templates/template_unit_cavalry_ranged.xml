@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Entity parent="template_unit_cavalry">
+  <Attack>
+    <Ranged>
+      <Hack>0</Hack>
+      <Pierce>9</Pierce>
+      <Crush>0</Crush>
+      <MaxRange>16.0</MaxRange>
+      <MinRange>20.0</MinRange>
+      <ProjectileSpeed>25.0</ProjectileSpeed>
+      <PrepareTime>1000</PrepareTime>
+      <RepeatTime>1500</RepeatTime>
+      <PreferredClasses datatype="tokens">Organic</PreferredClasses>
+      <Spread>1.6</Spread>
+    </Ranged>
+  </Attack>
+  <Identity>
+    <GenericName>Ranged Cavalry</GenericName>
+	<VisibleClasses datatype="tokens">Ranged</VisibleClasses>
+    <Formations datatype="tokens">
+      formations/skirmish
+    </Formations>
+  </Identity>
+  <Promotion>
+    <RequiredXp>200</RequiredXp>
+  </Promotion>
+  <Sound>
+    <SoundGroups>
+      <attack>attack/weapon/arrowfly.xml</attack>
+    </SoundGroups>
+  </Sound>
+</Entity>

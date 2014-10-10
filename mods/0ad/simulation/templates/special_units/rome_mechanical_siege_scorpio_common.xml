@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Entity parent="template_unit_mechanical_siege_ballista">
+  <Attack>
+    <Ranged>
+      <Hack>0.0</Hack>
+      <Pierce>120.0</Pierce>
+      <Crush>25.0</Crush>
+      <MaxRange>100</MaxRange>
+      <MinRange>4.0</MinRange>
+      <ProjectileSpeed>300.0</ProjectileSpeed>
+      <RepeatTime>2500</RepeatTime>
+    </Ranged>
+  </Attack>
+  <Cost>
+    <BuildTime>15</BuildTime>
+  </Cost>
+  <Footprint replace="">
+    <Square width="5.0" depth="5.0"/>
+    <Height>3.0</Height>
+  </Footprint>
+  <Identity>
+    <Civ>rome</Civ>
+    <SpecificName>Scorpio</SpecificName>
+  </Identity>
+</Entity>

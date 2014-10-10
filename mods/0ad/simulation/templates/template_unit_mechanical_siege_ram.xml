@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Entity parent="template_unit_mechanical_siege">
+  <Armour>
+    <Hack>1</Hack>
+    <Pierce>40</Pierce>
+    <Crush>5</Crush>
+  </Armour>
+  <Attack>
+    <Melee>
+      <Hack>0.0</Hack>
+      <Pierce>0.0</Pierce>
+      <Crush>80.0</Crush>
+      <MaxRange>6.5</MaxRange>
+      <RepeatTime>1500</RepeatTime>
+      <PreferredClasses datatype="tokens">Gates Structure</PreferredClasses>
+    </Melee>
+    <Charge>
+      <Hack>0.0</Hack>
+      <Pierce>0.0</Pierce>
+      <Crush>160.0</Crush>
+      <MaxRange>6.5</MaxRange>
+      <MinRange>0.0</MinRange>
+      <PreferredClasses datatype="tokens">Gates Structure</PreferredClasses>
+    </Charge>
+  </Attack>
+  <Cost>
+    <BuildTime>20</BuildTime>
+    <Population>5</Population>
+    <Resources>
+      <wood>350</wood>
+      <metal>200</metal>
+    </Resources>
+  </Cost>
+  <GarrisonHolder>
+    <Max>5</Max>
+    <EjectHealth>0.1</EjectHealth>
+    <EjectClassesOnDestroy datatype="tokens">Unit</EjectClassesOnDestroy>
+    <List datatype="tokens">Support Infantry</List>
+    <BuffHeal>1</BuffHeal>
+    <LoadingRange>2</LoadingRange>
+  </GarrisonHolder>
+  <Health>
+    <Max>500</Max>
+  </Health>
+  <Identity>
+    <GenericName>Battering Ram</GenericName>
+    <Classes datatype="tokens">Melee Ram</Classes>
+  </Identity>
+  <Sound>
+    <SoundGroups>
+      <select>attack/siege/siege_select.xml</select>
+      <order_walk>attack/siege/ram_move.xml</order_walk>
+      <order_attack>attack/siege/ram_attack_order.xml</order_attack>
+	  <trained>attack/siege/ram_move.xml</trained>
+	  <attack>attack/siege/ram_attack.xml</attack>
+    </SoundGroups>
+  </Sound>
+  <StatusBars>
+    <BarWidth>4.0</BarWidth>
+    <BarHeight>0.5</BarHeight>
+  </StatusBars>
+  <UnitMotion>
+    <WalkSpeed>8</WalkSpeed>
+    <Run>
+      <Speed>11.0</Speed>
+    </Run>
+  </UnitMotion>
+  <Vision>
+    <Range>80</Range>
+  </Vision>
+</Entity>

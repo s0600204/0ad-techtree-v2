@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Entity parent="template_unit_champion_infantry_spearman">
+  <Identity>
+    <Civ>athen</Civ>
+	<GenericName>City Guard</GenericName>
+    <SpecificName>Epilektos</SpecificName>
+    <History>.</History>
+    <Icon>units/athen_champion_infantry.png</Icon>
+  </Identity>
+  <UnitMotion>
+    <WalkSpeed>10</WalkSpeed>
+    <Run>
+      <Speed>16.0</Speed>
+    </Run>
+  </UnitMotion>
+  <VisualActor>
+    <Actor>units/athenians/champion_unit_spear.xml</Actor>
+  </VisualActor>
+</Entity>

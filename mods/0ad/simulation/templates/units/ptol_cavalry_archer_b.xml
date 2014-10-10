@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Entity parent="template_unit_cavalry_ranged_archer">
+  <Identity>
+    <Civ>ptol</Civ>
+    <Classes datatype="tokens">Camel</Classes>
+	<SelectionGroupName>units/ptol_cavalry_archer_b</SelectionGroupName>
+	<GenericName>Nabataean Camel Archer</GenericName>
+    <SpecificName>Mutsābiq Gamal Nabatu</SpecificName>
+    <History>?</History>
+	<Icon>units/ptol_cavalry_archer.png</Icon>
+    <Tooltip>Classes: Ranged Cavalry Camel Archer.</Tooltip>
+    <RequiredTechnology>phase_village</RequiredTechnology>
+  </Identity>
+  <Promotion>
+    <Entity>units/ptol_cavalry_archer_a</Entity>
+  </Promotion>
+  <Sound>
+    <SoundGroups>
+      <select>actor/fauna/animal/camel.xml</select>
+      <order_walk>actor/fauna/movement/camel.xml</order_walk>
+      <death>actor/fauna/death/death_camel.xml</death>
+    </SoundGroups>
+  </Sound>
+  <UnitMotion>
+    <WalkSpeed>13.5</WalkSpeed>
+    <Run>
+      <Speed>18.0</Speed>
+    </Run>
+  </UnitMotion>
+  <VisualActor>
+    <Actor>units/ptolemies/cavalry_archer_b.xml</Actor>
+  </VisualActor>
+</Entity>

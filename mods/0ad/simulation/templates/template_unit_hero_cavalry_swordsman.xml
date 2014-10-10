@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Entity parent="template_unit_hero_cavalry">
+  <Armour>
+    <Hack>5</Hack>
+    <Pierce>8</Pierce>
+    <Crush>8</Crush>
+  </Armour>
+  <Attack>
+    <Melee>
+     <Hack>36</Hack>
+     <Pierce>0</Pierce>
+     <Crush>0.0</Crush>
+     <MaxRange>6.0</MaxRange>
+     <RepeatTime>1000</RepeatTime>
+      <PreferredClasses datatype="tokens">Organic Siege</PreferredClasses>
+    </Melee>
+  </Attack>
+  <Identity>
+    <VisibleClasses datatype="tokens">Melee Sword</VisibleClasses>
+    <GenericName>Hero Cavalry Swordsman</GenericName>
+  </Identity>
+</Entity>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Entity parent="template_unit_hero_cavalry">
+  <Armour>
+    <Hack>6</Hack>
+    <Pierce>8</Pierce>
+    <Crush>8</Crush>
+  </Armour>
+  <Attack>
+    <Melee>
+      <Hack>25.5</Hack>
+      <Pierce>0</Pierce>
+      <Crush>0.0</Crush>
+      <MaxRange>6.0</MaxRange>
+      <RepeatTime>1000</RepeatTime>
+      <PreferredClasses datatype="tokens">Organic Siege</PreferredClasses>
+    </Melee>
+  </Attack>
+  <Identity>
+    <VisibleClasses datatype="tokens">Melee Spear</VisibleClasses>
+    <GenericName>Hero Cavalry Spearman</GenericName>
+  </Identity>
+  <Loot>
+    <xp>500</xp>
+    <food>10</food>
+    <wood>20</wood>
+    <stone>0</stone>
+    <metal>5</metal>
+  </Loot>
+</Entity>
