@@ -141,7 +141,8 @@ function loadDependencies ($modName) {
 	if (file_exists($modpath)) {
 		$modData = JSON_decode(file_get_contents($modpath), true);
 		foreach ($modData["dependencies"] as $mod) {
-			$mod = explode("=", $mod)[0];
+			$mod = explode("=", $mod);
+			$mod = $mod[0];
 			if (!in_array($mod, $g_args["mods"]) && loadDependencies($mod)) {
 				$g_args["mods"] = $mod;
 			}

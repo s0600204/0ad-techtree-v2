@@ -69,7 +69,8 @@ function fetchValue ($template, $keypath, $collate = false) {
 	}
 	else if (is_array($template))
 	{
-		$parent = reset($template)["parent"];
+		$parent = reset($template);
+		$parent = $parent["parent"];
 	}
 	else
 	{

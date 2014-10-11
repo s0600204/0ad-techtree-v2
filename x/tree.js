@@ -78,16 +78,21 @@ server = {
 	},
 	
 	_populateArgs: function () {
-		this.serverArgs = new FormData();
-		for (var arg in g_args)
-		{
-			if (Array.isArray(g_args[arg])) {
-				for (var subArg in g_args[arg]) {
-					this.serverArgs.append(arg+"[]", g_args[arg][subArg]);
+		try {
+			this.serverArgs = new FormData();
+			for (var arg in g_args)
+			{
+				if (Array.isArray(g_args[arg])) {
+					for (var subArg in g_args[arg]) {
+						this.serverArgs.append(arg+"[]", g_args[arg][subArg]);
+					}
+				} else {
+					this.serverArgs.append(arg, g_args[arg]);
 				}
-			} else {
-				this.serverArgs.append(arg, g_args[arg]);
 			}
+		} catch (err) {
+			document.getElementById('renderBanner').innerHTML = "I'm sorry, but your browser is not capable of displaying this. Please update your browser.";
+			throw err;
 		}
 	},
 	
@@ -367,8 +372,16 @@ function draw ()
 	g_canvasParts["tree"].attr('id', "tree__tree").y(80+8);
 	
 	g_canvas.gradient('radial', function (stop) {
-		stop.at(0, "rgba(0, 0, 0, 0)");
-		stop.at(1, "rgba(0, 0, 0, 0.8)");
+		stop.at({
+			"offset" : 0
+		,	"color"  : "rgb(0, 0, 0)"
+		,	"opacity": 0
+		});
+		stop.at({
+			"offset" : 1
+		,	"color"  : "rgb(0, 0, 0)"
+		,	"opacity": 0.8
+		});
 	}).radius(0.9).attr({"id": "gradient__box"});
 	
 	

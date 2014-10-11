@@ -178,7 +178,8 @@ foreach ($g_phases as $phaseCode => $data) {
 		foreach ($phaseInfo["requirements"] as $op => $val) {
 			if ($op == "any") {
 				foreach ($val as $v) {
-					$k = array_keys($v)[0];
+					$k = array_keys($v);
+					$k = $k[0];
 					$v = $v[$k];
 					if ($k == "tech" && array_key_exists($v, $g_phases)) {
 						$g_phases[$v]["actualPhase"] = $phaseCode;
