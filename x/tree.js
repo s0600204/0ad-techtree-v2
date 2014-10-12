@@ -34,11 +34,11 @@ function init(settings)
 		g_techPairs		= server.out["pairs"];
 		g_phaseList		= server.out["phaseList"];
 		g_civs			= server.out["civs"];
-	//	g_availMods		= server.out["availMods"];
+		g_availMods		= server.out["availMods"];
 		g_structures	= server.out["structures"];
 		g_units			= server.out["units"];
 		
-	//	populateModSelect();
+		populateModSelect();
 		populateCivSelect();
 		selectCiv(document.getElementById('civSelect').value);
 	});
@@ -469,7 +469,11 @@ function draw ()
 			treeWidth = rowWidth;
 		}
 		
-		treeHeight += box.height + 16;
+		if (box !== undefined) {
+			treeHeight += box.height + 16;
+		} else {
+			treeHeight += 192;
+		}
 	}
 	
 	// set band widths

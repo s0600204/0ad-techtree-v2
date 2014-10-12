@@ -15,16 +15,16 @@ $g_output["structures"] = Array();
 /* Load Structure Data from Files */
 foreach ($g_args["mods"] as $mod) {
 	$path = "../mods/".$mod."/simulation/templates/";
-	if (file_exists($path)) {
+	if (file_exists($path."structures/")) {
 		recurseThru($path, "structures/", $g_TemplateData, $mod);
-	}
 	
-	$files = scandir($path."structures/", 0);
-	foreach ($files as $file) {
-		if (substr($file,0,1) == ".") {
-			continue;
+		$files = scandir($path."structures/", 0);
+		foreach ($files as $file) {
+			if (substr($file,0,1) == ".") {
+				continue;
+			}
+			$g_StructureList[] = substr($file, 0, strrpos($file, '.'));
 		}
-		$g_StructureList[] = substr($file, 0, strrpos($file, '.'));
 	}
 }
 
@@ -68,7 +68,7 @@ foreach ($g_StructureList as $structCode) {
 //	report($structCode);
 	$structure = Array(
 			"genericName"	=> fetchValue($structInfo, "Identity/GenericName")
-		,	"specificName"	=> $structInfo["Identity"]["SpecificName"]
+		,	"specificName"	=> (array_key_exists("SpecificName", $structInfo["Identity"]) ? $structInfo["Identity"]["SpecificName"] : "-")
 		,	"phase"			=> $g_phaseList[0]
 		,	"civ"			=> $myCiv
 		,	"icon"			=> fetchValue($structInfo, "Identity/Icon")

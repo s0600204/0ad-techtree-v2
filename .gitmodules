@@ -1,0 +1,15 @@
+[submodule "mods/han_china"]
+	path = mods/han_china
+	url = https://github.com/0ADMods/han_china
+[submodule "mods/aristeia"]
+	path = mods/aristeia
+	url = https://github.com/0ADMods/aristeia
+[submodule "mods/millenniumad"]
+	path = mods/millenniumad
+	url = https://github.com/0ADMods/millenniumad
+[submodule "mods/ponies_ascendant"]
+	path = mods/ponies_ascendant
+	url = https://github.com/0ADMods/ponies_ascendant
+[submodule "mods/convert_attack"]
+	path = mods/convert_attack
+	url = https://github.com/0ADMods/convert_attack

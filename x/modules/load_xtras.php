@@ -10,7 +10,7 @@ require_once "./modules/load_templates.php";
 require_once "./modules/load_units.php";
 require_once "./modules/load_structures.php";
 
-$path = "../mods/".$mod."/simulation/templates/";
+$path = "../mods/0ad/simulation/templates/";
 
 /* gaia_sheep - required by all corrals */
 load_file($path, "gaia/fauna_sheep.xml", $g_TemplateData, "0ad");

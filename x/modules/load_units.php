@@ -15,17 +15,20 @@ $g_output["units"] = Array();
 /* Load Unit Data from Files */
 foreach ($g_args["mods"] as $mod) {
 	$path = "../mods/".$mod."/simulation/templates/";
-	if (file_exists($path)) {
+	if (file_exists($path."units/")) {
 		recurseThru($path, "units/", $g_TemplateData, $mod);
-		recurseThru($path, "special_units/", $g_TemplateData, $mod);
-	}
-	
-	$files = scandir($path."units/", 0);
-	foreach ($files as $file) {
-		if (substr($file,0,1) == ".") {
-			continue;
+		
+		if (file_exists($path."special_units/")) {	
+			recurseThru($path, "special_units/", $g_TemplateData, $mod);
 		}
-		$g_UnitList[] = substr($file, 0, strrpos($file, '.'));
+	
+		$files = scandir($path."units/", 0);
+		foreach ($files as $file) {
+			if (substr($file,0,1) == ".") {
+				continue;
+			}
+			$g_UnitList[] = substr($file, 0, strrpos($file, '.'));
+		}
 	}
 }
 

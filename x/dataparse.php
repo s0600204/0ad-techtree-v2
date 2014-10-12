@@ -144,7 +144,7 @@ function loadDependencies ($modName) {
 			$mod = explode("=", $mod);
 			$mod = $mod[0];
 			if (!in_array($mod, $g_args["mods"]) && loadDependencies($mod)) {
-				$g_args["mods"] = $mod;
+				$g_args["mods"][] = $mod;
 			}
 		}
 		return true;

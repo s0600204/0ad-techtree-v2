@@ -16,6 +16,11 @@ foreach ($g_CivCodes as $civ) {
 	foreach ($g_UnitBuilds[$civ] as $build) {
 		
 		$build = depath($build);
+		if (!array_key_exists($build, $g_output["structures"])) {
+			warn($build . " doesn't seem to exist for ".$civ."! (Check the civ attr of the struct)");
+			continue;
+		}
+		
 		$myPhase = $g_output["structures"][$build]["phase"];
 		
 		if (!array_key_exists($myPhase, $buildList)) {
