@@ -10,21 +10,20 @@ $g_output["debug"] = Array();
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  */
 $g_args = Array();
+$g_args["debug"] = ($_POST["debug"] === "true") ? true : false;
 if ($_POST['mod'] === "") {
 	$g_args["mods"] = Array("0ad");
 } else {
 	$g_args["mods"] = Array();
 	foreach ($_POST['mod'] as $mod) {
-		if (!in_array($mod, $g_args["mods"]) && loadDependencies($mod)) {
-			$g_args["mods"][] = $mod;
+		foreach (getDependencies($mod) as $dep) {
+			if (!in_array($dep, $g_args["mods"])) {
+				$g_args["mods"][] = $dep;
+			}
 		}
-	}
-	if (count($g_args["mods"]) == 0) {
-		$g_args["mods"][] = "0ad";
+		$g_args["mods"][] = $mod;
 	}
 }
-$g_args["debug"] = ($_POST["debug"] === "true") ? true : false;
-
 
 /*
  * Load and parse data JSON
@@ -38,7 +37,6 @@ foreach ($modules as $module) {
 	}
 	include_once "./modules/".$module;
 }
-
 
 /*
  * Output data
@@ -135,24 +133,19 @@ function depath ($str) {
 	return (strpos($str, "/")) ? substr($str, strrpos($str, '/')+1) : $str;
 }
 
-function loadDependencies ($modName) {
-	global $g_args;
-	$modpath = "../mods/" . $modName . "/mod.json";
-	if (file_exists($modpath)) {
-		$modData = JSON_decode(file_get_contents($modpath), true);
-		foreach ($modData["dependencies"] as $mod) {
-			$mod = explode("=", $mod);
-			$mod = $mod[0];
-			if (!in_array($mod, $g_args["mods"]) && loadDependencies($mod)) {
-				$g_args["mods"][] = $mod;
-			}
-		}
-		return true;
-	} else if ($modName == "0ad") {
-		return true;
-	} else {
-		return false;
+function getDependencies ($modName) {
+	$modPath = "../mods/" . $modName . "/mod.json";
+	if ($modName == "0ad" || !file_exists($modPath)) {
+		return Array();
 	}
+	$modFile = JSON_decode(file_get_contents($modPath), true);
+	$modDeps = Array();
+	foreach ($modFile["dependencies"] as $mod) {
+		$mod = explode("=", $mod);
+		$modDeps = array_merge($modDeps, getDependencies($mod[0]));
+		$modDeps[] = $mod[0];
+	}
+	return $modDeps;
 }
 
 function xml2array ($xml) {
