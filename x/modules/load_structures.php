@@ -28,7 +28,8 @@ foreach ($g_args["mods"] as $mod) {
 	}
 }
 
-/* Add wall bits from wallsets to UnitBuilds */
+/* Collate wall bits from wallsets because we need them included */
+$wallSegments = Array();
 foreach ($g_CivCodes as $civ) {
 	foreach ($g_UnitBuilds[$civ] as $buildable) {
 		
@@ -42,7 +43,7 @@ foreach ($g_CivCodes as $civ) {
 		{
 			foreach ($buildInfo["WallSet"]["Templates"] as $wCode)
 			{
-				$g_UnitBuilds[$civ][] = $wCode;
+				$wallSegments[] = $wCode;
 			}
 		}
 	}
@@ -61,7 +62,9 @@ foreach ($g_StructureList as $structCode) {
 	$myCiv = $structInfo["Identity"]["Civ"];
 	
 	/* Only include structure if it can actually be built by a unit */
-	if (!in_array("structures/".$structCode, $g_UnitBuilds[$myCiv])) {
+	if (!in_array("structures/".$structCode, $g_UnitBuilds[$myCiv])
+		&& !in_array("structures/".$structCode, $wallSegments))
+	{
 		continue;
 	}
 	

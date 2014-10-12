@@ -450,11 +450,6 @@ function draw ()
 		for (build in g_civs[g_selectedCiv].buildList[phaseStr]) {
 			build = g_civs[g_selectedCiv].buildList[phaseStr][build];
 			
-			var wallCheck = build.indexOf("_wall");
-			if (wallCheck > -1 && build.substr(wallCheck+1, 7) !== "wallset") {
-				continue;
-			}
-			
 		/*	if (build == g_civs[g_selectedCiv].startBuilding) {
 				continue;
 			}	*/
