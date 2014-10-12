@@ -48,7 +48,11 @@ foreach ($g_TechData as $techCode => $techInfo) {
 			$g_phases[$techCode]["name"]["specific"] = $techInfo["specificName"];
 		}
 		if (array_key_exists("icon", $techInfo)) {
-			$g_phases[$techCode]["icon"] = $techInfo["icon"];
+			$g_phases[$techCode]["icon"] = checkIcon("technologies/".$techInfo["icon"], $techInfo["mod"]);
+		} else {
+			$icon = strpos($techCode, "_");
+			$icon = substr($techCode, $icon+1) . "_" . substr($techCode, 0, $icon);
+			$g_phases[$techCode]["icon"] = checkIcon("technologies/".$icon.".png", $techInfo["mod"]);
 		}
 		
 	} else {
@@ -61,7 +65,7 @@ foreach ($g_TechData as $techCode => $techInfo) {
 						"generic"	=> $techInfo["genericName"],
 						"specific"	=> Array()
 					)
-			,	"icon"			=> (array_key_exists("icon", $techInfo)) ? $techInfo["icon"] : ""
+			,	"icon"			=> (array_key_exists("icon", $techInfo)) ? checkIcon("technologies/".$techInfo["icon"], $techInfo["mod"]) : ""
 		//	,	"cost"			=> (array_key_exists("cost", $techInfo)) ? $techInfo["cost"] : ""
 			,	"sourceMod"		=> $techInfo["mod"]
 			);

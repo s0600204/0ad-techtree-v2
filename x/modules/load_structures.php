@@ -71,7 +71,7 @@ foreach ($g_StructureList as $structCode) {
 		,	"specificName"	=> (array_key_exists("SpecificName", $structInfo["Identity"]) ? $structInfo["Identity"]["SpecificName"] : "-")
 		,	"phase"			=> $g_phaseList[0]
 		,	"civ"			=> $myCiv
-		,	"icon"			=> fetchValue($structInfo, "Identity/Icon")
+		,	"icon"			=> checkIcon(fetchValue($structInfo, "Identity/Icon"), $structInfo["mod"])
 		,	"sourceMod"		=> $structInfo["mod"]
 		,	"production"	=> Array(
 					"technology"	=> fetchValue($structInfo, "ProductionQueue/Technologies", true)

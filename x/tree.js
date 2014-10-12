@@ -386,7 +386,12 @@ function draw ()
 	
 	
 	// Title
-	var civEmblem = g_canvasParts["banner"].image("./mods/"+g_civs[g_selectedCiv].sourceMod+"/art/textures/ui/"+g_civs[g_selectedCiv].emblem);
+	if (g_civs[g_selectedCiv].emblem == "placeholder") {
+		var civEmblem = "./ui/emblem_placeholder.png";
+	} else {
+		var civEmblem = "./mods/"+g_civs[g_selectedCiv].sourceMod+"/art/textures/ui/"+g_civs[g_selectedCiv].emblem;
+	}
+	civEmblem = g_canvasParts["banner"].image(civEmblem);
 	civEmblem.attr({
 		'x': -16
 	,	'y': -32
@@ -416,10 +421,7 @@ function draw ()
 		g_canvasParts["tree"][phaseStr]["bands"] = [];
 		
 		// phase icon
-		var phaseSep = phaseStr.indexOf("_");
-		phaseSep = phaseStr.slice(phaseSep+1) +"_"+ phaseStr.slice(0, phaseSep);
-		var phaseIcon = [ "0ad", "tech", phaseSep+".png" ];
-		phaseIcon = g_canvasParts["tree"][phaseStr].icon(phaseIcon, 52, 'phase').move(
+		g_canvasParts["tree"][phaseStr].icon(g_phases[phaseStr].icon, 52, 'phase').move(
 			8
 		,	36
 		);
@@ -435,10 +437,7 @@ function draw ()
 			}));
 			
 		//	if (p != phase) {
-				var phaseSep = g_phaseList[p].indexOf("_");
-				phaseSep = g_phaseList[p].slice(phaseSep+1) +"_"+ g_phaseList[p].slice(0, phaseSep);
-				var phaseIcon = [ "0ad", "tech", phaseSep+".png" ];
-				phaseIcon = g_canvasParts["tree"][phaseStr].icon(phaseIcon, 24, 'phase').move(
+				g_canvasParts["tree"][phaseStr].icon(g_phases[g_phaseList[p]].icon, 24, 'phase').move(
 					3 + 40
 				,	3 + (p-phase) * 30 + 95
 				);
@@ -515,7 +514,7 @@ SVG.UI_Building = SVG.invent({
 		var ui_specificName = this.title(info.specificName);
 		h = 32;
 		
-		var ui_icon = this.icon([info.sourceMod, "struct", info.icon], 48, 'building').y(h);
+		var ui_icon = this.icon(info.icon, 48, 'building').y(h);
 		h += 48;
 		
 		var ui_genericName = this.text((g_args.debug)?id:info.genericName).attr({
@@ -554,8 +553,7 @@ SVG.UI_Building = SVG.invent({
 						console.log(uStr);
 					}
 					
-					var unitIcon = [ uInfo.sourceMod, "unit", uInfo.icon ];
-					prodGroup.rows[ph].row.icon(unitIcon, prodIconDimen, 'unit').x(
+					prodGroup.rows[ph].row.icon(uInfo.icon, prodIconDimen, 'unit').x(
 						prodGroup.rows[ph].count * (prodIconDimen + prodIconPadd)
 					);
 					
@@ -571,8 +569,7 @@ SVG.UI_Building = SVG.invent({
 				var sStr = info.wallset["Gate"].slice(pos);
 				var sInfo = g_structures[sStr];
 				
-				var structIcon = [ sInfo.sourceMod, "struct", sInfo.icon ];
-				prodGroup.rows[ph].row.icon(structIcon, prodIconDimen, 'struct').x(
+				prodGroup.rows[ph].row.icon(sInfo.icon, prodIconDimen, 'struct').x(
 					prodGroup.rows[ph].count * (prodIconDimen + prodIconPadd)
 				);
 				
@@ -581,8 +578,7 @@ SVG.UI_Building = SVG.invent({
 				var sStr = info.wallset["Tower"].slice(pos);
 				var sInfo = g_structures[sStr];
 				
-				var structIcon = [ sInfo.sourceMod, "struct", sInfo.icon ];
-				prodGroup.rows[ph].row.icon(structIcon, prodIconDimen, 'struct').x(
+				prodGroup.rows[ph].row.icon(sInfo.icon, prodIconDimen, 'struct').x(
 					prodGroup.rows[ph].count * (prodIconDimen + prodIconPadd)
 				);
 				
@@ -605,8 +601,7 @@ SVG.UI_Building = SVG.invent({
 						console.log(tStr);
 					}
 					
-					var techIcon = [ tInfo.sourceMod, "tech", tInfo.icon ];
-					prodGroup.rows[ph].row.icon(techIcon, prodIconDimen, 'tech').x(
+					prodGroup.rows[ph].row.icon(tInfo.icon, prodIconDimen, 'tech').x(
 						prodGroup.rows[ph].count * (prodIconDimen + prodIconPadd)
 					);
 					prodGroup.rows[ph].count++;
@@ -686,33 +681,26 @@ SVG.UI_Title = SVG.invent({
 SVG.Icon = SVG.invent({
 	create: function (img, dimen, col) {
 		this.constructor.call(this, SVG.create('g'));
-		this.attr('id', 'icon__'+img[2].slice(img[2].indexOf("/")+1, img[2].indexOf(".")));
+		this.attr('id', 'icon__'+img[0].slice(img[0].indexOf("/")+1, img[0].indexOf(".")));
 		dimen -= 2;
 		this.rect(dimen, dimen).attr({
 			'class' : 'icon icon_' + col
 		});
-		this.deriveIcon(img[0], img[1], img[2]);
+		this.deriveIcon(img[1], img[0]);
 		this.image(this.icon, dimen);
 	},
 	inherit: SVG.G,
 	extend: {
-		deriveIcon: function (mod, type, img) {
-			this.icon = "./mods/"+ mod +"/art/textures/ui/session/portraits";
-			switch (type)
-			{
-				case "tech":
-					this.icon += "/technologies/" + img;
-					break;
-					
-				case "struct":
-				case "unit":
-					this.icon += "/" + img;
-					break;
+		deriveIcon: function (mod, img) {
+			if (img === "placeholder") {
+				this.icon = "./ui/icon_placeholder.png";
+			} else {
+				this.icon = "./mods/"+ mod +"/art/textures/ui/session/portraits/"+ img;
 			}
 			return this;
 		},
-		setIcon: function (mod, type, img) {
-			this.deriveImage(mod, type, img);
+		setIcon: function (img) {
+			this.deriveImage(img[1], img[0]);
 			this._children[1].load(this.icon);
 			return this;
 		}

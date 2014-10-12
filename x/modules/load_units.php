@@ -74,7 +74,7 @@ foreach ($g_UnitList as $unitCode) {
 			"genericName"	=> fetchValue($unitInfo, "Identity/GenericName")
 		,	"specificName"	=> fetchValue($unitInfo, "Identity/SpecificName")
 		,	"civ"			=> $myCiv
-		,	"icon"			=> fetchValue($unitInfo, "Identity/Icon")
+		,	"icon"			=> checkIcon(fetchValue($unitInfo, "Identity/Icon"), $unitInfo["mod"])
 		,	"sourceMod"		=> $unitInfo["mod"]
 	//	,	"cost"			=> fetchValue($unitInfo, "Cost/Resources")
 	//	,	"time"			=> fetchValue($unitInfo, "Cost/BuildTime")

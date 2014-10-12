@@ -148,6 +148,30 @@ function getDependencies ($modName) {
 	return $modDeps;
 }
 
+function checkIcon ($icon, $mod) {
+	if (is_array($icon)) {
+		return "!";
+	}
+	$deps = getDependencies($mod);
+	$deps[] = $mod;
+	foreach (array_reverse($deps) as $dep) {
+		$path = "../mods/" . $dep . "/art/textures/ui/session/portraits/";
+		if (file_exists($path.$icon)) {
+			return Array($icon, $dep);
+		}
+	}
+	return Array("placeholder", "0ad");
+}
+
+function checkEmblem ($img, $mod) {
+	$path = "../mods/" . $mod . "/art/textures/ui/";
+	if (file_exists($path.$img)) {
+		return $img;
+	} else {
+		return "placeholder";
+	}
+}
+
 function xml2array ($xml) {
 	return json_decode(json_encode((array) simplexml_load_string($xml)), true);
 }
