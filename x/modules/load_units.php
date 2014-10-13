@@ -76,9 +76,9 @@ foreach ($g_UnitList as $unitCode) {
 		,	"civ"			=> $myCiv
 		,	"icon"			=> checkIcon(fetchValue($unitInfo, "Identity/Icon"), $unitInfo["mod"])
 		,	"sourceMod"		=> $unitInfo["mod"]
-	//	,	"cost"			=> fetchValue($unitInfo, "Cost/Resources")
-	//	,	"time"			=> fetchValue($unitInfo, "Cost/BuildTime")
+		,	"cost"			=> fetchValue($unitInfo, "Cost/Resources")
 		);
+	$unit["cost"]["time"] = fetchValue($unitInfo, "Cost/BuildTime");
 	
 	if (array_key_exists("RequiredTechnology", $unitInfo["Identity"])) {
 		$unit["reqTech"] = $unitInfo["Identity"]["RequiredTechnology"];
@@ -97,8 +97,6 @@ foreach ($g_UnitList as $unitCode) {
 			}
 		}
 	}
-	
-//	$unit["cost"]["time"] = fetchValue($unitInfo, "Cost/BuildTime");
 	
 	/* send to output */
 	$g_output["units"][$unitCode] = $unit;

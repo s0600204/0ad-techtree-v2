@@ -371,6 +371,7 @@ function draw ()
 	g_canvasParts["banner"].attr('id', "tree__banner");
 	g_canvasParts["tree"] = g_canvas.group();
 	g_canvasParts["tree"].attr('id', "tree__tree").y(80+8);
+	g_canvasParts["tooltip"] = g_canvas.tooltip().hide();
 	
 	g_canvas.gradient('radial', function (stop) {
 		stop.at({
@@ -510,7 +511,7 @@ SVG.UI_Building = SVG.invent({
 		var ui_specificName = this.title(info.specificName);
 		h = 32;
 		
-		var ui_icon = this.icon(info.icon, 48, 'building').y(h);
+		var ui_icon = this.icon(info.icon, 48, 'building').y(h).tooltip(info);
 		h += 48;
 		
 		var ui_genericName = this.text((g_args.debug)?id:info.genericName).attr({
@@ -551,7 +552,7 @@ SVG.UI_Building = SVG.invent({
 					
 					prodGroup.rows[ph].row.icon(uInfo.icon, prodIconDimen, 'unit').x(
 						prodGroup.rows[ph].count * (prodIconDimen + prodIconPadd)
-					);
+					).tooltip(uInfo);
 					
 					prodGroup.rows[ph].count++;
 				}
@@ -567,7 +568,7 @@ SVG.UI_Building = SVG.invent({
 				
 				prodGroup.rows[ph].row.icon(sInfo.icon, prodIconDimen, 'struct').x(
 					prodGroup.rows[ph].count * (prodIconDimen + prodIconPadd)
-				);
+				).tooltip(sInfo);
 				
 				prodGroup.rows[ph].count++;
 				
@@ -576,7 +577,7 @@ SVG.UI_Building = SVG.invent({
 				
 				prodGroup.rows[ph].row.icon(sInfo.icon, prodIconDimen, 'struct').x(
 					prodGroup.rows[ph].count * (prodIconDimen + prodIconPadd)
-				);
+				).tooltip(sInfo);
 				
 				prodGroup.rows[ph].count++;
 				
@@ -599,7 +600,7 @@ SVG.UI_Building = SVG.invent({
 					
 					prodGroup.rows[ph].row.icon(tInfo.icon, prodIconDimen, 'tech').x(
 						prodGroup.rows[ph].count * (prodIconDimen + prodIconPadd)
-					);
+					).tooltip(tInfo);
 					prodGroup.rows[ph].count++;
 				};
 			}
@@ -675,6 +676,74 @@ SVG.UI_Title = SVG.invent({
 	}
 });
 
+SVG.UI_Tooltip = SVG.invent({
+	create: function () {
+		this.constructor.call(this, SVG.create('g'));
+		
+		this.frame = this.rect(128, 40).attr({
+			'fill': '#000'
+		,	'stroke': 'rgb(193, 153, 106)'
+		});
+		
+		this.txt = this.text("?").x(4).attr({
+			'fill': '#fff'
+		,	'leading': 1
+		});
+		
+		this.cost = this.group().move(4, 20);
+		
+	},
+	inherit: SVG.G,
+	extend: {
+		populate: function (info) {
+			var generName = (info.genericName) ? info.genericName : info.name.generic;
+			var speciName = (info.specificName) ? info.specificName : info.name.specific[g_selectedCiv];
+			
+			if (speciName !== undefined) {
+				this.txt.text(speciName);
+				this.txt.build(true);
+				this.txt.tspan(" (" + generName + ")").attr('font-size', "0.7em");
+			} else {
+				this.txt.text(generName);
+			}
+			
+			this.cost.clear();
+			var rcnt = 0;
+			for (res in info.cost)
+			{
+				if (info.cost[res] > 0 || info.cost[res].length > 1 && Array.max(info.cost[res]) > 0)
+				{
+					if (Array.isArray(info.cost[res])) {
+						info.cost[res] = Array.min(info.cost[res]) +"-"+ Array.max(info.cost[res]);
+					}
+					this.cost.image("./mods/0ad/art/textures/ui/session/icons/resources/"+res+"_small.png").attr({
+						'x': rcnt*52
+					});
+					this.cost.text(" "+info.cost[res]).attr({
+						'leading': 1
+					,	'font-size': 12
+					,	'x': rcnt * 52 + 18
+					,	'y': 0
+					,	'fill': '#fff'
+					});
+					rcnt++;
+				}
+			}
+			
+			var w1 = rcnt * 52;
+			var w2 = this.txt.bbox().width;
+			this.frame.width(((w1>w2)?w1:w2) + 8);
+			
+			return this;
+		}
+	},
+	construct: {
+		tooltip: function () {
+			return this.put(new SVG.UI_Tooltip());
+		}
+	}
+});
+
 SVG.Icon = SVG.invent({
 	create: function (img, dimen, col) {
 		this.constructor.call(this, SVG.create('g'));
@@ -700,6 +769,18 @@ SVG.Icon = SVG.invent({
 			this.deriveImage(img[1], img[0]);
 			this._children[1].load(this.icon);
 			return this;
+		},
+		tooltip: function (info) {
+			this.mouseover(function (e) {
+				g_canvasParts["tooltip"].show().populate(info);
+			});
+			this.mousemove(function (e) {
+				g_canvasParts["tooltip"].move(e.pageX+2, e.pageY+2);
+			});
+			this.mouseout(function (e) {
+				g_canvasParts["tooltip"].hide();
+			});
+			return this;
 		}
 	},
 	construct: {
@@ -718,6 +799,24 @@ function dePath (techCode) {
 	}
 	console.log(ret);
 	return ret;
+}
+
+Array.max = function (arr) {
+	var max = -Infinity;
+	for (var i in arr) {
+		if (+arr[i] > max)
+			max = +arr[i];
+	}
+	return max;
+}
+
+Array.min = function (arr) {
+	var min = Infinity;
+	for (var i in arr) {
+		if (+arr[i] < min)
+			min = +arr[i];
+	}
+	return min;
 }
 
 function resizeDrawing ()

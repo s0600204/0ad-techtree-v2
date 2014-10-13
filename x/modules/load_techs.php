@@ -39,7 +39,7 @@ foreach ($g_TechData as $techCode => $techInfo) {
 						"generic"	=> $techInfo["genericName"],
 						"specific"	=> Array()
 					)
-		//	,	"cost"			=> (array_key_exists("cost", $techInfo)) ? $techInfo["cost"] : Array()
+			,	"cost"			=> (array_key_exists("cost", $techInfo)) ? $techInfo["cost"] : Array()
 		//	,	"actualPhase"	=> ""
 			,	"sourceMod"		=> $techInfo["mod"]
 			);
@@ -66,7 +66,7 @@ foreach ($g_TechData as $techCode => $techInfo) {
 						"specific"	=> Array()
 					)
 			,	"icon"			=> (array_key_exists("icon", $techInfo)) ? checkIcon("technologies/".$techInfo["icon"], $techInfo["mod"]) : ""
-		//	,	"cost"			=> (array_key_exists("cost", $techInfo)) ? $techInfo["cost"] : ""
+			,	"cost"			=> (array_key_exists("cost", $techInfo)) ? $techInfo["cost"] : ""
 			,	"sourceMod"		=> $techInfo["mod"]
 			);
 		
@@ -78,6 +78,9 @@ foreach ($g_TechData as $techCode => $techInfo) {
 		}
 		if (array_key_exists("autoResearch", $techInfo)) {
 			$g_techs[$techCode]["autoResearch"] = $techInfo["autoResearch"];
+		}
+		if (array_key_exists("researchTime", $techInfo)) {
+			$g_techs[$techCode]["cost"]["time"] = $techInfo["researchTime"];
 		}
 		
 		/* Reqs, part 1: the requirements field */

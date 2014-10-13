@@ -80,9 +80,9 @@ foreach ($g_StructureList as $structCode) {
 					"technology"	=> fetchValue($structInfo, "ProductionQueue/Technologies", true)
 				,	"units"			=> fetchValue($structInfo, "ProductionQueue/Entities", true)
 				)
-	//	,	"cost"			=> fetchValue($structInfo, "Cost/Resources")
-	//	,	"time"			=> fetchValue($structInfo, "Cost/BuildTime")
+		,	"cost"			=> fetchValue($structInfo, "Cost/Resources")
 		);
+	$structure["cost"]["time"] = fetchValue($structInfo, "Cost/BuildTime");
 	
 	$reqTech = fetchValue($structInfo, "Identity/RequiredTechnology");
 	if (is_string($reqTech) && substr($reqTech, 0, 5) == "phase") {
@@ -94,17 +94,27 @@ foreach ($g_StructureList as $structCode) {
 	if (array_key_exists("WallSet", $structInfo)) {
 		$structure["wallset"] = $structInfo["WallSet"]["Templates"];
 		
-		// Collate any techs from components in set
-		foreach ($structure["wallset"] as $wCode) {
+		// Collate techs and costs from components in set
+		foreach ($structure["wallset"] as $wTempl => $wCode) {
 			$wPart = $g_TemplateData[$wCode];
+			
 			$structure["production"]["technology"] = array_merge(
 					$structure["production"]["technology"],
 					fetchValue($wPart, "ProductionQueue/Technologies", true)
 				);
+			
+			if (substr($wTempl, 0, 4) == "Wall") {
+				foreach (fetchValue($wPart, "Cost/Resources") as $cost => $q) {
+					if (!array_key_exists($cost, $structure["cost"])) {
+						$structure["cost"][$cost] = Array();
+					}
+					$structure["cost"][$cost][] = $q;
+				}
+				$structure["cost"]["time"][] = fetchValue($wPart, "Cost/BuildTime");
+				arsort($structure["cost"]);
+			}
 		}
 	}
-	
-//	$structure["cost"]["time"] = fetchValue($structInfo, "Cost/BuildTime");
 	
 	/* send to output */
 	$g_output["structures"][$structCode] = $structure;
