@@ -3,7 +3,7 @@ body {
 	padding: 0;
 	background: #000 url("./gui2/background.png");
 	font-family: sans-serif;
-	font-size: 14px;
+	font-size: 16px;
 /*	box-shadow: inset 0 0 64px 0 #000;	*/
 }
 
@@ -55,7 +55,7 @@ div {
 	top: 32px;
 	right: 4px;
 	padding: 2px;
-	font-size: 0.8em;
+	font-size: 0.7em;
 	border: solid rgb(136,136,136) 1px;
 	background: rgba(255, 255, 255, 0.9);
 	display: none;
@@ -80,6 +80,10 @@ fieldset {
 	border: solid rgb(136,136,136) 1px;
 	padding: 2px;
 	text-align: left;
+}
+
+input[type=button] {
+	font-size: inherit;
 }
 
 fieldset, input[type=button] {
@@ -111,7 +115,11 @@ select {
 select:hover {
 	border-color: rgb(255, 255, 255);
 }
-
+/*
+select, fieldset, input[type=button] {
+	font-family: Biolinum;
+}
+*/
 select, .ico, input[type=checkbox] {
 	vertical-align: middle;
 }

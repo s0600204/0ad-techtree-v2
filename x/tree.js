@@ -25,6 +25,7 @@ var g_bonuses	= [ ];
 function init(settings)
 {
 	g_canvas = SVG('svg_canvas');
+	SVG.defaults.attrs["font-family"] = "Biolinum, sans-serif"
 	
 	document.getElementById('renderBanner').innerHTML = "Aquiring Data from Server...";
 	
@@ -654,6 +655,7 @@ SVG.UI_Building = SVG.invent({
 SVG.UI_Title = SVG.invent({
 	create: function (text) {
 		this.constructor.call(this, SVG.create('g'));
+		this.attr('id', 'title__'+text);
 		
 		this.image("./ui/gui2/titlebar-middle.png").x(26);
 		this.image("./ui/gui2/titlebar-left.png");

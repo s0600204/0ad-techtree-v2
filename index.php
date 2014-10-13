@@ -34,14 +34,16 @@
 	</script>
 	
 	<link href="./ui/tree.css" rel="stylesheet"></link>
+	<link href="./ui/biolinum/biolinum.css" rel="stylesheet"></link>
+	<link href="./ui/mfgicon/mfglabs_iconset.css" rel="stylesheet"></link>
 </head>
 
 <body onload="init()">
 
 <div id="selectDiv">
 	<select id="civSelect" onChange="selectCiv(event.target.value);" onclick="toggleDivs('')"></select>
-	<span class="ico" onclick="toggleDivs('mod')">&lowast;</span>
-	<span class="ico" onclick="toggleDivs('attr')">?</span>
+	<span class="ico mfgicon icon-settings" onclick="toggleDivs('mod')"></span>
+	<span class="ico mfgicon icon-white_question" onclick="toggleDivs('attr')"></span>
 </div>
 
 <div id="modDiv">
@@ -61,6 +63,11 @@
 	<fieldset id="modURLs">
 		<legend><b>Mods</b></legend>
 		<p>Links to individual mods' webpages:<p>
+	</fieldset>
+	<fieldset>
+		<legend><b>Attribution</b></legend>
+		<p>The font used is <b>Biolinum</b> by the <a href="http://www.linuxlibertine.org/" target="_new">Libertine Open Fonts Project</a>.</p>
+		<p>The Iconset used in the UI is by <a href="http://mfglabs.github.io/mfglabs-iconset/" target="_new">MFG Labs</a>.</p>
 	</fieldset>
 	<a rel="license" id="license" href="http://creativecommons.org/licenses/by-sa/3.0/" target="_new">
 		<img alt="Creative Commons License" src="./ui/cc-by-sa_80x15.png" />
