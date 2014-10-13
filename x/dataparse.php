@@ -2,8 +2,8 @@
 
 global $g_output;
 global $g_args;
-$g_output["report"] = Array();
-$g_output["debug"] = Array();
+global $g_debug;
+$g_debug["report"] = Array();
 
 /*
  * Set arguments
@@ -11,6 +11,7 @@ $g_output["debug"] = Array();
  */
 $g_args = Array();
 $g_args["debug"] = ($_POST["debug"] === "true") ? true : false;
+$g_args["redraw"] = ($_POST["redraw"] === "true") ? true : false;
 if ($_POST['mod'] === "") {
 	$g_args["mods"] = Array("0ad");
 } else {
@@ -23,6 +24,18 @@ if ($_POST['mod'] === "") {
 		}
 		$g_args["mods"][] = $mod;
 	}
+}
+
+/*
+ * Check for Cache
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ */
+$cachefile = $g_args["mods"];
+asort($cachefile);
+$cachefile = "../cache/".md5(implode("_", $cachefile));
+if (!$g_args["redraw"] && file_exists($cachefile)) {
+	echo file_get_contents($cachefile);
+	return;
 }
 
 /*
@@ -39,9 +52,21 @@ foreach ($modules as $module) {
 }
 
 /*
+ * Save Cache
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ */
+try {
+	$g_output["debug"] = Array("report" => Array(Array("info", "Cached Content")));
+	file_put_contents($cachefile, json_encode($g_output));
+} catch (Exception $e) {
+	warn("Unable to save a cache file: ".$e->getMessage());
+}
+
+/*
  * Output data
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  */
+$g_output["debug"] = $g_debug;
 echo json_encode($g_output);
 
 
@@ -179,8 +204,8 @@ function xml2array ($xml) {
 function report ($content, $type = "log") {
 	global $g_args;
 	if ($g_args["debug"] || $type == "warn" || $type == "error") {
-		global $g_output;
-		$g_output["report"][] = Array($type, $content);
+		global $g_debug;
+		$g_debug["report"][] = Array($type, $content);
 	}
 }
 

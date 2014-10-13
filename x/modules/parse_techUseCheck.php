@@ -82,8 +82,8 @@ foreach (array_keys($g_output["units"]) as $unit) {
 	
 }
 
-$g_output["debug"]["unresearchableTechs"] = $unusedTech;
-$g_output["debug"]["unbuildableStructs"] = $unusedStruct;
-$g_output["debug"]["untrainableUnits"] = $unusedUnit;
+$g_debug["unresearchableTechs"] = $unusedTech;
+$g_debug["unbuildableStructs"] = $unusedStruct;
+$g_debug["untrainableUnits"] = $unusedUnit;
 
 ?>

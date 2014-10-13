@@ -13,6 +13,7 @@
 	$args = Array(
 		'mod' => ''
 	,	'debug' => false
+	,	'redraw' => false
 	);
 	foreach ($_GET as $arg => $val) {
 		$arg = strtolower($arg);
@@ -24,6 +25,10 @@
 			
 			case "debug":
 				$args["debug"] = true;
+				break;
+			
+			case "redraw":
+				$args["redraw"] = true;
 				break;
 		}
 	}

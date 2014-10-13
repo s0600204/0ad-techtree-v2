@@ -27,7 +27,7 @@ function init(settings)
 	g_canvas = SVG('svg_canvas');
 	SVG.defaults.attrs["font-family"] = "Biolinum, sans-serif"
 	
-	document.getElementById('renderBanner').innerHTML = "Aquiring Data from Server...";
+	document.getElementById('renderBanner').innerHTML = "Acquiring Data from Server...";
 	
 	server.load(function () {
 		g_techs			= server.out["techs"];
@@ -61,8 +61,8 @@ server = {
 	},
 	
 	_callback: function () {
-		for (var report in server.out['report']) {
-			report = server.out['report'][report];
+		for (var report in server.out.debug['report']) {
+			report = server.out.debug['report'][report];
 			if (g_args["debug"] || report[0] == "error") {
 				report[1] = "(server) "+report[1];
 				if (report[0] == "info" || report[0] == "warn" || report[0] == "error" || report[0] == "log") {

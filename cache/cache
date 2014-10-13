@@ -1,0 +1,4 @@
+
+Unlike svn, git does not permit inclusion of empty folders.
+
+Hence this placeholder.
