@@ -18,6 +18,9 @@ foreach (scandir("../mods", 0) as $fsp) {
 
 foreach ($g_ModData as $modCode => $modInfo) {
 	
+	if ($modCode == "0ad")
+		continue;
+	
 	$mod = Array(
 			"name"			=> $modInfo["name"]
 		,	"label"			=> $modInfo["label"]

@@ -160,7 +160,7 @@ function depath ($str) {
 
 function getDependencies ($modName) {
 	$modPath = "../mods/" . $modName . "/mod.json";
-	if ($modName == "0ad" || !file_exists($modPath)) {
+	if (!file_exists($modPath)) {
 		return Array();
 	}
 	$modFile = JSON_decode(file_get_contents($modPath), true);
