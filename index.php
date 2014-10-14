@@ -63,11 +63,11 @@
 	<fieldset>
 		<legend><b>Description</b></legend>
 		<p>These are generated-on-the-fly diagrams showing the current technology tree of civilisations in <a href="http://play0ad.com/" target="_new">0AD : Empires Ascendant</a>.</p>
-		<p>The source code can be found at <a href="https://github.com/s0600204/0ad-civtree" target="_new">GitHub</a>.</p>
+		<p>The source code can be found at <a href="https://github.com/s0600204/0ad-techtree-v2" target="_new">GitHub</a>.</p>
 	</fieldset>
 	<fieldset id="modURLs">
 		<legend><b>Mods</b></legend>
-		<p>Links to individual mods' webpages:<p>
+		<p>Links to individual mods' webpages or repositories:<p>
 	</fieldset>
 	<fieldset>
 		<legend><b>Attribution</b></legend>

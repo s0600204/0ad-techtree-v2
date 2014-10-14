@@ -1,0 +1,30 @@
+
+0AD Tech-Tree (v2)
+
+Description
+------------------------------------------------------------------------
+This is a generated-on-the-fly diagram showing the current technology
+tree of a selected civilisation in 0AD. The JSON describing the
+technologies and the XML describing the structures and units are
+parsed and dependancies are extrapolated before rendering the tree you
+see in browser.
+
+
+Live Version
+------------------------------------------------------------------------
+You may see a live version of this project at
+  http://s06eye.co.uk/0ad/techtree-v2
+
+
+Credits
+------------------------------------------------------------------------
+My thanks go to the main development team at Wildfire Games, the
+independant teams working on modifying and expanding the game, not to
+mention all the volunteers and members of the further community.
+
+
+License
+------------------------------------------------------------------------
+This work is released under the Creative Commons Attribution ShareAlike
+3.0 license. Details may be found at
+http://creativecommons.org/licenses/by-sa/3.0/

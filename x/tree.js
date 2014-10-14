@@ -118,7 +118,7 @@ server = {
 				}
 			}
 		}
-		http_request.open('POST', 'http://127.0.0.1:88/0ad/civtree/x/dataparse.php', true);
+		http_request.open('POST', './x/dataparse.php', true);
 		http_request.send(this.serverArgs);
 	}
 }
