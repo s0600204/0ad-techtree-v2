@@ -87,6 +87,11 @@ foreach ($g_StructureList as $structCode) {
 				,	"metal"		=> fetchValue($structInfo, "Cost/Resources/metal")
 				,	"time"		=> fetchValue($structInfo, "Cost/BuildTime")
 				)
+		,	"stats"			=> Array(
+					"health"	=> fetchValue($structInfo, "Health/Max")
+				,	"attack"	=> fetchValue($structInfo, "Attack")
+				,	"armour"	=> fetchValue($structInfo, "Armour")
+				)
 		);
 	
 	$reqTech = fetchValue($structInfo, "Identity/RequiredTechnology");
@@ -94,6 +99,11 @@ foreach ($g_StructureList as $structCode) {
 		$structure["phase"] = $reqTech;
 	} else if (is_string($reqTech) || count($reqTech) > 0) {
 		$structure["reqTech"] = $reqTech;
+	}
+	
+	$foundation = array_search("Foundation", array_keys($structure["stats"]["armour"]));
+	if ($foundation) {
+		array_splice($structure["stats"]["armour"], $foundation);
 	}
 	
 	if (isset($structInfo["WallSet"])) {

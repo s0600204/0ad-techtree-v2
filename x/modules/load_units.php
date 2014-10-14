@@ -83,6 +83,7 @@ foreach ($g_UnitList as $unitCode) {
 				,	"metal"		=> fetchValue($unitInfo, "Cost/Resources/metal")
 				,	"time"		=> fetchValue($unitInfo, "Cost/BuildTime")
 				)
+		,	"stats"			=> loadUnitStats("units/".$unitCode)
 		);
 	
 	if (isset($unitInfo["Identity"]["RequiredTechnology"])) {
@@ -107,4 +108,29 @@ foreach ($g_UnitList as $unitCode) {
 	$g_output["units"][$unitCode] = $unit;
 	
 }
+
+function loadUnitStats ($unitCode) {
+	global $g_TemplateData;
+	$unitInfo = $g_TemplateData[$unitCode];
+	
+	$stats = Array();
+	$stats[0] = Array(
+			"health"	=> fetchValue($unitInfo, "Health/Max")
+		,	"attack"	=> fetchValue($unitInfo, "Attack")
+		,	"armour"	=> fetchValue($unitInfo, "Armour")
+		);
+	
+	$rank = fetchValue($unitInfo, "Identity/Rank");
+	if (!is_array($rank)) {
+		$stats[0]["rank"] = $rank;
+	}
+	
+	if (array_key_exists("Promotion", $unitInfo)
+		&& array_key_exists("Entity", $unitInfo["Promotion"])) {
+		$stats = array_merge($stats, loadUnitStats($unitInfo["Promotion"]["Entity"]));
+	}
+	
+	return $stats;
+}
+
 ?>

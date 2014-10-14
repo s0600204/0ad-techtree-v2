@@ -27,6 +27,7 @@ $unit = Array(
 				,	"metal"		=> fetchValue($unitInfo, "Cost/Resources/metal")
 				,	"time"		=> fetchValue($unitInfo, "Cost/BuildTime")
 				)
+	,	"stats"			=> loadUnitStats("gaia/fauna_sheep")
 	);
 $g_output["units"]["fauna_sheep"] = $unit;
 
@@ -46,6 +47,7 @@ $unit = Array(
 				,	"metal"		=> fetchValue($unitInfo, "Cost/Resources/metal")
 				,	"time"		=> fetchValue($unitInfo, "Cost/BuildTime")
 				)
+	,	"stats"			=> loadUnitStats("units/rome_infantry_spearman_a")
 	);
 $g_output["units"]["rome_infantry_spearman_a"] = $unit;
 
@@ -73,13 +75,23 @@ foreach ($palisade as $structCode) {
 			,	"units"			=> fetchValue($structInfo, "ProductionQueue/Entities", true)
 			)
 	,	"cost"			=> Array(
-					"food"		=> fetchValue($structInfo, "Cost/Resources/food")
-				,	"wood"		=> fetchValue($structInfo, "Cost/Resources/wood")
-				,	"stone"		=> fetchValue($structInfo, "Cost/Resources/stone")
-				,	"metal"		=> fetchValue($structInfo, "Cost/Resources/metal")
-				,	"time"		=> fetchValue($structInfo, "Cost/BuildTime")
-				)
+				"food"		=> fetchValue($structInfo, "Cost/Resources/food")
+			,	"wood"		=> fetchValue($structInfo, "Cost/Resources/wood")
+			,	"stone"		=> fetchValue($structInfo, "Cost/Resources/stone")
+			,	"metal"		=> fetchValue($structInfo, "Cost/Resources/metal")
+			,	"time"		=> fetchValue($structInfo, "Cost/BuildTime")
+			)
+	,	"stats"			=> Array(
+				"health"	=> fetchValue($structInfo, "Health/Max")
+			,	"attack"	=> fetchValue($structInfo, "Attack")
+			,	"armour"	=> fetchValue($structInfo, "Armour")
+			)
 	);
+	
+	$foundation = array_search("Foundation", array_keys($structure["stats"]["armour"]));
+	if ($foundation) {
+		array_splice($structure["stats"]["armour"], $foundation);
+	}
 	
 	if (isset($structInfo["WallSet"])) {
 		$structure["wallset"] = $structInfo["WallSet"]["Templates"];
