@@ -497,6 +497,7 @@ SVG.UI_Building = SVG.invent({
 		var w = 32 * 2 + 128;
 		var prodIconDimen = 24;
 		var prodIconPadd = 4;
+		var icons = {};
 		
 		var frame = this.rect().attr({
 			'y': 16
@@ -524,11 +525,15 @@ SVG.UI_Building = SVG.invent({
 		
 		h += 2;
 		
+		var prodDeps = this.group().y(h).attr({
+			'id': "box__"+id+"__deplines"
+		});
 		var prodGroup = this.group().y(h).attr({
 			'id': "box__"+id+"__production"
 		});
 		prodGroup.rows = [];
 		prodGroup.width = 0;
+		
 		
 		var sph = g_phaseList.indexOf(info.phase);
 		for (var ph = sph; ph < g_phaseList.length; ph++) {
@@ -536,6 +541,7 @@ SVG.UI_Building = SVG.invent({
 			
 			prodGroup.rows[ph] = {
 				"count": 0,
+				"offset": 0,
 				"row": prodGroup.group().y((ph-sph) * (prodIconDimen + 6)).attr('id', "row__"+id+"__"+phStr)
 			};
 			
@@ -552,6 +558,8 @@ SVG.UI_Building = SVG.invent({
 					
 					prodGroup.rows[ph].row.icon(uInfo.icon, prodIconDimen, 'unit').x(
 						prodGroup.rows[ph].count * (prodIconDimen + prodIconPadd)
+					).attr(
+						'id', 'icon__'+uStr
 					).tooltip(uInfo);
 					
 					prodGroup.rows[ph].count++;
@@ -568,6 +576,8 @@ SVG.UI_Building = SVG.invent({
 				
 				prodGroup.rows[ph].row.icon(sInfo.icon, prodIconDimen, 'struct').x(
 					prodGroup.rows[ph].count * (prodIconDimen + prodIconPadd)
+				).attr(
+					'id', 'icon__'+sStr
 				).tooltip(sInfo);
 				
 				prodGroup.rows[ph].count++;
@@ -577,6 +587,8 @@ SVG.UI_Building = SVG.invent({
 				
 				prodGroup.rows[ph].row.icon(sInfo.icon, prodIconDimen, 'struct').x(
 					prodGroup.rows[ph].count * (prodIconDimen + prodIconPadd)
+				).attr(
+					'id', 'icon__'+sStr
 				).tooltip(sInfo);
 				
 				prodGroup.rows[ph].count++;
@@ -598,11 +610,21 @@ SVG.UI_Building = SVG.invent({
 						console.log(tStr);
 					}
 					
-					prodGroup.rows[ph].row.icon(tInfo.icon, prodIconDimen, 'tech').x(
+					icons[tStr] = {
+						"pha": ph-sph,
+						"rpha": ph,
+						"cnt": +t,
+						"ico": ""
+					};
+					icons[tStr]["ico"] = prodGroup.rows[ph].row.icon(tInfo.icon, prodIconDimen, 'tech').x(
 						prodGroup.rows[ph].count * (prodIconDimen + prodIconPadd)
+					).attr(
+						'id', 'icon__'+tStr
 					).tooltip(tInfo);
 					prodGroup.rows[ph].count++;
+					
 				};
+				
 			}
 			
 			if (prodGroup.rows[ph].count > prodGroup.width)
@@ -615,6 +637,7 @@ SVG.UI_Building = SVG.invent({
 			row = prodGroup.rows[row];
 			var rw = row.count * (prodIconDimen+prodIconPadd) - prodIconPadd;
 			rw = (prodGroup.width - rw) / 2;
+			row.offset = rw;
 			row.row.x(rw);
 		}
 		if (prodGroup.width > w) {
@@ -625,8 +648,50 @@ SVG.UI_Building = SVG.invent({
 		}
 		var m = (this.width - prodGroup.width) / 2;
 		prodGroup.x(m);
+		prodDeps.x(m);
 		
-	//	ui_bar.width(this.width).height(8);
+		// add in depLines
+		for (var iStr in icons) {
+			
+			if (iStr.slice(0, 5) === "phase") {
+				var iReq = g_phases[iStr].reqs;
+			} else {
+				var iReq = g_techs[iStr].reqs;
+			}
+			
+			if (iReq == undefined) {
+				continue;
+			} else if (iReq[g_selectedCiv] !== undefined) {
+				iReq = iReq[g_selectedCiv];
+			} else {
+				iReq = iReq.generic;
+			}
+			
+			for (var r in iReq) {
+				r = iReq[r];
+				if (r.slice(0, 5) === "phase") {
+					continue;
+				}
+				if (icons[r] === undefined) {
+					console.warn("Missing: "+r);
+					continue;
+				}
+				var line = {
+					'x1': icons[r].ico.xM() + prodGroup.rows[icons[r].rpha].offset
+				,	'y1': icons[r].ico.y2() + icons[r].pha * (prodIconDimen + 6) - 1
+				,	'x2': icons[iStr].ico.xM() + prodGroup.rows[icons[iStr].rpha].offset
+				,	'y2': icons[iStr].ico.y() + icons[iStr].pha * (prodIconDimen + 6) - 1
+				}
+				
+				prodDeps.path(
+						"M" + line.x1 +","+ line.y1
+					+	"Q" + line.x1 +","+ (line.y1+(line.y2-line.y1)/6) +" "+ (line.x2+line.x1)/2 +","+ (line.y2+line.y1)/2
+					+	"T" + line.x2 +","+ line.y2
+					).attr( 'class', 'depLine' );
+			}
+			
+		}
+		
 		ui_bar.transform({
 			'scaleX': this.width / 2048
 		,	'scaleY': 1
@@ -748,6 +813,7 @@ SVG.Icon = SVG.invent({
 	create: function (img, dimen, col) {
 		this.constructor.call(this, SVG.create('g'));
 		this.attr('id', 'icon__'+img[0].slice(img[0].indexOf("/")+1, img[0].indexOf(".")));
+		this.d = dimen;
 		dimen -= 2;
 		this.rect(dimen, dimen).attr({
 			'class' : 'icon icon_' + col
@@ -781,6 +847,12 @@ SVG.Icon = SVG.invent({
 				g_canvasParts["tooltip"].hide();
 			});
 			return this;
+		},
+		xM: function () {
+			return this.x() + this.d/2;
+		},
+		y2: function () {
+			return this.y() + this.d;
 		}
 	},
 	construct: {
