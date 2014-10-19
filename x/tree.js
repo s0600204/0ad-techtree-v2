@@ -745,7 +745,7 @@ SVG.UI_Tooltip = SVG.invent({
 	create: function () {
 		this.constructor.call(this, SVG.create('g'));
 		
-		this.frame = this.rect(128, 40).attr({
+		this.frame = this.rect(128, 80).attr({
 			'fill': '#000'
 		,	'stroke': 'rgb(193, 153, 106)'
 		});
@@ -756,6 +756,9 @@ SVG.UI_Tooltip = SVG.invent({
 		});
 		
 		this.cost = this.group().move(4, 20);
+		
+		this.armour = this.group().move(4, 48);
+		this.attack = this.group().move(4, 48);
 		
 	},
 	inherit: SVG.G,
@@ -795,8 +798,84 @@ SVG.UI_Tooltip = SVG.invent({
 				}
 			}
 			
+			this.armour.clear();
+			this.attack.clear();
+			if (info.stats) {
+				if (Array.isArray(info.stats)) {
+					var statsArmour = info.stats[0].armour;
+					var statsAttack = info.stats[0].attack;
+				} else {
+					var statsArmour = info.stats.armour;
+					var statsAttack = info.stats.attack;
+				}
+				
+				this.armour.text(function (add) {
+					add.tspan("Armour:");
+					for (stat in statsArmour)
+					{
+						add.tspan(" "+statsArmour[stat]);
+						add.tspan(" "+stat+" ").attr({
+							'font-size': "0.7em"
+						});
+					}
+				}).attr({
+					'leading': 1
+				,	'font-size': 12
+				,	'x': 2
+				,	'y': 0
+				,	'fill': '#fff'
+				});
+				
+				if (Object.keys(statsAttack).length > 0) {
+					var attackDamages =  ["Hack","Pierce","Crush","RepeatTime"];
+					this.attack.text(function (add) {
+						for (var atkType in statsAttack) {
+							add.tspan(atkType+" Attack:").newLine();
+							if (atkType == "Ranged") {
+								if (statsAttack["Ranged"]["MinRange"] > 0) {
+									add.tspan(" "+statsAttack["Ranged"]["MinRange"]+"-"+statsAttack["Ranged"]["MaxRange"]);
+								} else {
+									add.tspan(" "+statsAttack["Ranged"]["MaxRange"]);
+								}
+								add.tspan(" Range ").attr({
+									'font-size': "0.7em"
+								});
+							}
+							for (atkDmg in attackDamages) {
+								atkDmg = attackDamages[atkDmg];
+								if (statsAttack[atkType][atkDmg] > 0) {
+									if (atkDmg == "RepeatTime") {
+										add.tspan(" "+statsAttack[atkType][atkDmg]/1000+"s");
+										add.tspan(" Repeat ").attr({
+											'font-size': "0.7em"
+										});
+									} else {
+										add.tspan(" "+statsAttack[atkType][atkDmg]);
+										add.tspan(" "+atkDmg+" ").attr({
+											'font-size': "0.7em"
+										});
+									}
+								}
+							}
+						}
+					}).attr({
+						'leading': 1
+					,	'font-size': 12
+					,	'x': 2
+					,	'y': 0
+					,	'fill': '#fff'
+					});
+				//	console.log(stats_attack);
+				}
+				
+			}
+			
 			var w1 = rcnt * 52;
 			var w2 = this.txt.bbox().width;
+			var w3 = this.armour.bbox().width + 4;
+			var w4 = this.attack.bbox().width + 4;
+			w1 = (w1>w3) ? w1 : w3;
+			w2 = (w2>w4) ? w2 : w4;
 			this.w = ((w1>w2)?w1:w2) + 8;
 			this.frame.width(this.w);
 			
@@ -807,8 +886,8 @@ SVG.UI_Tooltip = SVG.invent({
 			if (x+this.w > g_canvas.w)
 				x -= this.w;
 			
-			if (y+40 > g_canvas.h)
-				y -= 40;
+			if (y+80 > g_canvas.h)
+				y -= 80;
 			
 			this.transform('x', x+2);
 			this.transform('y', y+2);

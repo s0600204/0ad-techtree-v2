@@ -112,13 +112,31 @@ foreach ($g_UnitList as $unitCode) {
 function loadUnitStats ($unitCode) {
 	global $g_TemplateData;
 	$unitInfo = $g_TemplateData[$unitCode];
+	$attackMethods = Array( "Melee", "Ranged", "Charge" );
+	$attackDamages = Array( "Crush", "Hack", "Pierce", "MinRange", "MaxRange", "RepeatTime" );
 	
 	$stats = Array();
 	$stats[0] = Array(
 			"health"	=> fetchValue($unitInfo, "Health/Max")
-		,	"attack"	=> fetchValue($unitInfo, "Attack")
+		,	"attack"	=> Array()
 		,	"armour"	=> fetchValue($unitInfo, "Armour")
 		);
+	
+	foreach ($attackMethods as $meth) {
+		$attack = Array();
+		$keep = false;
+		foreach ($attackDamages as $dama) {
+			$attack[$dama] = fetchValue($unitInfo, "Attack/".$meth."/".$dama);
+			if (!is_array($attack[$dama])) {
+				$keep = true;
+			} else {
+				$attack[$dama] = 0;
+			}
+		}
+		if ($keep) {
+			$stats[0]["attack"][$meth] = $attack;
+		}
+	}
 	
 	$rank = fetchValue($unitInfo, "Identity/Rank");
 	if (!is_array($rank)) {
