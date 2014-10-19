@@ -61,27 +61,29 @@ function fetchValue ($template, $keypath, $collate = false) {
 	$keys = explode("/", $keypath);
 	$ret = Array();
 	
-	if (is_string($template) && array_key_exists($template, $g_TemplateData))
+	if (is_string($template) && isset($g_TemplateData[$template]))
 	{
 		$template = $g_TemplateData[$template];
-		$parent = reset($template);
-		$parent = (array_key_exists("parent", $parent)) ? $parent["parent"] : false;
+		if (isset($template["@attributes"])) {
+			$parent = $template["@attributes"]["parent"];
+		} else {
+			$parent = false;
+		}
 	}
 	else if (is_array($template))
 	{
-		$parent = reset($template);
-		$parent = $parent["parent"];
+		$parent = $template["@attributes"]["parent"];
 	}
 	else
 	{
-		echo $template . " does not exist in templates!\n";
+		warn($template . " does not exist in templates!");
 		return "DNE";
 	}
 	
 	// Navigate through until we reach the desired point
 	for ($k=0; $k < count($keys); $k++)
 	{
-		if (array_key_exists($keys[$k], $template))
+		if (isset($template[$keys[$k]]))
 		{
 			if ($k == count($keys) - 1)
 			{

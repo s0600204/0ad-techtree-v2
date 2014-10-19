@@ -39,15 +39,15 @@ foreach ($g_TechData as $techCode => $techInfo) {
 						"generic"	=> $techInfo["genericName"],
 						"specific"	=> Array()
 					)
-			,	"cost"			=> (array_key_exists("cost", $techInfo)) ? $techInfo["cost"] : Array()
+			,	"cost"			=> (isset($techInfo["cost"])) ? $techInfo["cost"] : Array()
 		//	,	"actualPhase"	=> ""
 			,	"sourceMod"		=> $techInfo["mod"]
 			);
 		
-		if (array_key_exists("specificName", $techInfo)) {
+		if (isset($techInfo["specificName"])) {
 			$g_phases[$techCode]["name"]["specific"] = $techInfo["specificName"];
 		}
-		if (array_key_exists("icon", $techInfo)) {
+		if (isset($techInfo["icon"])) {
 			$g_phases[$techCode]["icon"] = checkIcon("technologies/".$techInfo["icon"], $techInfo["mod"]);
 		} else {
 			$icon = strpos($techCode, "_");
@@ -65,26 +65,26 @@ foreach ($g_TechData as $techCode => $techInfo) {
 						"generic"	=> $techInfo["genericName"],
 						"specific"	=> Array()
 					)
-			,	"icon"			=> (array_key_exists("icon", $techInfo)) ? checkIcon("technologies/".$techInfo["icon"], $techInfo["mod"]) : ""
-			,	"cost"			=> (array_key_exists("cost", $techInfo)) ? $techInfo["cost"] : ""
+			,	"icon"			=> (isset($techInfo["icon"])) ? checkIcon("technologies/".$techInfo["icon"], $techInfo["mod"]) : ""
+			,	"cost"			=> (isset($techInfo["cost"])) ? $techInfo["cost"] : ""
 			,	"sourceMod"		=> $techInfo["mod"]
 			);
 		
-		if (array_key_exists("pair", $techInfo)) {
+		if (isset($techInfo["pair"])) {
 			$g_techs[$techCode]["pair"] = $techInfo["pair"];
 		}
-		if (array_key_exists("specificName", $techInfo)) {
+		if (isset($techInfo["specificName"])) {
 			$g_techs[$techCode]["name"]["specific"] = $techInfo["specificName"];
 		}
-		if (array_key_exists("autoResearch", $techInfo)) {
+		if (isset($techInfo["autoResearch"])) {
 			$g_techs[$techCode]["autoResearch"] = $techInfo["autoResearch"];
 		}
-		if (array_key_exists("researchTime", $techInfo)) {
+		if (isset($techInfo["researchTime"])) {
 			$g_techs[$techCode]["cost"]["time"] = $techInfo["researchTime"];
 		}
 		
 		/* Reqs, part 1: the requirements field */
-		if (array_key_exists("requirements", $techInfo)) {
+		if (isset($techInfo["requirements"])) {
 			
 			foreach ($techInfo["requirements"] as $op => $val) {
 				
@@ -131,7 +131,7 @@ foreach ($g_techPairs as $pair => $data) {
 	
 	$g_techPairs[$pair]["techs"] = Array( $techInfo["top"], $techInfo["bottom"] );
 	
-	if (array_key_exists("supersedes", $techInfo)) {
+	if (isset($techInfo["supersedes"])) {
 		$g_techPairs[$techInfo["supersedes"]]["unlocks"] = $g_techPairs[$pair]["techs"];
 	}
 }
@@ -141,11 +141,11 @@ foreach ($g_techs as $techCode => $data) {
 	$techInfo = $g_TechData[$techCode];
 	
 	/* Direct tech-to-tech superseding */
-	if (array_key_exists("supersedes", $techInfo)) {
+	if (isset($techInfo["supersedes"])) {
 		if (substr(depath($techInfo["supersedes"]), 0, 4) == "pair") { // training_conscription, much?
 			$g_techPairs[$techInfo["supersedes"]]["unlocks"][] = $techCode;
 		} else {
-			if (array_key_exists("generic", $g_techs[$techCode]["reqs"])) {
+			if (isset($g_techs[$techCode]["reqs"]["generic"])) {
 				$g_techs[$techCode]["reqs"]["generic"][] = $techInfo["supersedes"];
 			} else {
 				foreach (array_keys($g_techs[$techCode]["reqs"]) as $civkey) {
@@ -157,13 +157,13 @@ foreach ($g_techs as $techCode => $data) {
 	}
 	
 	/* Via pair-tech superseding */
-	if (array_key_exists("pair", $data)) {
+	if (isset($data["data"])) {
 		$pair = $data["pair"];
-		if (array_key_exists($pair, $g_techPairs)) {
+		if (isset($g_techPairs[$pair])) {
 			$pair = $g_techPairs[$pair]["unlocks"];
 			$g_techs[$techCode]["unlocks"] = array_merge($g_techs[$techCode]["unlocks"], $pair);
 			foreach ($pair as $tech) {
-				if (array_key_exists("generic", $g_techs[$tech]["reqs"])) {
+				if (isset($g_techs[$tech]["reqs"]["generic"])) {
 					$g_techs[$tech]["reqs"]["generic"][] = $techCode;
 				} else {
 					foreach (array_keys($g_techs[$tech]["reqs"]) as $civkey) {
@@ -181,14 +181,14 @@ foreach ($g_techs as $techCode => $data) {
 foreach ($g_phases as $phaseCode => $data) {
 	$phaseInfo = $g_TechData[$phaseCode];
 	
-	if (array_key_exists("requirements", $phaseInfo)) {
+	if (isset($phaseInfo["requirements"])) {
 		foreach ($phaseInfo["requirements"] as $op => $val) {
 			if ($op == "any") {
 				foreach ($val as $v) {
 					$k = array_keys($v);
 					$k = $k[0];
 					$v = $v[$k];
-					if ($k == "tech" && array_key_exists($v, $g_phases)) {
+					if ($k == "tech" && isset($g_phases[$v])) {
 						$g_phases[$v]["actualPhase"] = $phaseCode;
 					}
 				}
@@ -203,11 +203,11 @@ $g_phaseList = Array();
 foreach ($g_techs as $techCode => $data) {
 	$techInfo = $g_TechData[$techCode];
 	
-	if (array_key_exists("generic", $data["reqs"]) && count($data["reqs"]["generic"]) > 1)
+	if (isset($data["reqs"]["generic"]) && count($data["reqs"]["generic"]) > 1)
 	{
 		$reqTech = $g_techs[$techCode]["reqs"]["generic"][1];
 		
-		if (!array_key_exists("generic", $g_techs[$reqTech]["reqs"])) {
+		if (!isset($g_techs[$reqTech]["reqs"]["generic"])) {
 			continue;
 		}
 		$reqPhase = $g_techs[$reqTech]["reqs"]["generic"][0];

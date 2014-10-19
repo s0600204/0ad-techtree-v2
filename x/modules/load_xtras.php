@@ -66,7 +66,7 @@ foreach ($palisade as $structCode) {
 	);
 	$structure["cost"]["time"] = fetchValue($structInfo, "Cost/BuildTime");
 	
-	if (array_key_exists("WallSet", $structInfo)) {
+	if (isset($structInfo["WallSet"])) {
 		$structure["wallset"] = $structInfo["WallSet"]["Templates"];
 		
 		// Collate and costs from components in set
@@ -75,7 +75,7 @@ foreach ($palisade as $structCode) {
 			
 			if (substr($wTempl, 0, 4) == "Wall") {
 				foreach (fetchValue($wPart, "Cost/Resources") as $cost => $q) {
-					if (!array_key_exists($cost, $structure["cost"])) {
+					if (!isset($structure["cost"][$cost])) {
 						$structure["cost"][$cost] = Array();
 					}
 					$structure["cost"][$cost][] = $q;

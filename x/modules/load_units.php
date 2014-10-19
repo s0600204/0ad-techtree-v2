@@ -37,8 +37,8 @@ foreach ($g_UnitList as $unitCode) {
 	
 	$unitInfo = $g_TemplateData["units/".$unitCode];
 	
-	if (!array_key_exists("Promotion", $unitInfo)
-		|| !array_key_exists("Entity", $unitInfo["Promotion"]))
+	if (!isset($unitInfo["Promotion"])
+		|| !isset($unitInfo["Promotion"]["Entity"]))
 	{
 		continue;
 	}
@@ -64,8 +64,8 @@ foreach ($g_UnitList as $unitCode) {
 		continue;
 	}
 	
-	if (array_key_exists("Promotion", $unitInfo)
-		&& array_key_exists("Previous", $unitInfo["Promotion"]))
+	if (isset($unitInfo["Promotion"])
+		&& isset($unitInfo["Promotion"]["Previous"]))
 	{
 		continue;
 	}
@@ -80,7 +80,7 @@ foreach ($g_UnitList as $unitCode) {
 		);
 	$unit["cost"]["time"] = fetchValue($unitInfo, "Cost/BuildTime");
 	
-	if (array_key_exists("RequiredTechnology", $unitInfo["Identity"])) {
+	if (isset($unitInfo["Identity"]["RequiredTechnology"])) {
 		$unit["reqTech"] = $unitInfo["Identity"]["RequiredTechnology"];
 	}
 	

@@ -26,8 +26,8 @@ foreach ($g_StructureList as $build) {
 	
 	$build = "structures/".$build;
 	
-	if (!array_key_exists($build, $g_TemplateData)) {
-		report($build." does not exist! 2", "warn");
+	if (!isset($g_TemplateData[$build])) {
+		report($build." does not exist!", "warn");
 		continue;
 	}
 	$buildInfo = $g_TemplateData[$build];
@@ -65,7 +65,7 @@ foreach ($g_StructureList as $build) {
 // iterate through this list and acquire list of technologies not being used
 foreach (array_keys($g_TechData) as $tech) {
 	
-	$autoResearch = (array_key_exists("autoResearch", $g_TechData[$tech])) ? $g_TechData[$tech]["autoResearch"]: FALSE;
+	$autoResearch = (isset($g_TechData[$tech]["autoResearch"])) ? $g_TechData[$tech]["autoResearch"]: FALSE;
 	
 	if (!in_array($tech, $researchables) && !$autoResearch) {
 		$unusedTech[] = $tech;

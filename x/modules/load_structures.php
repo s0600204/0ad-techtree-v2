@@ -33,13 +33,13 @@ $wallSegments = Array();
 foreach ($g_CivCodes as $civ) {
 	foreach ($g_UnitBuilds[$civ] as $buildable) {
 		
-		if (!array_key_exists($buildable, $g_TemplateData)) {
+		if (!isset($g_TemplateData[$buildable])) {
 			report($buildable." does not exist in templates array!", "warn");
 			continue;
 		}
 		$buildInfo = $g_TemplateData[$buildable];
 		
-		if (array_key_exists("WallSet", $buildInfo))
+		if (isset($buildInfo["WallSet"]))
 		{
 			foreach ($buildInfo["WallSet"]["Templates"] as $wCode)
 			{
@@ -71,7 +71,7 @@ foreach ($g_StructureList as $structCode) {
 //	report($structCode);
 	$structure = Array(
 			"genericName"	=> fetchValue($structInfo, "Identity/GenericName")
-		,	"specificName"	=> (array_key_exists("SpecificName", $structInfo["Identity"]) ? $structInfo["Identity"]["SpecificName"] : "-")
+		,	"specificName"	=> (isset($structInfo["Identity"]["SpecificName"]) ? $structInfo["Identity"]["SpecificName"] : "-")
 		,	"phase"			=> $g_phaseList[0]
 		,	"civ"			=> $myCiv
 		,	"icon"			=> checkIcon(fetchValue($structInfo, "Identity/Icon"), $structInfo["mod"])
@@ -91,7 +91,7 @@ foreach ($g_StructureList as $structCode) {
 		$structure["reqTech"] = $reqTech;
 	}
 	
-	if (array_key_exists("WallSet", $structInfo)) {
+	if (isset($structInfo["WallSet"])) {
 		$structure["wallset"] = $structInfo["WallSet"]["Templates"];
 		
 		// Collate techs and costs from components in set
@@ -105,7 +105,7 @@ foreach ($g_StructureList as $structCode) {
 			
 			if (substr($wTempl, 0, 4) == "Wall") {
 				foreach (fetchValue($wPart, "Cost/Resources") as $cost => $q) {
-					if (!array_key_exists($cost, $structure["cost"])) {
+					if (!isset($structure["cost"][$cost])) {
 						$structure["cost"][$cost] = Array();
 					}
 					$structure["cost"][$cost][] = $q;

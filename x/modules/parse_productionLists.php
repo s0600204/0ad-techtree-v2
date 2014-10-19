@@ -37,11 +37,11 @@ foreach ($g_output["structures"] as $structCode => $structInfo) {
 				report($prod." has an invalid phase!", "warn");
 			}
 		}
-		else if (array_key_exists($civ, $g_output["techs"][$prod]["reqs"]))
+		else if (isset($g_output["techs"][$prod]["reqs"][$civ]))
 		{
 			$phase = $g_output["techs"][$prod]["reqs"][$civ][0];
 		}
-		else if (array_key_exists("generic", $g_output["techs"][$prod]["reqs"]))
+		else if (isset($g_output["techs"][$prod]["reqs"]["generic"]))
 		{
 			$phase = $g_output["techs"][$prod]["reqs"]["generic"][0];
 		}
@@ -51,7 +51,7 @@ foreach ($g_output["structures"] as $structCode => $structInfo) {
 			$phase = $structInfo["phase"];
 		}
 		
-		if (!array_key_exists($phase, $newProdTech)) {
+		if (!isset($newProdTech[$phase])) {
 			$newProdTech[$phase] = Array();
 		}
 		
@@ -66,17 +66,17 @@ foreach ($g_output["structures"] as $structCode => $structInfo) {
 		$prod = substr($prod, strpos($prod, "/")+1);
 		$prod = str_replace("{civ}", $civ, $prod);
 		
-		if (!array_key_exists($prod, $g_output["units"])) {
+		if (!isset($g_output["units"][$prod])) {
 			report($prod." doesn't exist! (".$structCode.")", "warn");
 			continue;
 		}
 		$unit = $g_output["units"][$prod];
 		
-		if (array_key_exists("reqTech", $unit)) {
+		if (isset($unit["reqTech"])) {
 			$reqTech = $unit["reqTech"];
 			if (substr($reqTech, 0, 5) == "phase") {
 				$phase = $unit["reqTech"];
-			} else if (array_key_exists($civ, $g_output["techs"][$reqTech]["reqs"])) {
+			} else if (isset($g_output["techs"][$reqTech]["reqs"][$civ])) {
 				$phase = $g_output["techs"][$reqTech]["reqs"][$civ][0];
 			} else {
 				$phase = $g_output["techs"][$reqTech]["reqs"]["generic"][0];
@@ -90,7 +90,7 @@ foreach ($g_output["structures"] as $structCode => $structInfo) {
 			}
 		}
 		
-		if (!array_key_exists($phase, $newProdUnits)) {
+		if (!isset($newProdUnits[$phase])) {
 			$newProdUnits[$phase] = Array();
 		}
 		
