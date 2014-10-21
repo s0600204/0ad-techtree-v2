@@ -797,7 +797,21 @@ SVG.UI_Tooltip = SVG.invent({
 			
 			var w1 = rcnt * 52;
 			var w2 = this.txt.bbox().width;
-			this.frame.width(((w1>w2)?w1:w2) + 8);
+			this.w = ((w1>w2)?w1:w2) + 8;
+			this.frame.width(this.w);
+			
+			return this;
+		},
+		move: function (x, y) {
+			
+			if (x+this.w > g_canvas.w)
+				x -= this.w;
+			
+			if (y+40 > g_canvas.h)
+				y -= 40;
+			
+			this.transform('x', x+2);
+			this.transform('y', y+2);
 			
 			return this;
 		}
@@ -841,7 +855,7 @@ SVG.Icon = SVG.invent({
 				g_canvasParts["tooltip"].show().populate(info);
 			});
 			this.mousemove(function (e) {
-				g_canvasParts["tooltip"].move(e.pageX+2, e.pageY+2);
+				g_canvasParts["tooltip"].move(e.pageX, e.pageY);
 			});
 			this.mouseout(function (e) {
 				g_canvasParts["tooltip"].hide();
@@ -894,8 +908,10 @@ Array.min = function (arr) {
 function resizeDrawing ()
 {
 	var bbox = g_canvas.bbox();
-	g_canvas.node.style.width = ((bbox.x2 > window.innerWidth-16) ? Math.round(bbox.x2) + 2 : window.innerWidth-16) + "px";
-	g_canvas.node.style.height = Math.round(bbox.y2) + 2 + "px";
+	g_canvas.w = ((bbox.x2 > window.innerWidth-16) ? Math.round(bbox.x2) + 2 : window.innerWidth-16);
+	g_canvas.h = Math.round(bbox.y2) + 2;
+	g_canvas.node.style.width = g_canvas.w + "px";
+	g_canvas.node.style.height = g_canvas.h + "px";
 //	document.body.style.width = g_canvas.node.style.width;
 }
 
