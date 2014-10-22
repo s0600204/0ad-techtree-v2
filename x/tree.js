@@ -757,14 +757,19 @@ SVG.UI_Tooltip = SVG.invent({
 		
 		this.cost = this.group().move(4, 20);
 		
-		this.descri = this.text("...").attr({
+		this.descr = this.text("...").attr({
 				'x':4 , 'y':36
 			,	'fill': '#fff'
 			,	'leading': 1
 			,	'font-size': 12
 			});
-		this.armour = this.group().move(4, 48);
-		this.attack = this.group().move(4, 48);
+		
+		this.stats = this.text("...").attr({
+				'x':4 , 'y':48
+			,	'fill': '#fff'
+			,	'leading': 1
+			,	'font-size': 12
+			});
 		
 	},
 	inherit: SVG.G,
@@ -780,6 +785,8 @@ SVG.UI_Tooltip = SVG.invent({
 			} else {
 				this.bname.text(generName);
 			}
+			this.w = this.bname.bbox().width;
+			this.h = 40;
 			
 			this.cost.clear();
 			var rcnt = 0;
@@ -803,16 +810,18 @@ SVG.UI_Tooltip = SVG.invent({
 					rcnt++;
 				}
 			}
+			var nw = rcnt * 52;
+			this.w = (nw > this.w) ? nw : this.w;
 			
-			this.descri.hide();
-			this.armour.clear();
-			this.attack.clear();
-			var descOffset = 0;
+			this.descr.hide();
+			this.stats.clear();
 			
 			if (info.tooltip && !Array.isArray(info.tooltip)) {
-				this.descri.text(info.tooltip).show();
-				descOffset = this.descri.lines.members.length;
+				this.descr.text(info.tooltip).show();
+				this.h += this.descr.lines.members.length * 12;
 			}
+			nw = this.descr.bbox().width;
+			this.w = (nw > this.w) ? nw : this.w;
 			
 			if (info.stats) {
 				if (Array.isArray(info.stats)) {
@@ -823,8 +832,9 @@ SVG.UI_Tooltip = SVG.invent({
 					var statsAttack = info.stats.attack;
 				}
 				
-				this.armour.y(48 + descOffset * 12);
-				this.armour.text(function (add) {
+				this.stats.attr('y', this.h+8);
+				this.stats.build(true);
+				this.stats.tspan(function (add) {
 					add.tspan("Armour:");
 					for (stat in statsArmour)
 					{
@@ -833,74 +843,47 @@ SVG.UI_Tooltip = SVG.invent({
 							'font-size': "0.75em"
 						});
 					}
-				}).attr({
-					'leading': 1
-				,	'font-size': 12
-				,	'x': 0
-				,	'y': 0
-				,	'fill': '#fff'
 				});
 				
 				if (Object.keys(statsAttack).length > 0) {
 					var attackDamages =  ["Hack","Pierce","Crush","RepeatTime"];
-					this.attack.y(48 + descOffset * 12);
-					this.attack.text(function (add) {
-						for (var atkType in statsAttack) {
-							add.tspan(function (addSub) {
-								addSub.tspan(atkType+" Attack:");
-								if (atkType == "Ranged") {
-									if (statsAttack["Ranged"]["MinRange"] > 0) {
-										addSub.tspan(" "+statsAttack["Ranged"]["MinRange"]+"-"+statsAttack["Ranged"]["MaxRange"]);
+					for (var atkType in statsAttack) {
+						this.stats.tspan(function (add) {
+							add.tspan(atkType+" Attack:");
+							if (atkType == "Ranged") {
+								if (statsAttack["Ranged"]["MinRange"] > 0) {
+									add.tspan(" "+statsAttack["Ranged"]["MinRange"]+"-"+statsAttack["Ranged"]["MaxRange"]);
+								} else {
+									add.tspan(" "+statsAttack["Ranged"]["MaxRange"]);
+								}
+								add.tspan(" Range ").attr({
+									'font-size': "0.75em"
+								});
+							}
+							for (atkDmg in attackDamages) {
+								atkDmg = attackDamages[atkDmg];
+								if (statsAttack[atkType][atkDmg] > 0) {
+									if (atkDmg == "RepeatTime") {
+										add.tspan(" "+statsAttack[atkType][atkDmg]/1000+"s");
+										add.tspan(" Repeat ").attr({
+											'font-size': "0.75em"
+										});
 									} else {
-										addSub.tspan(" "+statsAttack["Ranged"]["MaxRange"]);
-									}
-									addSub.tspan(" Range ").attr({
-										'font-size': "0.75em"
-									});
-								}
-								for (atkDmg in attackDamages) {
-									atkDmg = attackDamages[atkDmg];
-									if (statsAttack[atkType][atkDmg] > 0) {
-										if (atkDmg == "RepeatTime") {
-											addSub.tspan(" "+statsAttack[atkType][atkDmg]/1000+"s");
-											addSub.tspan(" Repeat ").attr({
-												'font-size': "0.75em"
-											});
-										} else {
-											addSub.tspan(" "+statsAttack[atkType][atkDmg]);
-											addSub.tspan(" "+atkDmg+" ").attr({
-												'font-size': "0.75em"
-											});
-										}
+										add.tspan(" "+statsAttack[atkType][atkDmg]);
+										add.tspan(" "+atkDmg+" ").attr({
+											'font-size': "0.75em"
+										});
 									}
 								}
-							}).newLine();
-						}
-					}).attr({
-						'leading': 1
-					,	'font-size': 12
-					,	'x': 0
-					,	'y': 0
-					,	'fill': '#fff'
-					});
-				}
-				
+							}
+						}).newLine();
+					}
+				};
+				this.stats.build(false);
+				this.h += 12 * this.stats.lines.members.length;
 			}
-			
-			var w1 = rcnt * 52;
-			var w2 = this.bname.bbox().width;
-			var w3 = this.armour.bbox().width + 4;
-			var w4 = this.attack.bbox().width + 4;
-			var w5 = this.descri.bbox().width;
-			w1 = (w1>w3) ? w1 : w3;
-			w2 = (w2>w4) ? w2 : w4;
-			w2 = (w2>w5) ? w2 : w5;
-			this.w = ((w1>w2)?w1:w2) + 8;
-			
-			this.h = 40 + (12 * descOffset) + ((this.armour._children[0]) ? 12 : 0);
-			if (this.attack._children[0]) {
-				this.h += 12 * this.attack._children[0].lines.members.length;
-			}
+			nw = this.stats.bbox().width;
+			this.w = ((nw > this.w) ? nw : this.w) + 8;
 			
 			this.frame.width(this.w);
 			this.frame.height(this.h);
