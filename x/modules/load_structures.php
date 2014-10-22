@@ -80,9 +80,14 @@ foreach ($g_StructureList as $structCode) {
 					"technology"	=> fetchValue($structInfo, "ProductionQueue/Technologies", true)
 				,	"units"			=> fetchValue($structInfo, "ProductionQueue/Entities", true)
 				)
-		,	"cost"			=> fetchValue($structInfo, "Cost/Resources")
+		,	"cost"			=> Array(
+					"food"		=> fetchValue($structInfo, "Cost/Resources/food")
+				,	"wood"		=> fetchValue($structInfo, "Cost/Resources/wood")
+				,	"stone"		=> fetchValue($structInfo, "Cost/Resources/stone")
+				,	"metal"		=> fetchValue($structInfo, "Cost/Resources/metal")
+				,	"time"		=> fetchValue($structInfo, "Cost/BuildTime")
+				)
 		);
-	$structure["cost"]["time"] = fetchValue($structInfo, "Cost/BuildTime");
 	
 	$reqTech = fetchValue($structInfo, "Identity/RequiredTechnology");
 	if (is_string($reqTech) && substr($reqTech, 0, 5) == "phase") {

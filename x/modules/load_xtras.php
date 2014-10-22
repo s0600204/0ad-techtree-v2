@@ -20,9 +20,14 @@ $unit = Array(
 	,	"specificName"	=> fetchValue($unitInfo, "Identity/SpecificName")
 	,	"icon"			=> checkIcon(fetchValue($unitInfo, "Identity/Icon"), $unitInfo["mod"])
 	,	"sourceMod"		=> $unitInfo["mod"]
-	,	"cost"			=> fetchValue($unitInfo, "Cost/Resources")
+	,	"cost"			=> Array(
+					"food"		=> fetchValue($unitInfo, "Cost/Resources/food")
+				,	"wood"		=> fetchValue($unitInfo, "Cost/Resources/wood")
+				,	"stone"		=> fetchValue($unitInfo, "Cost/Resources/stone")
+				,	"metal"		=> fetchValue($unitInfo, "Cost/Resources/metal")
+				,	"time"		=> fetchValue($unitInfo, "Cost/BuildTime")
+				)
 	);
-$unit["cost"]["time"] = fetchValue($unitInfo, "Cost/BuildTime");
 $g_output["units"]["fauna_sheep"] = $unit;
 
 
@@ -34,9 +39,14 @@ $unit = Array(
 	,	"civ"			=> $myCiv
 	,	"icon"			=> checkIcon(fetchValue($unitInfo, "Identity/Icon"), $unitInfo["mod"])
 	,	"sourceMod"		=> $unitInfo["mod"]
-	,	"cost"			=> fetchValue($unitInfo, "Cost/Resources")
+	,	"cost"			=> Array(
+					"food"		=> fetchValue($unitInfo, "Cost/Resources/food")
+				,	"wood"		=> fetchValue($unitInfo, "Cost/Resources/wood")
+				,	"stone"		=> fetchValue($unitInfo, "Cost/Resources/stone")
+				,	"metal"		=> fetchValue($unitInfo, "Cost/Resources/metal")
+				,	"time"		=> fetchValue($unitInfo, "Cost/BuildTime")
+				)
 	);
-$unit["cost"]["time"] = fetchValue($unitInfo, "Cost/BuildTime");
 $g_output["units"]["rome_infantry_spearman_a"] = $unit;
 
 
@@ -62,9 +72,14 @@ foreach ($palisade as $structCode) {
 				"technology"	=> fetchValue($structInfo, "ProductionQueue/Technologies", true)
 			,	"units"			=> fetchValue($structInfo, "ProductionQueue/Entities", true)
 			)
-	,	"cost"			=> fetchValue($structInfo, "Cost/Resources")
+	,	"cost"			=> Array(
+					"food"		=> fetchValue($structInfo, "Cost/Resources/food")
+				,	"wood"		=> fetchValue($structInfo, "Cost/Resources/wood")
+				,	"stone"		=> fetchValue($structInfo, "Cost/Resources/stone")
+				,	"metal"		=> fetchValue($structInfo, "Cost/Resources/metal")
+				,	"time"		=> fetchValue($structInfo, "Cost/BuildTime")
+				)
 	);
-	$structure["cost"]["time"] = fetchValue($structInfo, "Cost/BuildTime");
 	
 	if (isset($structInfo["WallSet"])) {
 		$structure["wallset"] = $structInfo["WallSet"]["Templates"];

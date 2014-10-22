@@ -76,9 +76,14 @@ foreach ($g_UnitList as $unitCode) {
 		,	"civ"			=> $myCiv
 		,	"icon"			=> checkIcon(fetchValue($unitInfo, "Identity/Icon"), $unitInfo["mod"])
 		,	"sourceMod"		=> $unitInfo["mod"]
-		,	"cost"			=> fetchValue($unitInfo, "Cost/Resources")
+		,	"cost"			=> Array(
+					"food"		=> fetchValue($unitInfo, "Cost/Resources/food")
+				,	"wood"		=> fetchValue($unitInfo, "Cost/Resources/wood")
+				,	"stone"		=> fetchValue($unitInfo, "Cost/Resources/stone")
+				,	"metal"		=> fetchValue($unitInfo, "Cost/Resources/metal")
+				,	"time"		=> fetchValue($unitInfo, "Cost/BuildTime")
+				)
 		);
-	$unit["cost"]["time"] = fetchValue($unitInfo, "Cost/BuildTime");
 	
 	if (isset($unitInfo["Identity"]["RequiredTechnology"])) {
 		$unit["reqTech"] = $unitInfo["Identity"]["RequiredTechnology"];
@@ -102,5 +107,4 @@ foreach ($g_UnitList as $unitCode) {
 	$g_output["units"][$unitCode] = $unit;
 	
 }
-
 ?>
