@@ -92,6 +92,7 @@ foreach ($g_StructureList as $structCode) {
 				,	"attack"	=> fetchValue($structInfo, "Attack")
 				,	"armour"	=> fetchValue($structInfo, "Armour")
 				)
+		,	"tooltip"		=> fetchValue($structInfo, "Identity/Tooltip")
 		);
 	
 	$reqTech = fetchValue($structInfo, "Identity/RequiredTechnology");

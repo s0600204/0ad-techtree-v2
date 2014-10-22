@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Load Data : Structures
+ * Load Data : Templates
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  */
 

@@ -42,6 +42,7 @@ foreach ($g_TechData as $techCode => $techInfo) {
 			,	"cost"			=> (isset($techInfo["cost"])) ? $techInfo["cost"] : Array()
 		//	,	"actualPhase"	=> ""
 			,	"sourceMod"		=> $techInfo["mod"]
+			,	"tooltip"		=> (isset($techInfo["tooltip"])) ? $techInfo["tooltip"] : ""
 			);
 		
 		if (isset($techInfo["specificName"])) {
@@ -68,6 +69,7 @@ foreach ($g_TechData as $techCode => $techInfo) {
 			,	"icon"			=> (isset($techInfo["icon"])) ? checkIcon("technologies/".$techInfo["icon"], $techInfo["mod"]) : ""
 			,	"cost"			=> (isset($techInfo["cost"])) ? $techInfo["cost"] : ""
 			,	"sourceMod"		=> $techInfo["mod"]
+			,	"tooltip"		=> (isset($techInfo["tooltip"])) ? $techInfo["tooltip"] : ""
 			);
 		
 		if (isset($techInfo["pair"])) {

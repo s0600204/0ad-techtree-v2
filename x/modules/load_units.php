@@ -84,6 +84,7 @@ foreach ($g_UnitList as $unitCode) {
 				,	"time"		=> fetchValue($unitInfo, "Cost/BuildTime")
 				)
 		,	"stats"			=> loadUnitStats("units/".$unitCode)
+		,	"tooltip"		=> fetchValue($unitInfo, "Identity/Tooltip")
 		);
 	
 	if (isset($unitInfo["Identity"]["RequiredTechnology"])) {
