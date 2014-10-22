@@ -845,6 +845,23 @@ SVG.UI_Tooltip = SVG.invent({
 					}
 				});
 				
+				if (info.stats[0] && info.stats[0].healer) {
+					this.stats.tspan(function (add) {
+						add.tspan("Healer:");
+						for (stat in info.stats[0].healer)
+						{
+							if (stat == "Rate") {
+								add.tspan(" "+(info.stats[0].healer[stat]/1000)+"s");
+							} else {
+								add.tspan(" "+info.stats[0].healer[stat]);
+							}
+							add.tspan(" "+stat+" ").attr({
+								'font-size': "0.75em"
+							});
+						}
+					}).newLine();
+				}
+				
 				if (Object.keys(statsAttack).length > 0) {
 					var attackDamages =  ["Hack","Pierce","Crush","RepeatTime"];
 					for (var atkType in statsAttack) {

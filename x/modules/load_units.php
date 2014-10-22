@@ -123,6 +123,15 @@ function loadUnitStats ($unitCode) {
 		,	"armour"	=> fetchValue($unitInfo, "Armour")
 		);
 	
+	$healer = fetchValue($unitInfo, "Heal");
+	if (count($healer) > 0) {
+		$stats[0]["healer"] = Array(
+				"Range"	=> (int) $healer["Range"]
+			,	"HP"	=> (int) $healer["HP"]
+			,	"Rate"	=> (isset($healer["Rate"])) ? (int) $healer["Rate"] : 0
+			);
+	}
+	
 	foreach ($attackMethods as $meth) {
 		$attack = Array();
 		$keep = false;
