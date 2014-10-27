@@ -5,241 +5,237 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  */
 
-global $g_TechData;
-global $g_techs;
-global $g_techPairs;
-global $g_phases;
-global $g_phaseList;
-/*$g_output["techs"] = Array();
-$g_output["phases"] = Array();
-$g_output["phaseList"] = Array();
-$g_output["pairs"] = Array();	*/
+global $g_TechnologyData;
 
-/* Load Tech Data from Files */
-foreach ($g_args["mods"] as $mod) {
-	$path = "../mods/".$mod."/simulation/data/technologies/";
-	if (file_exists($path)) {
-		recurseThru($path, "", $g_TechData, $mod);
+function load_techJSON ($tech) {
+	global $g_TechnologyData;
+	
+	if (!isset($g_TechnologyData[$tech])) {
+		$path = "../mods/".$GLOBALS['g_currentMod']."/simulation/data/technologies/";
+		
+		if (file_exists($path.$tech.".json")) {
+			load_file($path, $tech.".json", $g_TechnologyData);
+		} else {
+			return false;
+		}
 	}
+	return $g_TechnologyData[$tech];
 }
 
-foreach ($g_TechData as $techCode => $techInfo) {
+function load_tech ($techCode) {
 	
-	$realCode = depath($techCode);
+	$techInfo = load_techJSON($techCode);
+//	$realCode = depath($techCode);
 	
-	if (substr($realCode, 0, 4) == "pair") {
-		$g_techPairs[$techCode] = Array(
-				"techs"		=> Array()
-			,	"unlocks"	=> Array()
-			);
+	/* Set basic branch information */
+	$tech = Array(
+			"reqs"			=> Array()
+	//	,	"unlocks"		=> Array()
+		,	"name"			=> Array(
+					"generic"	=> $techInfo["genericName"],
+					"specific"	=> Array()
+				)
+		,	"icon"			=> (isset($techInfo["icon"])) ? checkIcon("technologies/".$techInfo["icon"], $techInfo["mod"]) : ""
+		,	"cost"			=> (isset($techInfo["cost"])) ? $techInfo["cost"] : ""
+		,	"sourceMod"		=> $techInfo["mod"]
+		,	"tooltip"		=> (isset($techInfo["tooltip"])) ? $techInfo["tooltip"] : ""
+		);
 	
-	} else if (substr($realCode, 0, 5) == "phase") {
-		$g_phases[$techCode] = Array(
-				"name"			=> Array(
-						"generic"	=> $techInfo["genericName"],
-						"specific"	=> Array()
-					)
-			,	"cost"			=> (isset($techInfo["cost"])) ? $techInfo["cost"] : Array()
-		//	,	"actualPhase"	=> ""
-			,	"sourceMod"		=> $techInfo["mod"]
-			,	"tooltip"		=> (isset($techInfo["tooltip"])) ? $techInfo["tooltip"] : ""
-			);
+	if (isset($techInfo["pair"])) {
+		$tech["pair"] = $techInfo["pair"];
+	}
+	if (isset($techInfo["specificName"])) {
+		$tech["name"]["specific"] = $techInfo["specificName"];
+	}
+	if (isset($techInfo["autoResearch"])) {
+		$tech["autoResearch"] = $techInfo["autoResearch"];
+	}
+	if (isset($techInfo["researchTime"])) {
+		$tech["cost"]["time"] = $techInfo["researchTime"];
+	}
+	
+	/* Reqs, part 1: the requirements field */
+	if (isset($techInfo["requirements"])) {
 		
-		if (isset($techInfo["specificName"])) {
-			$g_phases[$techCode]["name"]["specific"] = $techInfo["specificName"];
-		}
-		if (isset($techInfo["icon"])) {
-			$g_phases[$techCode]["icon"] = checkIcon("technologies/".$techInfo["icon"], $techInfo["mod"]);
-		} else {
-			$icon = strpos($techCode, "_");
-			$icon = substr($techCode, $icon+1) . "_" . substr($techCode, 0, $icon);
-			$g_phases[$techCode]["icon"] = checkIcon("technologies/".$icon.".png", $techInfo["mod"]);
-		}
-		
-	} else {
-		
-		/* Set basic branch information */
-		$g_techs[$techCode] = Array(
-				"reqs"			=> Array()
-			,	"unlocks"		=> Array()
-			,	"name"			=> Array(
-						"generic"	=> $techInfo["genericName"],
-						"specific"	=> Array()
-					)
-			,	"icon"			=> (isset($techInfo["icon"])) ? checkIcon("technologies/".$techInfo["icon"], $techInfo["mod"]) : ""
-			,	"cost"			=> (isset($techInfo["cost"])) ? $techInfo["cost"] : ""
-			,	"sourceMod"		=> $techInfo["mod"]
-			,	"tooltip"		=> (isset($techInfo["tooltip"])) ? $techInfo["tooltip"] : ""
-			);
-		
-		if (isset($techInfo["pair"])) {
-			$g_techs[$techCode]["pair"] = $techInfo["pair"];
-		}
-		if (isset($techInfo["specificName"])) {
-			$g_techs[$techCode]["name"]["specific"] = $techInfo["specificName"];
-		}
-		if (isset($techInfo["autoResearch"])) {
-			$g_techs[$techCode]["autoResearch"] = $techInfo["autoResearch"];
-		}
-		if (isset($techInfo["researchTime"])) {
-			$g_techs[$techCode]["cost"]["time"] = $techInfo["researchTime"];
-		}
-		
-		/* Reqs, part 1: the requirements field */
-		if (isset($techInfo["requirements"])) {
+		foreach ($techInfo["requirements"] as $op => $val) {
 			
-			foreach ($techInfo["requirements"] as $op => $val) {
+			$ret = calcReqs($op, $val);
+			
+			switch ($op) {
+				case "tech":
+					$tech["reqs"]["generic"] = Array( $ret );
+					break;
 				
-				$ret = calcReqs($op, $val);
+				case "civ":
+					$tech["reqs"][$ret] = Array();
+					break;
 				
-				switch ($op) {
-					case "tech":
-						$g_techs[$techCode]["reqs"]["generic"] = Array( $ret );
-						break;
-					
-					case "civ":
-						$g_techs[$techCode]["reqs"][$ret] = Array();
-						break;
-					
-					case "any":
-						if (count($ret[0]) > 0) {
-							foreach ($ret[0] as $r => $v) {
-								if (is_numeric($r)) {
-									$g_techs[$techCode]["reqs"][$v] = Array();
-								} else {
-									$g_techs[$techCode]["reqs"][$r] = $v;
-								}
+				case "any":
+					if (count($ret[0]) > 0) {
+						foreach ($ret[0] as $r => $v) {
+							if (is_numeric($r)) {
+								$tech["reqs"][$v] = Array();
+							} else {
+								$tech["reqs"][$r] = $v;
 							}
 						}
-						if (count($ret[1]) > 0) {
-							$g_techs[$techCode]["reqs"]["generic"] = $ret[1];
-						}
-						break;
-					
-					case "all":
-						foreach ($ret[0] as $r) {
-							$g_techs[$techCode]["reqs"][$r] = $ret[1];
-						}
-						break;
-				}
+					}
+					if (count($ret[1]) > 0) {
+						$tech["reqs"]["generic"] = $ret[1];
+					}
+					break;
+				
+				case "all":
+					foreach ($ret[0] as $r) {
+						$tech["reqs"][$r] = $ret[1];
+					}
+					break;
 			}
 		}
 	}
-}
-
-/* Unravel pair chains */
-foreach ($g_techPairs as $pair => $data) {
-	$techInfo = $g_TechData[$pair];
-	
-	$g_techPairs[$pair]["techs"] = Array( $techInfo["top"], $techInfo["bottom"] );
 	
 	if (isset($techInfo["supersedes"])) {
-		$g_techPairs[$techInfo["supersedes"]]["unlocks"] = $g_techPairs[$pair]["techs"];
-	}
-}
-
-/* Reqs, part 2: supersedes */
-foreach ($g_techs as $techCode => $data) {
-	$techInfo = $g_TechData[$techCode];
-	
-	/* Direct tech-to-tech superseding */
-	if (isset($techInfo["supersedes"])) {
-		if (substr(depath($techInfo["supersedes"]), 0, 4) == "pair") { // training_conscription, much?
+	/*	if (substr(depath($techInfo["supersedes"]), 0, 4) == "pair") { // training_conscription, much?
 			$g_techPairs[$techInfo["supersedes"]]["unlocks"][] = $techCode;
-		} else {
-			if (isset($g_techs[$techCode]["reqs"]["generic"])) {
-				$g_techs[$techCode]["reqs"]["generic"][] = $techInfo["supersedes"];
+		} else {	*/
+			if (isset($tech["reqs"]["generic"])) {
+				$tech["reqs"]["generic"][] = $techInfo["supersedes"];
 			} else {
-				foreach (array_keys($g_techs[$techCode]["reqs"]) as $civkey) {
-					$g_techs[$techCode]["reqs"][$civkey][] = $techInfo["supersedes"];
+				foreach (array_keys($tech["reqs"]) as $civkey) {
+					$tech["reqs"][$civkey][] = $techInfo["supersedes"];
 				}
 			}
-			$g_techs[$techInfo["supersedes"]]["unlocks"][] = $techCode;
-		}
+		//	$g_techs[$techInfo["supersedes"]]["unlocks"][] = $techCode;
+	//	}
 	}
 	
-	/* Via pair-tech superseding */
-	if (isset($data["data"])) {
-		$pair = $data["pair"];
-		if (isset($g_techPairs[$pair])) {
-			$pair = $g_techPairs[$pair]["unlocks"];
-			$g_techs[$techCode]["unlocks"] = array_merge($g_techs[$techCode]["unlocks"], $pair);
-			foreach ($pair as $tech) {
-				if (isset($g_techs[$tech]["reqs"]["generic"])) {
-					$g_techs[$tech]["reqs"]["generic"][] = $techCode;
-				} else {
-					foreach (array_keys($g_techs[$tech]["reqs"]) as $civkey) {
-						$g_techs[$tech]["reqs"][$civkey][] = $techCode;
-					}
-				}
-			}
-		} else {
-//			echo $techCode ." is trying to use non-existant ". $pair ." as a pair\n";
-		}
-	}
-}
-
-/* Derive the phase of a phase */
-foreach ($g_phases as $phaseCode => $data) {
-	$phaseInfo = $g_TechData[$phaseCode];
-	
-	if (isset($phaseInfo["requirements"])) {
-		foreach ($phaseInfo["requirements"] as $op => $val) {
-			if ($op == "any") {
-				foreach ($val as $v) {
-					$k = array_keys($v);
-					$k = $k[0];
-					$v = $v[$k];
-					if ($k == "tech" && isset($g_phases[$v])) {
-						$g_phases[$v]["actualPhase"] = $phaseCode;
-					}
-				}
-			}
-		}
-	}
+	return $tech;
 	
 }
 
-/* Unravel phase order */
-$g_phaseList = Array();
-foreach ($g_techs as $techCode => $data) {
-	$techInfo = $g_TechData[$techCode];
+function load_phase ($techCode) {
 	
-	if (isset($data["reqs"]["generic"]) && count($data["reqs"]["generic"]) > 1)
+	$techInfo = load_techJSON($techCode);
+	
+	$phase = Array(
+			"name"			=> Array(
+					"generic"	=> $techInfo["genericName"],
+					"specific"	=> Array()
+				)
+		,	"cost"			=> (isset($techInfo["cost"])) ? $techInfo["cost"] : Array()
+		,	"actualPhase"	=> ""
+		,	"sourceMod"		=> $techInfo["mod"]
+		,	"tooltip"		=> (isset($techInfo["tooltip"])) ? $techInfo["tooltip"] : ""
+		);
+	
+	if (isset($techInfo["specificName"])) {
+		$phase["name"]["specific"] = $techInfo["specificName"];
+	}
+	if (isset($techInfo["icon"])) {
+		$phase["icon"] = checkIcon("technologies/".$techInfo["icon"], $techInfo["mod"]);
+	} else {
+		$icon = strpos($techCode, "_");
+		$icon = substr($techCode, $icon+1) . "_" . substr($techCode, 0, $icon);
+		$phase["icon"] = checkIcon("technologies/".$icon.".png", $techInfo["mod"]);
+	}
+	
+	return $phase;
+}
+
+function load_pair ($techCode) {
+	
+	$techInfo = load_techJSON($techCode);
+	
+	return Array(
+			"techs"	=> Array( $techInfo["top"], $techInfo["bottom"] )
+		,	"req"	=> (isset($techInfo["supersedes"])) ? $techInfo["supersedes"] : ""
+		);
+	
+}
+
+function unravel_phases ($techs) {
+	
+	$phaseList = Array();
+	
+	foreach ($techs as $techCode => $data)
+	{	
+		if (isset($data["reqs"]["generic"]) && count($data["reqs"]["generic"]) > 1)
+		{
+			$reqTech = $techs[$techCode]["reqs"]["generic"][1];
+			
+			if (!isset($techs[$reqTech]["reqs"]["generic"]))
+				continue;
+			
+			$reqPhase = $techs[$reqTech]["reqs"]["generic"][0];
+			$myPhase = $techs[$techCode]["reqs"]["generic"][0];
+			
+			if ($reqPhase == $myPhase)
+				continue;
+			
+			$reqPhasePos = array_search($reqPhase, $phaseList);
+			$myPhasePos = array_search($myPhase, $phaseList);
+			
+			if (count($phaseList) == 0)
+			{
+				$phaseList = Array( $reqPhase, $myPhase );
+			}
+			else if ($reqPhasePos === false && $myPhasePos > -1)
+			{
+				array_splice($phaseList, $myPhasePos, 0, $reqPhase);
+			}
+			else if ($myPhasePos === false && $reqPhasePos > -1)
+			{
+				array_splice($phaseList, $reqPhasePos+1, 0, $myPhase);
+			}
+		}
+	}
+	
+	return $phaseList;
+}
+
+function calcReqs ($op, $val)
+{
+	switch ($op)
 	{
-		$reqTech = $g_techs[$techCode]["reqs"]["generic"][1];
-		
-		if (!isset($g_techs[$reqTech]["reqs"]["generic"])) {
-			continue;
-		}
-		$reqPhase = $g_techs[$reqTech]["reqs"]["generic"][0];
-		$myPhase = $g_techs[$techCode]["reqs"]["generic"][0];
-		
-		if ($reqPhase == $myPhase) {
-			continue;
-		}
-		$reqPhasePos = array_search($reqPhase, $g_phaseList);
-		$myPhasePos = array_search($myPhase, $g_phaseList);
-		
-		if (count($g_phaseList) == 0)
+	case "civ":
+	case "tech":
+		return $val;
+	
+	case "all":
+	case "any":
+		$t = Array();
+		$c = Array();
+		foreach ($val as $nv)
 		{
-			$g_phaseList = Array( $reqPhase, $myPhase );
+			foreach ($nv as $o => $v)
+			{
+				$r = calcReqs($o, $v);
+				switch ($o)
+				{
+				case "civ":
+					$c[] = $r;
+					break;
+					
+				case "tech":
+					$t[] = $r;
+					break;
+					
+				case "any":
+					$c = array_merge($c, $r[0]);
+					$t = array_merge($t, $r[1]);
+					break;
+					
+				case "all":
+					foreach ($r[0] as $ci) {
+						$c[$ci] = $r[1];
+					}
+					$t = $t;
+				}
+				
+			}
 		}
-		else if ($reqPhasePos === false && $myPhasePos > -1)
-		{
-			array_splice($g_phaseList, $myPhasePos, 0, $reqPhase);
-		}
-		else if ($myPhasePos === false && $reqPhasePos > -1)
-		{
-			array_splice($g_phaseList, $reqPhasePos+1, 0, $myPhase);
-		}
+		return Array( $c, $t );
 	}
 }
-
-/* send to output */
-$g_output["techs"] = $g_techs;
-$g_output["phases"] = $g_phases;
-$g_output["phaseList"] = $g_phaseList;
-$g_output["pairs"] = $g_techPairs;
 
 ?>

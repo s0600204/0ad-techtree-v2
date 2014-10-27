@@ -5,21 +5,21 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  */
 
-require_once "./modules/load_civs.php";
-require_once "./modules/load_structures.php";
-
-foreach ($g_CivCodes as $civ) {
+foreach ($g_CivList as $civ) {
 	
 	$buildList = Array();
 	
 	// create lists
-	foreach ($g_UnitBuilds[$civ] as $build) {
+	foreach ($g_StructureList[$civ] as $build) {
 		
 		$build = depath($build);
 		if (!isset($g_output["structures"][$build])) {
 			warn($build . " doesn't seem to exist for ".$civ."! (Check the civ attr of the struct)");
 			continue;
 		}
+		
+		if (!$g_output["structures"][$build]["phase"])
+			$g_output["structures"][$build]["phase"] = $g_output["phaseList"][0];
 		
 		$myPhase = $g_output["structures"][$build]["phase"];
 		

@@ -7,16 +7,21 @@
 
 global $g_TemplateData;
 
-/* Load Structure Data from Files */
-$tmpRecurse = $GLOBALS["recurse"];
-$GLOBALS["recurse"] = false;
-foreach ($g_args["mods"] as $mod) {
-	$path = "../mods/".$mod."/simulation/templates/";
-	if (file_exists($path)) {
-		recurseThru($path, "", $g_TemplateData, $mod);
+/* Load Structure Data from Array/File */
+function load_template ($template) {
+	global $g_TemplateData;
+	
+	if (!isset($g_TemplateData[$template])) {
+		$path = "../mods/".$GLOBALS["g_currentMod"]."/simulation/templates/";
+		
+		if (file_exists($path.$template.".xml")) {
+			load_file($path, $template.".xml", $g_TemplateData);
+		} else {
+			return false;
+		}
 	}
+	return $g_TemplateData[$template];
 }
-$GLOBALS["recurse"] = $tmpRecurse;
 
 function collateValues ($template, $keypath) {
 	return fetchValue($template, $keypath, true);
@@ -61,9 +66,14 @@ function fetchValue ($template, $keypath, $collate = false) {
 	$keys = explode("/", $keypath);
 	$ret = Array();
 	
-	if (is_string($template) && isset($g_TemplateData[$template]))
+	if (is_string($template))
 	{
-		$template = $g_TemplateData[$template];
+		$tText = $template;
+		$template = load_template($template);
+		if (!$template) {
+			warn($tText . " does not exist in templates!");
+			return "DNE";
+		}
 		if (isset($template["@attributes"])) {
 			$parent = $template["@attributes"]["parent"];
 		} else {
@@ -76,8 +86,8 @@ function fetchValue ($template, $keypath, $collate = false) {
 	}
 	else
 	{
-		warn($template . " does not exist in templates!");
-		return "DNE";
+		warn($template);
+		return Array();
 	}
 	
 	// Navigate through until we reach the desired point

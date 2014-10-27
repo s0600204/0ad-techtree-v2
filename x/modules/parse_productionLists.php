@@ -5,10 +5,6 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  */
 
-require_once "./modules/load_structures.php";
-require_once "./modules/load_techs.php";
-require_once "./modules/load_units.php";
-
 // iterate through the structures
 foreach ($g_output["structures"] as $structCode => $structInfo) {
 	
@@ -20,7 +16,7 @@ foreach ($g_output["structures"] as $structCode => $structInfo) {
 	foreach ($prodTech as $prod) {
 		if (substr($prod, 0, 4) == "pair" || strpos($prod, "/pair")) {
 			$pt = array_search($prod, $prodTech);
-			array_splice($prodTech, $pt, 1, $g_techPairs[$prod]["techs"]);
+			array_splice($prodTech, $pt, 1, $techPairs[$prod]["techs"]);
 		}
 	}
 	
@@ -30,11 +26,11 @@ foreach ($g_output["structures"] as $structCode => $structInfo) {
 		
 		if (substr($prod, 0, 5) == "phase")
 		{
-			$phase = array_search($g_phases[$prod]["actualPhase"], $g_phaseList);
+			$phase = array_search($g_output["phases"][$prod]["actualPhase"], $g_output["phaseList"]);
 			if ($phase > 0) {
-				$phase = $g_phaseList[$phase - 1];
+				$phase = $g_output["phaseList"][$phase - 1];
 			} else {
-				report($prod." has an invalid phase!", "warn");
+				warn($prod." has an invalid phase! (".$phase.")");
 			}
 		}
 		else if (isset($g_output["techs"][$prod]["reqs"][$civ]))
@@ -47,7 +43,8 @@ foreach ($g_output["structures"] as $structCode => $structInfo) {
 		}
 		else
 		{
-			report($prod." doesn't possess a phase! (".$civ.")", "warn");
+			report($prod." doesn't possess a phase! (".$structCode.",".$civ.")", "warn");
+			warn(print_r($prodTech, true));
 			$phase = $structInfo["phase"];
 		}
 		
@@ -63,8 +60,7 @@ foreach ($g_output["structures"] as $structCode => $structInfo) {
 	$newProdUnits = Array();
 	foreach ($prodUnits as $prod) {
 		
-		$prod = substr($prod, strpos($prod, "/")+1);
-		$prod = str_replace("{civ}", $civ, $prod);
+		$prod = depath($prod);
 		
 		if (!isset($g_output["units"][$prod])) {
 			report($prod." doesn't exist! (".$structCode.")", "warn");
@@ -84,7 +80,7 @@ foreach ($g_output["structures"] as $structCode => $structInfo) {
 		} else {
 			// hack so it works with civil centres
 			if (strpos($structCode, "civil_centre")) {
-				$phase = $g_phaseList[0];
+				$phase = $g_output["phaseList"][0];
 			} else {
 				$phase = $structInfo["phase"];
 			}

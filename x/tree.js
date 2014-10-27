@@ -30,9 +30,11 @@ function init(settings)
 	document.getElementById('renderBanner').innerHTML = "Acquiring Data from Server...";
 	
 	server.load(function () {
+		console.info(server.out);
+		
 		g_techs			= server.out["techs"];
 		g_phases		= server.out["phases"];
-		g_techPairs		= server.out["pairs"];
+	//	g_techPairs		= server.out["pairs"];
 		g_phaseList		= server.out["phaseList"];
 		g_civs			= server.out["civs"];
 		g_availMods		= server.out["availMods"];
@@ -569,26 +571,20 @@ SVG.UI_Building = SVG.invent({
 			// WallSet icons - We only show gate and tower
 			if (info.wallset !== undefined && info.phase == phStr) {
 				
-				var pos = info.wallset["Gate"].indexOf("/") + 1;
-				
-				var sStr = info.wallset["Gate"].slice(pos);
-				var sInfo = g_structures[sStr];
-				
+				var sInfo = info.wallset["Gate"];
 				prodGroup.rows[ph].row.icon(sInfo.icon, prodIconDimen, 'struct').x(
 					prodGroup.rows[ph].count * (prodIconDimen + prodIconPadd)
 				).attr(
-					'id', 'icon__'+sStr
+					'id', 'icon__'+sInfo.code
 				).tooltip(sInfo);
 				
 				prodGroup.rows[ph].count++;
 				
-				var sStr = info.wallset["Tower"].slice(pos);
-				var sInfo = g_structures[sStr];
-				
+				var sInfo = info.wallset["Tower"];
 				prodGroup.rows[ph].row.icon(sInfo.icon, prodIconDimen, 'struct').x(
 					prodGroup.rows[ph].count * (prodIconDimen + prodIconPadd)
 				).attr(
-					'id', 'icon__'+sStr
+					'id', 'icon__'+sInfo.code
 				).tooltip(sInfo);
 				
 				prodGroup.rows[ph].count++;

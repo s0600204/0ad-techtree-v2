@@ -1,5 +1,6 @@
 <?php
 
+require_once "./modules/util_functions.php";
 global $g_output;
 global $g_args;
 global $g_debug;
@@ -25,6 +26,7 @@ if ($_POST['mod'] === "") {
 		$g_args["mods"][] = $mod;
 	}
 }
+info(print_r($g_args["mods"], true));
 
 /*
  * Check for Cache
@@ -33,23 +35,164 @@ if ($_POST['mod'] === "") {
 $cachefile = $g_args["mods"];
 asort($cachefile);
 $cachefile = "../cache/".md5(implode("_", $cachefile));
-if (!$g_args["redraw"] && file_exists($cachefile)) {
+/*if (!$g_args["redraw"] && file_exists($cachefile)) {
 	echo file_get_contents($cachefile);
 	return;
-}
+}	*/
 
 /*
- * Load and parse data JSON
+ * Initialise Globals
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  */
-$GLOBALS['recurse'] = true;
-$modules = scandir("./modules", 0);
-foreach ($modules as $module) {
-	if (substr($module,0,1) == "." || preg_match("/.php/i", $module) != 1) {
-		continue;
+
+global $g_CivList;
+global $g_UnitList;
+global $g_StructureList;
+global $g_TechList;
+$g_CivList = Array();
+$g_UnitList = Array();
+$g_StructureList = Array();
+$g_TechList = Array();
+
+global $g_currentMod;
+$g_currentMod = "0ad";
+
+/*
+ * Load data
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ */
+
+/* Load Mod Selection */
+include_once "./modules/load_mods.php";
+
+/* Civ Load Code */
+include_once "./modules/load_civs.php";
+
+/* Units and Structure Load Code */
+include_once "./modules/load_templates.php";
+include_once "./modules/load_units.php";
+include_once "./modules/load_structures.php";
+$g_output["units"] = Array();
+$g_output["structures"] = Array();
+$uCount = 0;
+
+foreach ($g_args["mods"] as $mod) {
+	$g_currentMod = $mod;
+	
+	foreach (fetch_civs() as $civCode) {
+		$g_CivList[] = $civCode;
+		$civData = load_civ($civCode);
+		if (!$civData)
+			continue;
+		
+		$g_output["civs"][$civCode] = $civData;
+		
+		/* Load Units and Structures */
+		$g_StructureList[$civCode] = Array();
+		do {
+			
+			foreach ($g_UnitList[$civCode] as $unitCode) {
+				if (!in_array(depath($unitCode), $g_output["units"])) {
+					$newUnit = load_unit($unitCode);
+					$unitCode = depath($unitCode);
+					if ($newUnit)
+						$g_output["units"][$unitCode] = $newUnit;
+				}
+			}
+			$uCount = count($g_UnitList[$civCode]);
+			
+			foreach ($g_StructureList[$civCode] as $structCode) {
+				if (!in_array(depath($structCode), $g_output["structures"])) {
+					$newStruct = load_structure($structCode);
+					$structCode = depath($structCode);
+					if ($newStruct) {
+						$g_output["structures"][$structCode] = $newStruct;
+						
+						foreach ($newStruct["production"]["units"] as $unitCode) {
+							if (!in_array($unitCode, $g_UnitList[$civCode])) {
+								$g_UnitList[$civCode][] = $unitCode;
+							}
+						}
+						foreach ($newStruct["production"]["technology"] as $techCode) {
+							if (!in_array($techCode, $g_TechList)) {
+								$g_TechList[] = $techCode;
+							}
+						}
+					}
+				}
+			}
+			
+		} while ($uCount < count($g_UnitList[$civCode]));
 	}
-	include_once "./modules/".$module;
+
+	/* Load techs */
+	include_once "./modules/load_techs.php";
+	$techPairs = Array();
+	foreach ($g_TechList as $techCode) {
+		
+		$realCode = depath($techCode);
+		
+		if (substr($realCode, 0, 4) == "pair") {
+			$techPairs[$techCode] = load_pair($techCode);
+		} else if (substr($realCode, 0, 5) == "phase") {
+			$g_output["phases"][$techCode] = load_phase($techCode);
+		} else {
+			$g_output["techs"][$techCode] = load_tech($techCode);
+		}
+	}
+	foreach ($techPairs as $pairCode => $pairInfo) {
+		foreach ($pairInfo["techs"] as $techCode) {
+			$newTech = load_tech($techCode);
+			
+			if ($pairInfo["req"] !== "") {
+				if (isset($newTech["reqs"]["generic"])) {
+					$newTech["reqs"]["generic"] = array_merge($newTech["reqs"]["generic"], $techPairs[$pairInfo["req"]]["techs"]);
+				} else {
+					foreach (array_keys($newTech["reqs"]) as $civkey) {
+						$newTech["reqs"][$civkey] = array_merge($newTech["reqs"][$civkey], $techPairs[$pairInfo["req"]]["techs"]);
+					}
+				}
+			}
+			
+			$g_output["techs"][$techCode] = $newTech;
+		}
+	}
 }
+$g_currentMod = $g_args["mods"][0];
+
+/*
+ * Parse Data
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ */
+
+/* Unravel phase order */
+$g_output["phaseList"] = unravel_phases($g_output["techs"]);
+
+/* Load actual phase for phases */
+foreach ($g_output["phaseList"] as $phaseCode) {
+	$phaseInfo = load_techJSON($phaseCode);
+	$g_output["phases"][$phaseCode] = load_phase($phaseCode);
+	
+	if (isset($phaseInfo["requirements"])) {
+		foreach ($phaseInfo["requirements"] as $op => $val) {
+			if ($op == "any") {
+				foreach ($val as $v) {
+					$k = array_keys($v);
+					$k = $k[0];
+					$v = $v[$k];
+					if ($k == "tech" && isset($g_output["phases"][$v])) {
+						$g_output["phases"][$v]["actualPhase"] = $phaseCode;
+					}
+				}
+			}
+		}
+	}
+}
+
+/* Sort production (of structures) and build lists (of civs) */
+include_once "./modules/parse_productionLists.php";
+include_once "./modules/parse_buildLists.php";
+
 
 /*
  * Save Cache
@@ -63,163 +206,11 @@ try {
 }
 
 /*
- * Output data
+ * Output parsed data
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  */
 $g_output["debug"] = $g_debug;
 echo json_encode($g_output);
-
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-
-function calcReqs ($op, $val)
-{
-	switch ($op)
-	{
-	case "civ":
-	case "tech":
-		return $val;
-	
-	case "all":
-	case "any":
-		$t = Array();
-		$c = Array();
-		foreach ($val as $nv)
-		{
-			foreach ($nv as $o => $v)
-			{
-				$r = calcReqs($o, $v);
-				switch ($o)
-				{
-				case "civ":
-					$c[] = $r;
-					break;
-					
-				case "tech":
-					$t[] = $r;
-					break;
-					
-				case "any":
-					$c = array_merge($c, $r[0]);
-					$t = array_merge($t, $r[1]);
-					break;
-					
-				case "all":
-					foreach ($r[0] as $ci) {
-						$c[$ci] = $r[1];
-					}
-					$t = $t;
-				}
-				
-			}
-		}
-		return Array( $c, $t );
-	}
-}
-
-function recurseThru ($path, $subpath, &$store, $mod) {
-	$files = scandir($path.$subpath, 0);
-//	global $pattern;
-	foreach ($files as $file) {
-		if (substr($file,0,1) == ".") {
-			continue;
-		}
-		if (is_dir($path.$subpath.$file)) {
-			if ($GLOBALS['recurse'] == true) {
-				recurseThru($path, $subpath.$file."/", $store, $mod);
-			} else {
-				continue;
-			}
-		} else {
-			load_file($path, $subpath.$file, $store, $mod);
-		}
-	}
-}
-
-function load_file ($path, $file, &$store, $mod) {
-	if (preg_match("/.json/i", $file) == 1) {
-		$fcontents = json_decode(file_get_contents($path.$file), true);
-	} else if (preg_match("/.xml/i", $file) == 1) {
-		$fcontents = xml2array(file_get_contents($path.$file));
-	} else {
-		continue;
-	}
-	$fname = substr($file, 0, strrpos($file, '.'));
-	if ($fcontents !== NULL) {
-		$store[$fname] = $fcontents;
-		$store[$fname]["mod"] = $mod;
-	} else {
-		report($path.$file . " is not a valid JSON or XML file!", "error");
-	}
-}
-
-function depath ($str) {
-	return (strpos($str, "/")) ? substr($str, strrpos($str, '/')+1) : $str;
-}
-
-function getDependencies ($modName) {
-	$modPath = "../mods/" . $modName . "/mod.json";
-	if (!file_exists($modPath)) {
-		return Array();
-	}
-	$modFile = JSON_decode(file_get_contents($modPath), true);
-	$modDeps = Array();
-	foreach ($modFile["dependencies"] as $mod) {
-		$mod = explode("=", $mod);
-		$modDeps = array_merge($modDeps, getDependencies($mod[0]));
-		$modDeps[] = $mod[0];
-	}
-	return $modDeps;
-}
-
-function checkIcon ($icon, $mod) {
-	if (is_array($icon)) {
-		return "!";
-	}
-	$deps = getDependencies($mod);
-	$deps[] = $mod;
-	foreach (array_reverse($deps) as $dep) {
-		$path = "../mods/" . $dep . "/art/textures/ui/session/portraits/";
-		if (file_exists($path.$icon)) {
-			return Array($icon, $dep);
-		}
-	}
-	return Array("placeholder", "0ad");
-}
-
-function checkEmblem ($img, $mod) {
-	$path = "../mods/" . $mod . "/art/textures/ui/";
-	if (file_exists($path.$img)) {
-		return $img;
-	} else {
-		return "placeholder";
-	}
-}
-
-function xml2array ($xml) {
-	return json_decode(json_encode((array) simplexml_load_string($xml)), true);
-}
-
-function report ($content, $type = "log") {
-	global $g_args;
-	if ($g_args["debug"] || $type == "warn" || $type == "error") {
-		global $g_debug;
-		$g_debug["report"][] = Array($type, $content);
-	}
-}
-
-function info($content) {
-	report($content, "info");
-}
-
-function warn($content) {
-	report($content, "warn");
-}
-
-function err($content) {
-	report($content, "error");
-}
-
+//echo print_r($g_output, true);
 
 ?>

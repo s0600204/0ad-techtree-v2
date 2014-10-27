@@ -5,80 +5,26 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  */
 
-require_once "./modules/load_civs.php";
-require_once "./modules/load_techs.php";
-require_once "./modules/load_templates.php";
-require_once "./modules/load_units.php";
-global $g_StructureList;
-$g_output["structures"] = Array();
-
-/* Load Structure Data from Files */
-foreach ($g_args["mods"] as $mod) {
-	$path = "../mods/".$mod."/simulation/templates/";
-	if (file_exists($path."structures/")) {
-		recurseThru($path, "structures/", $g_TemplateData, $mod);
-	
-		$files = scandir($path."structures/", 0);
-		foreach ($files as $file) {
-			if (substr($file,0,1) == ".") {
-				continue;
-			}
-			$g_StructureList[] = substr($file, 0, strrpos($file, '.'));
-		}
-	}
-}
-
-/* Collate wall bits from wallsets because we need them included */
-$wallSegments = Array();
-foreach ($g_CivCodes as $civ) {
-	foreach ($g_UnitBuilds[$civ] as $buildable) {
-		
-		if (!isset($g_TemplateData[$buildable])) {
-			report($buildable." does not exist in templates array!", "warn");
-			continue;
-		}
-		$buildInfo = $g_TemplateData[$buildable];
-		
-		if (isset($buildInfo["WallSet"]))
-		{
-			foreach ($buildInfo["WallSet"]["Templates"] as $wCode)
-			{
-				$wallSegments[] = $wCode;
-			}
-		}
-	}
-}
-
 /* Acquire structures */
-foreach ($g_StructureList as $structCode) {
+function load_structure ($structCode) {
 	
-	$structInfo = $g_TemplateData["structures/".$structCode];
+	$structInfo = load_template($structCode);
 	
-	/* Only include structure if it belongs to a playable civ */
-	if (!in_array($structInfo["Identity"]["Civ"], $g_CivCodes)) {
-		continue;
-	}
+	if (!$structInfo)
+		return false;
 	
 	$myCiv = $structInfo["Identity"]["Civ"];
 	
-	/* Only include structure if it can actually be built by a unit */
-	if (!in_array("structures/".$structCode, $g_UnitBuilds[$myCiv])
-		&& !in_array("structures/".$structCode, $wallSegments))
-	{
-		continue;
-	}
-	
-//	report($structCode);
 	$structure = Array(
 			"genericName"	=> fetchValue($structInfo, "Identity/GenericName")
 		,	"specificName"	=> (isset($structInfo["Identity"]["SpecificName"]) ? $structInfo["Identity"]["SpecificName"] : "-")
-		,	"phase"			=> $g_phaseList[0]
+		,	"phase"			=> false
 		,	"civ"			=> $myCiv
 		,	"icon"			=> checkIcon(fetchValue($structInfo, "Identity/Icon"), $structInfo["mod"])
 		,	"sourceMod"		=> $structInfo["mod"]
 		,	"production"	=> Array(
 					"technology"	=> fetchValue($structInfo, "ProductionQueue/Technologies", true)
-				,	"units"			=> fetchValue($structInfo, "ProductionQueue/Entities", true)
+				,	"units"			=> Array()
 				)
 		,	"cost"			=> Array(
 					"food"		=> fetchValue($structInfo, "Cost/Resources/food")
@@ -102,17 +48,23 @@ foreach ($g_StructureList as $structCode) {
 		$structure["reqTech"] = $reqTech;
 	}
 	
+	foreach (fetchValue($structInfo, "ProductionQueue/Entities", true) as $unitCode) {
+		$structure["production"]["units"][] = str_replace("{civ}", $myCiv, $unitCode);
+	}
+	
 	$foundation = array_search("Foundation", array_keys($structure["stats"]["armour"]));
 	if ($foundation) {
 		array_splice($structure["stats"]["armour"], $foundation);
 	}
 	
 	if (isset($structInfo["WallSet"])) {
-		$structure["wallset"] = $structInfo["WallSet"]["Templates"];
+		$structure["wallset"] = Array();
 		
 		// Collate techs and costs from components in set
-		foreach ($structure["wallset"] as $wTempl => $wCode) {
-			$wPart = $g_TemplateData[$wCode];
+		foreach ($structInfo["WallSet"]["Templates"] as $wTempl => $wCode) {
+			$wPart = load_template($wCode);
+			$structure["wallset"][$wTempl] = load_structure($wCode);
+			$structure["wallset"][$wTempl]["code"] = $wCode;
 			
 			$structure["production"]["technology"] = array_merge(
 					$structure["production"]["technology"],
@@ -133,7 +85,7 @@ foreach ($g_StructureList as $structCode) {
 	}
 	
 	/* send to output */
-	$g_output["structures"][$structCode] = $structure;
+	return $structure;
 }
 
 ?>
