@@ -10,15 +10,19 @@ global $g_TemplateData;
 /* Load Structure Data from Array/File */
 function load_template ($template) {
 	global $g_TemplateData;
+	global $g_currentMod;
 	
 	if (!isset($g_TemplateData[$template])) {
-		$path = "../mods/".$GLOBALS["g_currentMod"]."/simulation/templates/";
-		
-		if (file_exists($path.$template.".xml")) {
-			load_file($path, $template.".xml", $g_TemplateData);
-		} else {
-			return false;
+		$deps = getDependencies($g_currentMod);
+		$deps[] = $g_currentMod;
+		foreach (array_reverse($deps) as $dep) {
+			$path = "../mods/" . $dep . "/simulation/templates/";
+			if (file_exists($path.$template.".xml")) {
+				load_file($path, $template.".xml", $g_TemplateData, $dep);
+				return $g_TemplateData[$template];
+			}
 		}
+		return false;
 	}
 	return $g_TemplateData[$template];
 }
@@ -72,7 +76,7 @@ function fetchValue ($template, $keypath, $collate = false) {
 		$template = load_template($template);
 		if (!$template) {
 			warn($tText . " does not exist in templates!");
-			return "DNE";
+			return Array();
 		}
 		if (isset($template["@attributes"])) {
 			$parent = $template["@attributes"]["parent"];

@@ -21,7 +21,6 @@ function load_structure ($structCode) {
 		,	"phase"			=> false
 		,	"civ"			=> $myCiv
 		,	"icon"			=> checkIcon(fetchValue($structInfo, "Identity/Icon"), $structInfo["mod"])
-		,	"sourceMod"		=> $structInfo["mod"]
 		,	"production"	=> Array(
 					"technology"	=> fetchValue($structInfo, "ProductionQueue/Technologies", true)
 				,	"units"			=> Array()
@@ -83,6 +82,9 @@ function load_structure ($structCode) {
 			}
 		}
 	}
+	
+	if ($GLOBALS["g_args"]["debug"])
+		$structure["sourceMod"] = $structInfo["mod"];
 	
 	/* send to output */
 	return $structure;

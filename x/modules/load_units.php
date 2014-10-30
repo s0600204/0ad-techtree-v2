@@ -19,7 +19,6 @@ function load_unit ($unitCode) {
 		,	"specificName"	=> fetchValue($unitInfo, "Identity/SpecificName")
 		,	"civ"			=> $myCiv
 		,	"icon"			=> checkIcon(fetchValue($unitInfo, "Identity/Icon"), $unitInfo["mod"])
-		,	"sourceMod"		=> $unitInfo["mod"]
 		,	"cost"			=> Array(
 					"food"		=> fetchValue($unitInfo, "Cost/Resources/food")
 				,	"wood"		=> fetchValue($unitInfo, "Cost/Resources/wood")
@@ -50,6 +49,9 @@ function load_unit ($unitCode) {
 			}
 		}
 	}
+	
+	if ($GLOBALS["g_args"]["debug"])
+		$unit["sourceMod"] = $unitInfo["mod"];
 	
 	/* send to output */
 	return $unit;

@@ -32,7 +32,7 @@ function load_civJSON ($civ) {
 		$path = "../mods/".$GLOBALS['g_currentMod']."/civs/";
 		
 		if (file_exists($path.$civ.".json")) {
-			load_file($path, $civ.".json", $g_CivData);
+			load_file($path, $civ.".json", $g_CivData, $GLOBALS['g_currentMod']);
 		} else {
 			return false;
 		}

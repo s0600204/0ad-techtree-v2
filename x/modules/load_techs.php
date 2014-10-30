@@ -9,15 +9,19 @@ global $g_TechnologyData;
 
 function load_techJSON ($tech) {
 	global $g_TechnologyData;
+	global $g_currentMod;
 	
 	if (!isset($g_TechnologyData[$tech])) {
-		$path = "../mods/".$GLOBALS['g_currentMod']."/simulation/data/technologies/";
-		
-		if (file_exists($path.$tech.".json")) {
-			load_file($path, $tech.".json", $g_TechnologyData);
-		} else {
-			return false;
+		$deps = getDependencies($g_currentMod);
+		$deps[] = $g_currentMod;
+		foreach (array_reverse($deps) as $dep) {
+			$path = "../mods/" . $dep . "/simulation/data/technologies/";
+			if (file_exists($path.$tech.".json")) {
+				load_file($path, $tech.".json", $g_TechnologyData, $dep);
+				return $g_TechnologyData[$tech];
+			}
 		}
+		return false;
 	}
 	return $g_TechnologyData[$tech];
 }
@@ -25,7 +29,6 @@ function load_techJSON ($tech) {
 function load_tech ($techCode) {
 	
 	$techInfo = load_techJSON($techCode);
-//	$realCode = depath($techCode);
 	
 	/* Set basic branch information */
 	$tech = Array(
@@ -37,7 +40,6 @@ function load_tech ($techCode) {
 				)
 		,	"icon"			=> (isset($techInfo["icon"])) ? checkIcon("technologies/".$techInfo["icon"], $techInfo["mod"]) : ""
 		,	"cost"			=> (isset($techInfo["cost"])) ? $techInfo["cost"] : ""
-		,	"sourceMod"		=> $techInfo["mod"]
 		,	"tooltip"		=> (isset($techInfo["tooltip"])) ? $techInfo["tooltip"] : ""
 		);
 	
@@ -109,6 +111,9 @@ function load_tech ($techCode) {
 	//	}
 	}
 	
+	if ($GLOBALS["g_args"]["debug"])
+		$tech["sourceMod"] = $techInfo["mod"];
+	
 	return $tech;
 	
 }
@@ -124,7 +129,6 @@ function load_phase ($techCode) {
 				)
 		,	"cost"			=> (isset($techInfo["cost"])) ? $techInfo["cost"] : Array()
 		,	"actualPhase"	=> ""
-		,	"sourceMod"		=> $techInfo["mod"]
 		,	"tooltip"		=> (isset($techInfo["tooltip"])) ? $techInfo["tooltip"] : ""
 		);
 	
@@ -138,6 +142,9 @@ function load_phase ($techCode) {
 		$icon = substr($techCode, $icon+1) . "_" . substr($techCode, 0, $icon);
 		$phase["icon"] = checkIcon("technologies/".$icon.".png", $techInfo["mod"]);
 	}
+	
+	if ($GLOBALS["g_args"]["debug"])
+		$phase["sourceMod"] = $techInfo["mod"];
 	
 	return $phase;
 }

@@ -25,8 +25,8 @@ if ($_POST['mod'] === "") {
 		}
 		$g_args["mods"][] = $mod;
 	}
+	$g_args["mods"] = array_reverse($g_args["mods"]);
 }
-info(print_r($g_args["mods"], true));
 
 /*
  * Check for Cache
@@ -35,10 +35,10 @@ info(print_r($g_args["mods"], true));
 $cachefile = $g_args["mods"];
 asort($cachefile);
 $cachefile = "../cache/".md5(implode("_", $cachefile));
-/*if (!$g_args["redraw"] && file_exists($cachefile)) {
+if (!$g_args["redraw"] && file_exists($cachefile)) {
 	echo file_get_contents($cachefile);
 	return;
-}	*/
+}
 
 /*
  * Initialise Globals
@@ -55,7 +55,6 @@ $g_StructureList = Array();
 $g_TechList = Array();
 
 global $g_currentMod;
-$g_currentMod = "0ad";
 
 /*
  * Load data
@@ -76,8 +75,7 @@ $g_output["units"] = Array();
 $g_output["structures"] = Array();
 $uCount = 0;
 
-foreach ($g_args["mods"] as $mod) {
-	$g_currentMod = $mod;
+foreach ($g_args["mods"] as $g_currentMod) {
 	
 	foreach (fetch_civs() as $civCode) {
 		$g_CivList[] = $civCode;
@@ -211,6 +209,5 @@ try {
  */
 $g_output["debug"] = $g_debug;
 echo json_encode($g_output);
-//echo print_r($g_output, true);
 
 ?>

@@ -38,7 +38,7 @@ function ls ($path) {
 	return $ls;
 }
 
-function load_file ($path, $file, &$store) {
+function load_file ($path, $file, &$store, $sourceMod) {
 	if (preg_match("/.json/i", $file) == 1) {
 		$fcontents = json_decode(file_get_contents($path.$file), true);
 	} else if (preg_match("/.xml/i", $file) == 1) {
@@ -49,7 +49,7 @@ function load_file ($path, $file, &$store) {
 	$fname = substr($file, 0, strrpos($file, '.'));
 	if ($fcontents !== NULL) {
 		$store[$fname] = $fcontents;
-		$store[$fname]["mod"] = $GLOBALS['g_currentMod'];
+		$store[$fname]["mod"] = $sourceMod;
 	} else {
 		report($path.$file . " is not a valid JSON or XML file!", "error");
 	}
