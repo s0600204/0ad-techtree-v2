@@ -16,8 +16,10 @@ function load_structure ($structCode) {
 	$myCiv = $structInfo["Identity"]["Civ"];
 	
 	$structure = Array(
-			"genericName"	=> fetchValue($structInfo, "Identity/GenericName")
-		,	"specificName"	=> (isset($structInfo["Identity"]["SpecificName"]) ? $structInfo["Identity"]["SpecificName"] : "-")
+			"name"			=> Array(
+					"generic"	=> fetchValue($structInfo, "Identity/GenericName")
+				,	"specific"	=> (isset($structInfo["Identity"]["SpecificName"]) ? $structInfo["Identity"]["SpecificName"] : "-")
+				)
 		,	"phase"			=> false
 		,	"civ"			=> $myCiv
 		,	"icon"			=> checkIcon(fetchValue($structInfo, "Identity/Icon"), $structInfo["mod"])

@@ -15,19 +15,21 @@ function load_unit ($unitCode) {
 	$myCiv = fetchValue($unitInfo, "Identity/Civ");
 	
 	$unit = Array(
-			"genericName"	=> fetchValue($unitInfo, "Identity/GenericName")
-		,	"specificName"	=> fetchValue($unitInfo, "Identity/SpecificName")
-		,	"civ"			=> $myCiv
-		,	"icon"			=> checkIcon(fetchValue($unitInfo, "Identity/Icon"), $unitInfo["mod"])
-		,	"cost"			=> Array(
+			"name"		=> Array(
+					"generic"	=> fetchValue($unitInfo, "Identity/GenericName")
+				,	"specific"	=> fetchValue($unitInfo, "Identity/SpecificName")
+				)
+		,	"civ"		=> $myCiv
+		,	"icon"		=> checkIcon(fetchValue($unitInfo, "Identity/Icon"), $unitInfo["mod"])
+		,	"cost"		=> Array(
 					"food"		=> fetchValue($unitInfo, "Cost/Resources/food")
 				,	"wood"		=> fetchValue($unitInfo, "Cost/Resources/wood")
 				,	"stone"		=> fetchValue($unitInfo, "Cost/Resources/stone")
 				,	"metal"		=> fetchValue($unitInfo, "Cost/Resources/metal")
 				,	"time"		=> fetchValue($unitInfo, "Cost/BuildTime")
 				)
-		,	"stats"			=> loadUnitStats($unitCode)
-		,	"tooltip"		=> fetchValue($unitInfo, "Identity/Tooltip")
+		,	"stats"		=> loadUnitStats($unitCode)
+		,	"tooltip"	=> fetchValue($unitInfo, "Identity/Tooltip")
 		);
 	
 	if (isset($unitInfo["Identity"]["RequiredTechnology"])) {

@@ -511,13 +511,13 @@ SVG.UI_Building = SVG.invent({
 		
 		var ui_bar = this.image("./ui/gui2/border.png").y(12);
 		
-		var ui_specificName = this.title(info.specificName);
+		var ui_specificName = this.title(info.name.specific);
 		h = 32;
 		
 		var ui_icon = this.icon(info.icon, 48, 'building').y(h).tooltip(info);
 		h += 48;
 		
-		var ui_genericName = this.text((g_args.debug)?id:info.genericName).attr({
+		var ui_genericName = this.text((g_args.debug)?id:info.name.generic).attr({
 			'leading': 0.7
 		,	'class': 'building_subtitle'
 		}).font({
@@ -771,15 +771,14 @@ SVG.UI_Tooltip = SVG.invent({
 	inherit: SVG.G,
 	extend: {
 		populate: function (info) {
-			var generName = (info.genericName) ? info.genericName : info.name.generic;
-			var speciName = (info.specificName) ? info.specificName : info.name.specific[g_selectedCiv];
+			var speciName = (info.name[g_selectedCiv]) ? info.name[g_selectedCiv] : info.name.specific;
 			
 			if (speciName !== undefined) {
 				this.bname.text(speciName);
 				this.bname.build(true);
-				this.bname.tspan(" (" + generName + ")").attr('font-size', "0.7em");
+				this.bname.tspan(" (" + info.name.generic + ")").attr('font-size', "0.7em");
 			} else {
-				this.bname.text(generName);
+				this.bname.text(info.name.generic);
 			}
 			this.w = this.bname.bbox().width;
 			this.h = 40;

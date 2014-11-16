@@ -35,8 +35,7 @@ function load_tech ($techCode) {
 			"reqs"			=> Array()
 	//	,	"unlocks"		=> Array()
 		,	"name"			=> Array(
-					"generic"	=> $techInfo["genericName"],
-					"specific"	=> Array()
+					"generic"	=> $techInfo["genericName"]
 				)
 		,	"icon"			=> (isset($techInfo["icon"])) ? checkIcon("technologies/".$techInfo["icon"], $techInfo["mod"]) : ""
 		,	"cost"			=> (isset($techInfo["cost"])) ? $techInfo["cost"] : ""
@@ -47,7 +46,13 @@ function load_tech ($techCode) {
 		$tech["pair"] = $techInfo["pair"];
 	}
 	if (isset($techInfo["specificName"])) {
-		$tech["name"]["specific"] = $techInfo["specificName"];
+		if (is_array($techInfo["specificName"])) {
+			foreach ($techInfo["specificName"] as $sn_civ => $sn_value) {
+				$tech["name"][$sn_civ] = $sn_value;
+			}
+		} else {
+			$tech["name"]["specific"] = $techInfo["specificName"];
+		}
 	}
 	if (isset($techInfo["autoResearch"])) {
 		$tech["autoResearch"] = $techInfo["autoResearch"];
@@ -124,8 +129,7 @@ function load_phase ($techCode) {
 	
 	$phase = Array(
 			"name"			=> Array(
-					"generic"	=> $techInfo["genericName"],
-					"specific"	=> Array()
+					"generic"	=> $techInfo["genericName"]
 				)
 		,	"cost"			=> (isset($techInfo["cost"])) ? $techInfo["cost"] : Array()
 		,	"actualPhase"	=> ""
@@ -133,7 +137,13 @@ function load_phase ($techCode) {
 		);
 	
 	if (isset($techInfo["specificName"])) {
-		$phase["name"]["specific"] = $techInfo["specificName"];
+		if (is_array($techInfo["specificName"])) {
+			foreach ($techInfo["specificName"] as $sn_civ => $sn_value) {
+				$phase["name"][$sn_civ] = $sn_value;
+			}
+		} else {
+			$phase["name"]["specific"] = $techInfo["specificName"];
+		}
 	}
 	if (isset($techInfo["icon"])) {
 		$phase["icon"] = checkIcon("technologies/".$techInfo["icon"], $techInfo["mod"]);
