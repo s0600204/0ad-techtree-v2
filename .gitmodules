@@ -13,3 +13,6 @@
 [submodule "mods/convert_attack"]
 	path = mods/convert_attack
 	url = https://github.com/0ADMods/convert_attack
+[submodule "mods/0ad_ancient_empires"]
+	path = mods/0ad_ancient_empires
+	url = https://github.com/prod0ad/0ad_ancient_empires.git
