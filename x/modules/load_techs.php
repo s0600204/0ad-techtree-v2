@@ -176,8 +176,10 @@ function unravel_phases ($techs) {
 			$reqPhase = $techs[$reqTech]["reqs"]["generic"][0];
 			$myPhase = $techs[$techCode]["reqs"]["generic"][0];
 			
-			if ($reqPhase == $myPhase)
-				continue;
+			if ($reqPhase == $myPhase
+				|| substr(depath($reqPhase), 0, 5) !== "phase"
+				|| substr(depath($myPhase), 0, 5) !== "phase")
+					continue;
 			
 			$reqPhasePos = array_search($reqPhase, $phaseList);
 			$myPhasePos = array_search($myPhase, $phaseList);

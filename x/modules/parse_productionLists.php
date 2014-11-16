@@ -27,24 +27,22 @@ foreach ($g_output["structures"] as $structCode => $structInfo) {
 		if (substr($prod, 0, 5) == "phase")
 		{
 			$phase = array_search($g_output["phases"][$prod]["actualPhase"], $g_output["phaseList"]);
-			if ($phase > 0) {
+			if ($phase > 0)
 				$phase = $g_output["phaseList"][$phase - 1];
-			} else {
-				warn($prod." has an invalid phase! (".$phase.")");
-			}
 		}
 		else if (isset($g_output["techs"][$prod]["reqs"][$civ]))
 		{
-			$phase = $g_output["techs"][$prod]["reqs"][$civ][0];
+			if (isset($g_output["techs"][$prod]["reqs"][$civ][0]))
+				$phase = $g_output["techs"][$prod]["reqs"][$civ][0];
 		}
 		else if (isset($g_output["techs"][$prod]["reqs"]["generic"]))
 		{
 			$phase = $g_output["techs"][$prod]["reqs"]["generic"][0];
 		}
-		else
+		
+		if (!isset($phase) || substr(depath($phase), 0, 5) !== "phase")
 		{
-			report($prod." doesn't possess a phase! (".$structCode.",".$civ.")", "warn");
-			warn(print_r($prodTech, true));
+			report($prod." doesn't have a specific phase set (".$structCode.",".$civ.")", "info");
 			$phase = $structInfo["phase"];
 		}
 		
