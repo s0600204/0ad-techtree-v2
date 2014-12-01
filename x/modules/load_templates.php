@@ -27,23 +27,12 @@ function load_template ($template) {
 	return $g_TemplateData[$template];
 }
 
-function collateValues ($template, $keypath) {
-	return fetchValue($template, $keypath, true);
-}
-
-function explode_tokens ($tokens){
+function explode_tokens ($tokens) {
 	if (is_array($tokens)) {
-		// rome_tent.xml has a section for technology tokens, but no tokens.
-		// This has led to $tokens ending up as an array containing a
-		//   two-dimensional array with the key: @attributes
+	//	warn(print_r($tokens,true));
 		return Array();
 	}
-	$ret = explode("\n", trim($tokens));
-	for ($rvi=0; $rvi < count($ret); $rvi++)
-	{
-		$ret[$rvi] = trim($ret[$rvi]);
-	}
-	return $ret;
+	return preg_split("/\s+/", $tokens, -1, PREG_SPLIT_NO_EMPTY);
 }
 
 function merge_tokens ($arr1, $arr2) {
@@ -69,6 +58,7 @@ function fetchValue ($template, $keypath, $collate = false) {
 	global $g_TemplateData;
 	$keys = explode("/", $keypath);
 	$ret = Array();
+	$parent = false;
 	
 	if (is_string($template))
 	{
@@ -80,8 +70,6 @@ function fetchValue ($template, $keypath, $collate = false) {
 		}
 		if (isset($template["@attributes"])) {
 			$parent = $template["@attributes"]["parent"];
-		} else {
-			$parent = false;
 		}
 	}
 	else if (is_array($template))

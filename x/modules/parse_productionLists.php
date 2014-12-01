@@ -68,12 +68,20 @@ foreach ($g_output["structures"] as $structCode => $structInfo) {
 		
 		if (isset($unit["reqTech"])) {
 			$reqTech = $unit["reqTech"];
-			if (substr($reqTech, 0, 5) == "phase") {
-				$phase = $unit["reqTech"];
-			} else if (isset($g_output["techs"][$reqTech]["reqs"][$civ])) {
-				$phase = $g_output["techs"][$reqTech]["reqs"][$civ][0];
+			if (is_array($reqTech)) {
+				foreach ($reqTech as $rt) {
+					if (substr($rt, 0, 5) == "phase") {
+						$phase = $rt;
+					}
+				}
 			} else {
-				$phase = $g_output["techs"][$reqTech]["reqs"]["generic"][0];
+				if (substr($reqTech, 0, 5) == "phase") {
+					$phase = $unit["reqTech"];
+				} else if (isset($g_output["techs"][$reqTech]["reqs"][$civ])) {
+					$phase = $g_output["techs"][$reqTech]["reqs"][$civ][0];
+				} else {
+					$phase = $g_output["techs"][$reqTech]["reqs"]["generic"][0];
+				}
 			}
 		} else {
 			// hack so it works with civil centres

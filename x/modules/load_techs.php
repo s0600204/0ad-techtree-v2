@@ -66,20 +66,20 @@ function load_tech ($techCode) {
 		
 		foreach ($techInfo["requirements"] as $op => $val) {
 			
-			$ret = calcReqs($op, $val);
+			$reqs = calcReqs($op, $val);
 			
 			switch ($op) {
 				case "tech":
-					$tech["reqs"]["generic"] = Array( $ret );
+					$tech["reqs"]["generic"] = Array( $reqs );
 					break;
 				
 				case "civ":
-					$tech["reqs"][$ret] = Array();
+					$tech["reqs"][$reqs] = Array();
 					break;
 				
 				case "any":
-					if (count($ret[0]) > 0) {
-						foreach ($ret[0] as $r => $v) {
+					if (count($reqs[0]) > 0) {
+						foreach ($reqs[0] as $r => $v) {
 							if (is_numeric($r)) {
 								$tech["reqs"][$v] = Array();
 							} else {
@@ -87,14 +87,14 @@ function load_tech ($techCode) {
 							}
 						}
 					}
-					if (count($ret[1]) > 0) {
-						$tech["reqs"]["generic"] = $ret[1];
+					if (count($reqs[1]) > 0) {
+						$tech["reqs"]["generic"] = $reqs[1];
 					}
 					break;
 				
 				case "all":
-					foreach ($ret[0] as $r) {
-						$tech["reqs"][$r] = $ret[1];
+					foreach ($reqs[0] as $r) {
+						$tech["reqs"][$r] = $reqs[1];
 					}
 					break;
 			}
