@@ -16,3 +16,9 @@
 [submodule "mods/0ad_ancient_empires"]
 	path = mods/0ad_ancient_empires
 	url = https://github.com/prod0ad/0ad_ancient_empires.git
+[submodule "mods/amazones-0ad"]
+	path = mods/amazones-0ad
+	url = https://github.com/dvangennip/amazones-0ad.git
+[submodule "mods/delenda_est"]
+	path = mods/delenda_est
+	url = https://github.com/JustusAvramenko/delenda_est.git
