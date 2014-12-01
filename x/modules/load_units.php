@@ -37,18 +37,15 @@ function load_unit ($unitCode) {
 	}
 	
 	global $g_StructureList;
+	global $g_currentCiv;
+	if ($g_currentCiv !== $myCiv) {
+		info("Unit's set Civ does not match Current: ".$myCiv."!=".$g_currentCiv." (".$unitCode.")");
+	}
 	foreach (fetchValue($unitInfo, "Builder/Entities", true) as $build) {
-		if (!in_array($build, $g_StructureList[$myCiv])) {
-			
-			if (strpos($build, "{civ}")) {
-				// keep these if statements separate
-				if (!in_array(str_ireplace("{civ}", $myCiv, $build), $g_StructureList[$myCiv])) {
-					$g_StructureList[$myCiv][] = str_ireplace("{civ}", $myCiv, $build);
-				}
-			} else {
-				$g_StructureList[$myCiv][] = $build;
-				
-			}
+		
+		$build = str_ireplace("{civ}", $g_currentCiv, $build);
+		if (!in_array($build, $g_StructureList[$g_currentCiv])) {
+			$g_StructureList[$g_currentCiv][] = $build;
 		}
 	}
 	

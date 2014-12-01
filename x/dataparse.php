@@ -55,6 +55,7 @@ $g_StructureList = Array();
 $g_TechList = Array();
 
 global $g_currentMod;
+global $g_currentCiv;
 
 /*
  * Load data
@@ -77,19 +78,19 @@ $uCount = 0;
 
 foreach ($g_args["mods"] as $g_currentMod) {
 	
-	foreach (fetch_civs() as $civCode) {
-		$g_CivList[] = $civCode;
-		$civData = load_civ($civCode);
+	foreach (fetch_civs() as $g_currentCiv) {
+		$g_CivList[] = $g_currentCiv;
+		$civData = load_civ($g_currentCiv);
 		if (!$civData)
 			continue;
 		
-		$g_output["civs"][$civCode] = $civData;
+		$g_output["civs"][$g_currentCiv] = $civData;
 		
 		/* Load Units and Structures */
-		$g_StructureList[$civCode] = Array();
+		$g_StructureList[$g_currentCiv] = Array();
 		do {
 			
-			foreach ($g_UnitList[$civCode] as $unitCode) {
+			foreach ($g_UnitList[$g_currentCiv] as $unitCode) {
 				if (!in_array(depath($unitCode), $g_output["units"])) {
 					$newUnit = load_unit($unitCode);
 					$unitCode = depath($unitCode);
@@ -97,9 +98,9 @@ foreach ($g_args["mods"] as $g_currentMod) {
 						$g_output["units"][$unitCode] = $newUnit;
 				}
 			}
-			$uCount = count($g_UnitList[$civCode]);
+			$uCount = count($g_UnitList[$g_currentCiv]);
 			
-			foreach ($g_StructureList[$civCode] as $structCode) {
+			foreach ($g_StructureList[$g_currentCiv] as $structCode) {
 				if (!in_array(depath($structCode), $g_output["structures"])) {
 					$newStruct = load_structure($structCode);
 					$structCode = depath($structCode);
@@ -107,8 +108,8 @@ foreach ($g_args["mods"] as $g_currentMod) {
 						$g_output["structures"][$structCode] = $newStruct;
 						
 						foreach ($newStruct["production"]["units"] as $unitCode) {
-							if (!in_array($unitCode, $g_UnitList[$civCode])) {
-								$g_UnitList[$civCode][] = $unitCode;
+							if (!in_array($unitCode, $g_UnitList[$g_currentCiv])) {
+								$g_UnitList[$g_currentCiv][] = $unitCode;
 							}
 						}
 						foreach ($newStruct["production"]["technology"] as $techCode) {
@@ -120,7 +121,7 @@ foreach ($g_args["mods"] as $g_currentMod) {
 				}
 			}
 			
-		} while ($uCount < count($g_UnitList[$civCode]));
+		} while ($uCount < count($g_UnitList[$g_currentCiv]));
 	}
 
 	/* Load techs */
