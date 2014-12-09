@@ -36,7 +36,7 @@ $cachefile = $g_args["mods"];
 asort($cachefile);
 $cachefile = "../cache/".md5(implode("_", $cachefile));
 if (!$g_args["redraw"] && file_exists($cachefile)) {
-	echo file_get_contents($cachefile);
+	readfile($cachefile);
 	return;
 }
 
@@ -173,14 +173,14 @@ foreach ($g_output["phaseList"] as $phaseCode) {
 	$g_output["phases"][$phaseCode] = load_phase($phaseCode);
 	
 	if (isset($phaseInfo["requirements"])) {
-		foreach ($phaseInfo["requirements"] as $op => $val) {
+		foreach ($phaseInfo["requirements"] as $op => $reqs) {
 			if ($op == "any") {
-				foreach ($val as $v) {
-					$k = array_keys($v);
-					$k = $k[0];
-					$v = $v[$k];
-					if ($k == "tech" && isset($g_output["phases"][$v])) {
-						$g_output["phases"][$v]["actualPhase"] = $phaseCode;
+				foreach ($reqs as $req) {
+					$key = array_keys($req);
+					$key = $key[0];
+					$req = $req[$key];
+					if ($key == "tech" && isset($g_output["phases"][$req])) {
+						$g_output["phases"][$req]["actualPhase"] = $phaseCode;
 					}
 				}
 			}
@@ -210,5 +210,3 @@ try {
  */
 $g_output["debug"] = $g_debug;
 echo json_encode($g_output);
-
-?>

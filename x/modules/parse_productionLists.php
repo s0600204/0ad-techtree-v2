@@ -15,8 +15,8 @@ foreach ($g_output["structures"] as $structCode => $structInfo) {
 	/* Expand tech pairs */
 	foreach ($prodTech as $prod) {
 		if (substr($prod, 0, 4) == "pair" || strpos($prod, "/pair")) {
-			$pt = array_search($prod, $prodTech);
-			array_splice($prodTech, $pt, 1, $techPairs[$prod]["techs"]);
+			$pos = array_search($prod, $prodTech);
+			array_splice($prodTech, $pos, 1, $techPairs[$prod]["techs"]);
 		}
 	}
 	
@@ -85,7 +85,7 @@ foreach ($g_output["structures"] as $structCode => $structInfo) {
 			}
 		} else {
 			// hack so it works with civil centres
-			if (strpos($structCode, "civil_centre")) {
+			if (strpos($structCode, "civil_centre") || $structInfo["phase"] === false) {
 				$phase = $g_output["phaseList"][0];
 			} else {
 				$phase = $structInfo["phase"];
@@ -106,5 +106,3 @@ foreach ($g_output["structures"] as $structCode => $structInfo) {
 		);
 	
 }
-
-?>

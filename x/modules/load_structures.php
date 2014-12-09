@@ -85,11 +85,10 @@ function load_structure ($structCode) {
 		}
 	}
 	
-	if ($GLOBALS["g_args"]["debug"])
+	global $g_args;
+	if ($g_args["debug"])
 		$structure["sourceMod"] = $structInfo["mod"];
 	
 	/* send to output */
 	return $structure;
 }
-
-?>

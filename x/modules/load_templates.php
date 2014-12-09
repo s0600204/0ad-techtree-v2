@@ -124,5 +124,3 @@ function fetchValue ($template, $keypath, $collate = false) {
 	}
 	return $ret;
 }
-
-?>

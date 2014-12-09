@@ -34,7 +34,3 @@ foreach ($g_CivList as $civ) {
 	// output
 	$g_output["civs"][$civ]["buildList"] = $buildList;
 }
-
-
-
-?>

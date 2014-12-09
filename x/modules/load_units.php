@@ -49,7 +49,8 @@ function load_unit ($unitCode) {
 		}
 	}
 	
-	if ($GLOBALS["g_args"]["debug"])
+	global $g_args;
+	if ($g_args["debug"])
 		$unit["sourceMod"] = $unitInfo["mod"];
 	
 	/* send to output */
@@ -112,6 +113,3 @@ function loadUnitStats ($unitCode) {
 	
 	return $stats;
 }
-
-
-?>

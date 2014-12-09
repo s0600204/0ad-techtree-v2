@@ -46,13 +46,7 @@ function load_tech ($techCode) {
 		$tech["pair"] = $techInfo["pair"];
 	}
 	if (isset($techInfo["specificName"])) {
-		if (is_array($techInfo["specificName"])) {
-			foreach ($techInfo["specificName"] as $sn_civ => $sn_value) {
-				$tech["name"][$sn_civ] = $sn_value;
-			}
-		} else {
-			$tech["name"]["specific"] = $techInfo["specificName"];
-		}
+		$tech["name"] = array_merge($tech["name"], fetchSpecificNames($techInfo));
 	}
 	if (isset($techInfo["autoResearch"])) {
 		$tech["autoResearch"] = $techInfo["autoResearch"];
@@ -116,7 +110,8 @@ function load_tech ($techCode) {
 	//	}
 	}
 	
-	if ($GLOBALS["g_args"]["debug"])
+	global $g_args;
+	if ($g_args["debug"])
 		$tech["sourceMod"] = $techInfo["mod"];
 	
 	return $tech;
@@ -137,13 +132,7 @@ function load_phase ($techCode) {
 		);
 	
 	if (isset($techInfo["specificName"])) {
-		if (is_array($techInfo["specificName"])) {
-			foreach ($techInfo["specificName"] as $sn_civ => $sn_value) {
-				$phase["name"][$sn_civ] = $sn_value;
-			}
-		} else {
-			$phase["name"]["specific"] = $techInfo["specificName"];
-		}
+		$phase["name"] = array_merge($phase["name"], fetchSpecificNames($techInfo));
 	}
 	if (isset($techInfo["icon"])) {
 		$phase["icon"] = checkIcon("technologies/".$techInfo["icon"], $techInfo["mod"]);
@@ -153,7 +142,8 @@ function load_phase ($techCode) {
 		$phase["icon"] = checkIcon("technologies/".$icon.".png", $techInfo["mod"]);
 	}
 	
-	if ($GLOBALS["g_args"]["debug"])
+	global $g_args;
+	if ($g_args["debug"])
 		$phase["sourceMod"] = $techInfo["mod"];
 	
 	return $phase;
@@ -222,39 +212,53 @@ function calcReqs ($op, $val)
 	
 	case "all":
 	case "any":
-		$t = Array();
-		$c = Array();
+		$techs = Array();
+		$civs = Array();
 		foreach ($val as $nv)
 		{
 			foreach ($nv as $o => $v)
 			{
-				$r = calcReqs($o, $v);
+				$reqs = calcReqs($o, $v);
 				switch ($o)
 				{
 				case "civ":
-					$c[] = $r;
+					$civs[] = $reqs;
 					break;
 					
 				case "tech":
-					$t[] = $r;
+					$techs[] = $reqs;
 					break;
 					
 				case "any":
-					$c = array_merge($c, $r[0]);
-					$t = array_merge($t, $r[1]);
+					$civs = array_merge($civs, $reqs[0]);
+					$techs = array_merge($techs, $reqs[1]);
 					break;
 					
 				case "all":
-					foreach ($r[0] as $ci) {
-						$c[$ci] = $r[1];
+					foreach ($reqs[0] as $ci) {
+						$civs[$ci] = $reqs[1];
 					}
-					$t = $t;
+					$techs = $techs;
 				}
 				
 			}
 		}
-		return Array( $c, $t );
+		return Array( $civs, $techs );
 	}
 }
 
-?>
+function fetchSpecificNames ($techInfo) {
+	$newNames = Array();
+	
+	if (isset($techInfo["specificName"])) {
+		if (is_array($techInfo["specificName"])) {
+			foreach ($techInfo["specificName"] as $sn_civ => $sn_value) {
+				$newNames[$sn_civ] = $sn_value;
+			}
+		} else {
+			$newNames["specific"] = $techInfo["specificName"];
+		}
+	}
+	
+	return $newNames;
+}

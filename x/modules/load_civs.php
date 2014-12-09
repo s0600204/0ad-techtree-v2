@@ -10,8 +10,9 @@ $g_output["civs"] = Array();
 
 /* Load Civ Data from Files */
 function fetch_civs () {
+	global $g_currentMod;
 	$civs = Array();
-	$path = "../mods/".$GLOBALS['g_currentMod']."/civs/";
+	$path = "../mods/".$g_currentMod."/civs/";
 	if (file_exists($path)) {
 		$filenames = ls($path);
 		
@@ -27,12 +28,13 @@ function fetch_civs () {
 
 function load_civJSON ($civ) {
 	global $g_CivData;
+	global $g_currentMod;
 	
 	if (!isset($g_CivData[$civ])) {
-		$path = "../mods/".$GLOBALS['g_currentMod']."/civs/";
+		$path = "../mods/".$g_currentMod."/civs/";
 		
 		if (file_exists($path.$civ.".json")) {
-			load_file($path, $civ.".json", $g_CivData, $GLOBALS['g_currentMod']);
+			load_file($path, $civ.".json", $g_CivData, $g_currentMod);
 		} else {
 			return false;
 		}
@@ -42,6 +44,7 @@ function load_civJSON ($civ) {
 
 /* Iterate through and acquire needed info */
 function load_civ ($civCode) {
+	global $g_UnitList;
 	
 	$civInfo = load_civJSON($civCode);
 	
@@ -61,7 +64,7 @@ function load_civ ($civCode) {
 		if (substr($ents["Template"], 0, 6) == "struct") {
 			$civ["startBuilding"] = substr($ents["Template"], 11);
 		} else {
-			$GLOBALS['g_UnitList'][$civCode][] = $ents["Template"];
+			$g_UnitList[$civCode][] = $ents["Template"];
 		}
 	}
 	
@@ -69,5 +72,3 @@ function load_civ ($civCode) {
 	return $civ;
 	
 }
-
-?>

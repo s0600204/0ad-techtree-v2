@@ -1,3 +1,5 @@
+/* jshint laxcomma: true, forin: false */
+/* global SVG, g_args */
 
 // Page structure
 var g_canvas;
@@ -6,7 +8,7 @@ var g_canvasParts = { };
 // Fetched from Server
 var g_techs;	// { }
 var g_phases;	// { }
-var g_techPairs;	// { }
+//var g_techPairs;	// { }
 var g_phaseList;	// [ ]
 var g_civs;			// { }
 var g_availMods;	// { }
@@ -16,30 +18,25 @@ var g_units;	// { }
 // User Input
 var g_selectedCiv;	// " "
 
-// Calculated
-var g_treeHeads	= [ ];
-var g_treeCols	= { };
-var g_bonuses	= [ ];
-
 /* Runs on Page Load */
-function init(settings)
+function init()
 {
 	g_canvas = SVG('svg_canvas');
-	SVG.defaults.attrs["font-family"] = "Biolinum, sans-serif"
+	SVG.defaults.attrs["font-family"] = "Biolinum, sans-serif";
 	
 	document.getElementById('renderBanner').innerHTML = "Acquiring Data from Server...";
 	
 	server.load(function () {
 		console.info(server.out);
 		
-		g_techs			= server.out["techs"];
-		g_phases		= server.out["phases"];
-	//	g_techPairs		= server.out["pairs"];
-		g_phaseList		= server.out["phaseList"];
-		g_civs			= server.out["civs"];
-		g_availMods		= server.out["availMods"];
-		g_structures	= server.out["structures"];
-		g_units			= server.out["units"];
+		g_techs			= server.out.techs;
+		g_phases		= server.out.phases;
+	//	g_techPairs		= server.out.pairs;
+		g_phaseList		= server.out.phaseList;
+		g_civs			= server.out.civs;
+		g_availMods		= server.out.availMods;
+		g_structures	= server.out.structures;
+		g_units			= server.out.units;
 		
 		populateModSelect();
 		populateCivSelect();
@@ -48,14 +45,14 @@ function init(settings)
 }
 
 // Fetch the data from the server
-server = {
+var server = {
 	
 	out: null,
 	serverArgs: null,
 	userCallback: null,
 	
 	load: function (cb) {
-		if (cb !== undefined && typeof(cb) == "function") {
+		if (cb !== undefined && typeof(cb) === "function") {
 			this.userCallback = cb;
 		}
 		this._populateArgs();
@@ -63,11 +60,11 @@ server = {
 	},
 	
 	_callback: function () {
-		for (var report in server.out.debug['report']) {
-			report = server.out.debug['report'][report];
-			if (g_args["debug"] || report[0] == "error") {
+		for (var report in server.out.debug.report) {
+			report = server.out.debug.report[report];
+			if (g_args.debug || report[0] === "error") {
 				report[1] = "(server) "+report[1];
-				if (report[0] == "info" || report[0] == "warn" || report[0] == "error" || report[0] == "log") {
+				if (report[0] === "info" || report[0] === "warn" || report[0] === "error" || report[0] === "log") {
 					console[report[0]](report[1]);
 				} else {
 					console.log(report[1]);
@@ -103,7 +100,7 @@ server = {
 		
 		server.out = "";	
 		
-		http_request = new XMLHttpRequest();
+		var http_request = new XMLHttpRequest();
 		http_request.onreadystatechange = function () {
 			if (http_request.readyState === 4) {
 				if (http_request.status === 200) {
@@ -119,11 +116,11 @@ server = {
 					server.out = false;
 				}
 			}
-		}
+		};
 		http_request.open('POST', './x/dataparse.php', true);
 		http_request.send(this.serverArgs);
 	}
-}
+};
 
 // Called when user selects civ from dropdown
 function selectCiv(code)
@@ -135,101 +132,6 @@ function selectCiv(code)
 	draw();
 	
 	console.log("(civ select) '"+code+"' selected.");
-}
-
-function prep () {
-	
-}
-
-function getPhase (techCode)
-{
-	var reqs = getReqs(techCode, false);
-	if (reqs.length > 0 && reqs[0].slice(0, 5) == "phase")
-	{
-		return reqs[0];
-	}
-	return g_phaseList[0];
-}
-
-function getReqs (techCode, noPhase)
-{
-	if (noPhase === undefined) { noPhase = true; }
-	
-	var reqs = g_techs[techCode].reqs;
-	if (reqs[g_selectedCiv] !== undefined)
-	{
-		reqs = reqs[g_selectedCiv];
-	}
-	else if (reqs["generic"] !== undefined)
-	{
-		reqs = reqs["generic"];
-	}
-	else
-	{
-		return false;
-	}
-	
-	if (noPhase && reqs.length > 0 && reqs[0].slice(0, 5) == "phase") {
-		reqs = reqs.slice(1);
-	}
-	
-	return reqs;
-}
-
-/*
-function hasCivSpecificOverride (techCode)
-{
-	var matches = Object.keys(g_techs).filter(function (code) {
-			return code.indexOf(techCode) > 0;
-		});
-	for (var match in matches)
-	{
-		var civs = Object.keys(g_techs[matches[match]].reqs);
-		if (civs.indexOf(g_selectedCiv) > -1)
-		{
-			return true;
-		}
-	}
-	return false;
-}
-*/
-
-function sortTechByName (a,b)
-{
-	a = (hasSpecificName(a)) ? g_techs[a].name.specific[g_selectedCiv] : g_techs[a].name.generic;
-	b = (hasSpecificName(b)) ? g_techs[b].name.specific[g_selectedCiv] : g_techs[b].name.generic;
-	if (a < b)
-		return -1;
-	else if (a > b)
-		return 1;
-	else
-		return 0;
-}
-
-function hasSpecificName (techCode)
-{
-	if (techCode.slice(0,5) == "phase") {
-		return (typeof(g_phases[techCode].name.specific) == "object"
-			&& typeof(g_phases[techCode].name.specific[g_selectedCiv]) == "string");
-	} else {
-		return (typeof(g_techs[techCode].name.specific) == "object"
-			&& typeof(g_techs[techCode].name.specific[g_selectedCiv]) == "string");
-	}
-}
-
-function getPhaseTech (phase) {
-	if (typeof(g_phases[phase+"_"+g_selectedCiv]) == "object")
-	{
-		return phase+"_"+g_selectedCiv;
-	}
-	else if (typeof(g_phases[phase+"_generic"]) == "object")
-	{
-		return phase+"_generic";
-	}
-	else
-	{
-		return phase;
-	}
 }
 
 function populateModSelect () {
@@ -281,8 +183,8 @@ function toggleDivs (div) {
 	var modDiv = document.getElementById('modDiv');
 	var attrDiv = document.getElementById('attrDiv');
 	
-	modDiv.style.display = (div == "mod" && window.getComputedStyle(modDiv).display == "none") ?  "block" : "none";
-	attrDiv.style.display = (div == "attr" && window.getComputedStyle(attrDiv).display == "none") ?  "block" : "none";
+	modDiv.style.display = (div === "mod" && window.getComputedStyle(modDiv).display === "none") ?  "block" : "none";
+	attrDiv.style.display = (div === "attr" && window.getComputedStyle(attrDiv).display === "none") ?  "block" : "none";
 	
 }
 
@@ -290,8 +192,8 @@ function readModSelect () {
 	var modOpts = document.getElementById('modSelect').childNodes;
 	var modSelection = [];
 	for (var ele=0; modOpts.length > ele; ele++) {
-		if (modOpts[ele].nodeType == 1) {
-			if (modOpts[ele].type == "checkbox" && modOpts[ele].checked == true) {
+		if (modOpts[ele].nodeType === 1) {
+			if (modOpts[ele].type === "checkbox" && modOpts[ele].checked === true) {
 				modSelection.push(modOpts[ele].value);
 			}
 		}
@@ -302,8 +204,8 @@ function readModSelect () {
 function clearModSelect () {
 	var modOpts = document.getElementById('modSelect').childNodes;
 	for (var ele=0; modOpts.length > ele; ele++) {
-		if (modOpts[ele].nodeType == 1) {
-			if (modOpts[ele].type == "checkbox") {
+		if (modOpts[ele].nodeType === 1) {
+			if (modOpts[ele].type === "checkbox") {
 				modOpts[ele].checked = false;
 			}
 		}
@@ -320,13 +222,13 @@ function selectMod () {
 	modString = modString.slice(0, -1);
 	
 	var paras = window.location.search;
-	if (paras == "") {
+	if (paras === "") {
 		paras = "?" + modString;
 	} else {
-		while (pos = paras.indexOf("mod") > -1) {
+		while (paras.indexOf("mod") > -1) {
 			var pos = paras.indexOf("mod");
 			var end = paras.indexOf("&", pos);
-			end = (end == -1) ? end = paras.length : end + 1;
+			end = (end === -1) ? end = paras.length : end + 1;
 			paras = paras.slice(0, pos) + paras.slice(end);
 		}
 		if (modString.length > 1) {
@@ -350,7 +252,7 @@ function populateCivSelect () {
 		});
 	}
 	civList.sort(sortNameIgnoreCase);
-	for (var civ in civList) {
+	for (civ in civList) {
 		civ = civList[civ];
 		var newOpt = document.createElement('option');
 		newOpt.text = civ.name;
@@ -369,11 +271,11 @@ function draw ()
 	
 	// Clear canvas
 	g_canvas.clear();
-	g_canvasParts["banner"] = g_canvas.group();
-	g_canvasParts["banner"].attr('id', "tree__banner");
-	g_canvasParts["tree"] = g_canvas.group();
-	g_canvasParts["tree"].attr('id', "tree__tree").y(80+8);
-	g_canvasParts["tooltip"] = g_canvas.tooltip().hide();
+	g_canvasParts.banner = g_canvas.group();
+	g_canvasParts.banner.attr('id', "tree__banner");
+	g_canvasParts.tree = g_canvas.group();
+	g_canvasParts.tree.attr('id', "tree__tree").y(80+8);
+	g_canvasParts.tooltip = g_canvas.tooltip().hide();
 	
 	g_canvas.gradient('radial', function (stop) {
 		stop.at({
@@ -390,19 +292,18 @@ function draw ()
 	
 	
 	// Title
-	if (g_civs[g_selectedCiv].emblem == "placeholder") {
-		var civEmblem = "./ui/emblem_placeholder.png";
-	} else {
-		var civEmblem = "./mods/"+g_civs[g_selectedCiv].sourceMod+"/art/textures/ui/"+g_civs[g_selectedCiv].emblem;
+	var civEmblem = "./mods/"+g_civs[g_selectedCiv].sourceMod+"/art/textures/ui/"+g_civs[g_selectedCiv].emblem;
+	if (g_civs[g_selectedCiv].emblem === "placeholder") {
+		civEmblem = "./ui/emblem_placeholder.png";
 	}
-	civEmblem = g_canvasParts["banner"].image(civEmblem);
+	civEmblem = g_canvasParts.banner.image(civEmblem);
 	civEmblem.attr({
 		'x': -16
 	,	'y': -32
 //	,	'height': 80
 //	,	'width': 80
 	});
-	var civName = g_canvasParts["banner"].text(g_civs[g_selectedCiv].name);
+	var civName = g_canvasParts.banner.text(g_civs[g_selectedCiv].name);
 	civName.attr({
 		'x': 120
 	,	'y': 24
@@ -415,24 +316,23 @@ function draw ()
 	var treeHeight = 0;
 	var treeWidth = 0;
 	var colGap = 32;
-	var fullWid = 0;
 	
-//	box_structure(g_civs[g_selectedCiv].startBuilding, 4, 4, colWid-colGap, g_canvasParts["tree"]);
+//	box_structure(g_civs[g_selectedCiv].startBuilding, 4, 4, colWid-colGap, g_canvasParts.tree);
 	
 	for (var phase in g_phaseList) {
 		var phaseStr = g_phaseList[phase];
-		g_canvasParts["tree"][phaseStr] = g_canvasParts["tree"].group().attr('id', 'tree__'+phaseStr).move(16, treeHeight);
-		g_canvasParts["tree"][phaseStr]["bands"] = [];
+		g_canvasParts.tree[phaseStr] = g_canvasParts.tree.group().attr('id', 'tree__'+phaseStr).move(16, treeHeight);
+		g_canvasParts.tree[phaseStr].bands = [];
 		
 		// phase icon
-		g_canvasParts["tree"][phaseStr].icon(g_phases[phaseStr].icon, 52, 'phase').move(
+		g_canvasParts.tree[phaseStr].icon(g_phases[phaseStr].icon, 52, 'phase').move(
 			8
 		,	36
 		);
 		
 		// horizontal banding
 		for (var p = (+phase+1); p < g_phaseList.length; p++) {
-			g_canvasParts["tree"][phaseStr]["bands"].push(g_canvasParts["tree"][phaseStr].rect(1024, 28). attr({
+			g_canvasParts.tree[phaseStr].bands.push(g_canvasParts.tree[phaseStr].rect(1024, 28). attr({
 				'x': 40
 			,	'y': 95 + (p-phase) * 30
 			,	'stroke-opacity': 0
@@ -441,7 +341,7 @@ function draw ()
 			}));
 			
 		//	if (p != phase) {
-				g_canvasParts["tree"][phaseStr].icon(g_phases[g_phaseList[p]].icon, 24, 'phase').move(
+				g_canvasParts.tree[phaseStr].icon(g_phases[g_phaseList[p]].icon, 24, 'phase').move(
 					3 + 40
 				,	3 + (p-phase) * 30 + 95
 				);
@@ -451,14 +351,15 @@ function draw ()
 		var rowWidth = 0;
 		
 		// buildings
-		for (build in g_civs[g_selectedCiv].buildList[phaseStr]) {
+		var box = {};
+		for (var build in g_civs[g_selectedCiv].buildList[phaseStr]) {
 			build = g_civs[g_selectedCiv].buildList[phaseStr][build];
 			
-		/*	if (build == g_civs[g_selectedCiv].startBuilding) {
+		/*	if (build === g_civs[g_selectedCiv].startBuilding) {
 				continue;
 			}	*/
 			
-			var box = g_canvasParts["tree"][phaseStr].building(build).move(rowWidth+80, 0);
+			box = g_canvasParts.tree[phaseStr].building(build).move(rowWidth+80, 0);
 			
 			rowWidth += box.width + colGap;
 		}
@@ -467,7 +368,7 @@ function draw ()
 			treeWidth = rowWidth;
 		}
 		
-		if (box !== undefined) {
+		if (box.height !== undefined) {
 			treeHeight += box.height + 16;
 		} else {
 			treeHeight += 192;
@@ -475,11 +376,11 @@ function draw ()
 	}
 	
 	// set band widths
-	for (var phase in g_phaseList) {
+	for (phase in g_phaseList) {
 		
-		for (var band in g_canvasParts["tree"][g_phaseList[phase]]["bands"])
+		for (var band in g_canvasParts.tree[g_phaseList[phase]].bands)
 		{
-			g_canvasParts["tree"][g_phaseList[phase]]["bands"][band].width(treeWidth+32);
+			g_canvasParts.tree[g_phaseList[phase]].bands[band].width(treeWidth+32);
 		}
 	}
 	
@@ -494,7 +395,6 @@ SVG.UI_Building = SVG.invent({
 		this.attr('id', 'box__'+id);
 		
 		var info = g_structures[id];
-		var fontSize = 14;
 		var h = 2;
 		var w = 32 * 2 + 128;
 		var prodIconDimen = 24;
@@ -539,7 +439,7 @@ SVG.UI_Building = SVG.invent({
 		
 		var sph = g_phaseList.indexOf(info.phase);
 		for (var ph = sph; ph < g_phaseList.length; ph++) {
-			phStr = g_phaseList[ph];
+			var phStr = g_phaseList[ph];
 			
 			prodGroup.rows[ph] = {
 				"count": 0,
@@ -569,9 +469,9 @@ SVG.UI_Building = SVG.invent({
 			}
 			
 			// WallSet icons - We only show gate and tower
-			if (info.wallset !== undefined && info.phase == phStr) {
+			if (info.wallset !== undefined && info.phase === phStr) {
 				
-				var sInfo = info.wallset["Gate"];
+				var sInfo = info.wallset.Gate;
 				prodGroup.rows[ph].row.icon(sInfo.icon, prodIconDimen, 'struct').x(
 					prodGroup.rows[ph].count * (prodIconDimen + prodIconPadd)
 				).attr(
@@ -580,7 +480,7 @@ SVG.UI_Building = SVG.invent({
 				
 				prodGroup.rows[ph].count++;
 				
-				var sInfo = info.wallset["Tower"];
+				sInfo = info.wallset.Tower;
 				prodGroup.rows[ph].row.icon(sInfo.icon, prodIconDimen, 'struct').x(
 					prodGroup.rows[ph].count * (prodIconDimen + prodIconPadd)
 				).attr(
@@ -596,11 +496,7 @@ SVG.UI_Building = SVG.invent({
 				for (var t in info.production.technology[phStr]) {
 					
 					var tStr = info.production.technology[phStr][t];
-					if (tStr.slice(0, 5) === "phase") {
-						var tInfo = g_phases[tStr];
-					} else {
-						var tInfo = g_techs[tStr];
-					}
+					var tInfo = (tStr.slice(0, 5) === "phase") ? g_phases[tStr] : g_techs[tStr];
 					
 					if (tInfo === undefined) {
 						console.log(tStr);
@@ -612,19 +508,20 @@ SVG.UI_Building = SVG.invent({
 						"cnt": +t,
 						"ico": ""
 					};
-					icons[tStr]["ico"] = prodGroup.rows[ph].row.icon(tInfo.icon, prodIconDimen, 'tech').x(
+					icons[tStr].ico = prodGroup.rows[ph].row.icon(tInfo.icon, prodIconDimen, 'tech').x(
 						prodGroup.rows[ph].count * (prodIconDimen + prodIconPadd)
 					).attr(
 						'id', 'icon__'+tStr
 					).tooltip(tInfo);
 					prodGroup.rows[ph].count++;
 					
-				};
+				}
 				
 			}
 			
-			if (prodGroup.rows[ph].count > prodGroup.width)
+			if (prodGroup.rows[ph].count > prodGroup.width) {
 				prodGroup.width = prodGroup.rows[ph].count;
+			}
 		}
 		
 		// centre production rows and widen box if neccesary
@@ -649,13 +546,9 @@ SVG.UI_Building = SVG.invent({
 		// add in depLines
 		for (var iStr in icons) {
 			
-			if (iStr.slice(0, 5) === "phase") {
-				var iReq = g_phases[iStr].reqs;
-			} else {
-				var iReq = g_techs[iStr].reqs;
-			}
+			var iReq = (iStr.slice(0, 5) === "phase") ? g_phases[iStr].reqs : g_techs[iStr].reqs;
 			
-			if (iReq == undefined) {
+			if (iReq === undefined) {
 				continue;
 			} else if (iReq[g_selectedCiv] !== undefined) {
 				iReq = iReq[g_selectedCiv];
@@ -677,7 +570,7 @@ SVG.UI_Building = SVG.invent({
 				,	'y1': icons[r].ico.y2() + icons[r].pha * (prodIconDimen + 6) - 1
 				,	'x2': icons[iStr].ico.xM() + prodGroup.rows[icons[iStr].rpha].offset
 				,	'y2': icons[iStr].ico.y() + icons[iStr].pha * (prodIconDimen + 6) - 1
-				}
+				};
 				
 				prodDeps.path(
 						"M" + line.x1 +","+ line.y1
@@ -785,7 +678,7 @@ SVG.UI_Tooltip = SVG.invent({
 			
 			this.cost.clear();
 			var rcnt = 0;
-			for (res in info.cost)
+			for (var res in info.cost)
 			{
 				if (info.cost[res] > 0 || info.cost[res].length > 1 && Array.max(info.cost[res]) > 0)
 				{
@@ -819,19 +712,18 @@ SVG.UI_Tooltip = SVG.invent({
 			this.w = (nw > this.w) ? nw : this.w;
 			
 			if (info.stats) {
+				var statsArmour = info.stats.armour;
+				var statsAttack = info.stats.attack;
 				if (Array.isArray(info.stats)) {
-					var statsArmour = info.stats[0].armour;
-					var statsAttack = info.stats[0].attack;
-				} else {
-					var statsArmour = info.stats.armour;
-					var statsAttack = info.stats.attack;
+					statsArmour = info.stats[0].armour;
+					statsAttack = info.stats[0].attack;
 				}
 				
 				this.stats.attr('y', this.h+8);
 				this.stats.build(true);
 				this.stats.tspan(function (add) {
 					add.tspan("Armour:");
-					for (stat in statsArmour)
+					for (var stat in statsArmour)
 					{
 						add.tspan(" "+statsArmour[stat]);
 						add.tspan(" "+stat+" ").attr({
@@ -843,9 +735,9 @@ SVG.UI_Tooltip = SVG.invent({
 				if (info.stats[0] && info.stats[0].healer) {
 					this.stats.tspan(function (add) {
 						add.tspan("Healer:");
-						for (stat in info.stats[0].healer)
+						for (var stat in info.stats[0].healer)
 						{
-							if (stat == "Rate") {
+							if (stat === "Rate") {
 								add.tspan(" "+(info.stats[0].healer[stat]/1000)+"s");
 							} else {
 								add.tspan(" "+info.stats[0].healer[stat]);
@@ -858,24 +750,24 @@ SVG.UI_Tooltip = SVG.invent({
 				}
 				
 				if (Object.keys(statsAttack).length > 0) {
-					var attackDamages =  ["Hack","Pierce","Crush","RepeatTime"];
+					var attackDamages = ["Hack","Pierce","Crush","RepeatTime"];
 					for (var atkType in statsAttack) {
 						this.stats.tspan(function (add) {
 							add.tspan(atkType+" Attack:");
-							if (atkType == "Ranged") {
-								if (statsAttack["Ranged"]["MinRange"] > 0) {
-									add.tspan(" "+statsAttack["Ranged"]["MinRange"]+"-"+statsAttack["Ranged"]["MaxRange"]);
+							if (atkType === "Ranged") {
+								if (statsAttack.Ranged.MinRange > 0) {
+									add.tspan(" "+statsAttack.Ranged.MinRange+"-"+statsAttack.Ranged.MaxRange);
 								} else {
-									add.tspan(" "+statsAttack["Ranged"]["MaxRange"]);
+									add.tspan(" "+statsAttack.Ranged.MaxRange);
 								}
 								add.tspan(" Range ").attr({
 									'font-size': "0.75em"
 								});
 							}
-							for (atkDmg in attackDamages) {
+							for (var atkDmg in attackDamages) {
 								atkDmg = attackDamages[atkDmg];
 								if (statsAttack[atkType][atkDmg] > 0) {
-									if (atkDmg == "RepeatTime") {
+									if (atkDmg === "RepeatTime") {
 										add.tspan(" "+statsAttack[atkType][atkDmg]/1000+"s");
 										add.tspan(" Repeat ").attr({
 											'font-size': "0.75em"
@@ -890,7 +782,7 @@ SVG.UI_Tooltip = SVG.invent({
 							}
 						}).newLine();
 					}
-				};
+				}
 				this.stats.build(false);
 				this.h += 12 * this.stats.lines.members.length;
 			}
@@ -904,11 +796,12 @@ SVG.UI_Tooltip = SVG.invent({
 		},
 		move: function (x, y) {
 			
-			if (x+this.w > g_canvas.w)
+			if (x+this.w > g_canvas.w) {
 				x -= this.w;
-			
-			if (y+this.h > g_canvas.h)
+			}
+			if (y+this.h > g_canvas.h) {
 				y -= this.h;
+			}
 			
 			this.transform('x', x+2);
 			this.transform('y', y+2);
@@ -951,14 +844,14 @@ SVG.Icon = SVG.invent({
 			return this;
 		},
 		tooltip: function (info) {
-			this.mouseover(function (e) {
-				g_canvasParts["tooltip"].show().populate(info);
+			this.mouseover(function () {
+				g_canvasParts.tooltip.show().populate(info);
 			});
 			this.mousemove(function (e) {
-				g_canvasParts["tooltip"].move(e.pageX, e.pageY);
+				g_canvasParts.tooltip.move(e.pageX, e.pageY);
 			});
-			this.mouseout(function (e) {
-				g_canvasParts["tooltip"].hide();
+			this.mouseout(function () {
+				g_canvasParts.tooltip.hide();
 			});
 			return this;
 		},
@@ -975,7 +868,7 @@ SVG.Icon = SVG.invent({
 			}
 		}
 });
-
+/*
 function dePath (techCode) {
 	var ret = "";
 	if (techCode.indexOf("/") === -1) {
@@ -986,24 +879,26 @@ function dePath (techCode) {
 	console.log(ret);
 	return ret;
 }
-
+*/
 Array.max = function (arr) {
 	var max = -Infinity;
 	for (var i in arr) {
-		if (+arr[i] > max)
+		if (+arr[i] > max) {
 			max = +arr[i];
+		}
 	}
 	return max;
-}
+};
 
 Array.min = function (arr) {
 	var min = Infinity;
 	for (var i in arr) {
-		if (+arr[i] < min)
+		if (+arr[i] < min) {
 			min = +arr[i];
+		}
 	}
 	return min;
-}
+};
 
 function resizeDrawing ()
 {
@@ -1021,10 +916,11 @@ function sortNameIgnoreCase(x, y)
 	var lowerX = x.name.toLowerCase();
 	var lowerY = y.name.toLowerCase();
 	
-	if (lowerX < lowerY)
+	if (lowerX < lowerY) {
 		return -1;
-	else if (lowerX > lowerY)
+	} else if (lowerX > lowerY) {
 		return 1;
-	else
+	} else {
 		return 0;
+	}
 }

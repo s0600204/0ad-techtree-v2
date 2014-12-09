@@ -121,4 +121,3 @@ function warn($content) {
 function err($content) {
 	report($content, "error");
 }
-?>

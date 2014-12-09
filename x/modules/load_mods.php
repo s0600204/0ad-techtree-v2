@@ -33,5 +33,3 @@ foreach ($g_ModData as $modCode => $modInfo) {
 	$g_output["availMods"][$modCode] = $mod;
 	
 }
-
-?>
