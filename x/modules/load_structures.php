@@ -13,33 +13,18 @@ function load_structure ($structCode) {
 	if (!$structInfo)
 		return false;
 	
-	$myCiv = $structInfo["Identity"]["Civ"];
+	$structure = load_common_fromEnt($structInfo);
+	$myCiv = $structure["civ"];
 	
-	$structure = Array(
-			"name"			=> Array(
-					"generic"	=> fetchValue($structInfo, "Identity/GenericName")
-				,	"specific"	=> (isset($structInfo["Identity"]["SpecificName"]) ? $structInfo["Identity"]["SpecificName"] : "-")
-				)
-		,	"phase"			=> false
-		,	"civ"			=> $myCiv
-		,	"icon"			=> checkIcon(fetchValue($structInfo, "Identity/Icon"), $structInfo["mod"])
-		,	"production"	=> Array(
-					"technology"	=> fetchValue($structInfo, "ProductionQueue/Technologies", true)
-				,	"units"			=> Array()
-				)
-		,	"cost"			=> Array(
-					"food"		=> fetchValue($structInfo, "Cost/Resources/food")
-				,	"wood"		=> fetchValue($structInfo, "Cost/Resources/wood")
-				,	"stone"		=> fetchValue($structInfo, "Cost/Resources/stone")
-				,	"metal"		=> fetchValue($structInfo, "Cost/Resources/metal")
-				,	"time"		=> fetchValue($structInfo, "Cost/BuildTime")
-				)
-		,	"stats"			=> Array(
-					"health"	=> fetchValue($structInfo, "Health/Max")
-				,	"attack"	=> fetchValue($structInfo, "Attack")
-				,	"armour"	=> fetchValue($structInfo, "Armour")
-				)
-		,	"tooltip"		=> fetchValue($structInfo, "Identity/Tooltip")
+	$structure["phase"] = false;
+	$structure["production"] = Array(
+			"technology"	=> fetchValue($structInfo, "ProductionQueue/Technologies", true)
+		,	"units"			=> Array()
+		);
+	$structure["stats"] = Array(
+			"health"	=> fetchValue($structInfo, "Health/Max")
+		,	"attack"	=> fetchValue($structInfo, "Attack")
+		,	"armour"	=> fetchValue($structInfo, "Armour")
 		);
 	
 	$reqTech = fetchValue($structInfo, "Identity/RequiredTechnology");

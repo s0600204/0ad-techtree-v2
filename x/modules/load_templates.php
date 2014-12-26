@@ -124,3 +124,26 @@ function fetchValue ($template, $keypath, $collate = false) {
 	}
 	return $ret;
 }
+
+function load_common_fromEnt ($entityData) {
+	
+	$myCiv = fetchValue($entityData, "Identity/Civ");
+	
+	return Array(
+			"name"		=> Array(
+					"generic"	=> fetchValue($entityData, "Identity/GenericName")
+				,	"specific"	=> fetchValue($entityData, "Identity/SpecificName")
+				)
+		,	"civ"		=> $myCiv
+		,	"icon"		=> checkIcon(fetchValue($entityData, "Identity/Icon"), $entityData["mod"])
+		,	"cost"		=> Array(
+					"food"		=> fetchValue($entityData, "Cost/Resources/food")
+				,	"wood"		=> fetchValue($entityData, "Cost/Resources/wood")
+				,	"stone"		=> fetchValue($entityData, "Cost/Resources/stone")
+				,	"metal"		=> fetchValue($entityData, "Cost/Resources/metal")
+				,	"time"		=> fetchValue($entityData, "Cost/BuildTime")
+				)
+		,	"tooltip"	=> fetchValue($entityData, "Identity/Tooltip")
+		);
+	
+}

@@ -12,25 +12,11 @@ function load_unit ($unitCode) {
 	if (!$unitInfo)
 		return false;
 	
-	$myCiv = fetchValue($unitInfo, "Identity/Civ");
+	$unit = load_common_fromEnt($unitInfo);
+	$myCiv = $unit["civ"];
 	
-	$unit = Array(
-			"name"		=> Array(
-					"generic"	=> fetchValue($unitInfo, "Identity/GenericName")
-				,	"specific"	=> fetchValue($unitInfo, "Identity/SpecificName")
-				)
-		,	"civ"		=> $myCiv
-		,	"icon"		=> checkIcon(fetchValue($unitInfo, "Identity/Icon"), $unitInfo["mod"])
-		,	"cost"		=> Array(
-					"food"		=> fetchValue($unitInfo, "Cost/Resources/food")
-				,	"wood"		=> fetchValue($unitInfo, "Cost/Resources/wood")
-				,	"stone"		=> fetchValue($unitInfo, "Cost/Resources/stone")
-				,	"metal"		=> fetchValue($unitInfo, "Cost/Resources/metal")
-				,	"time"		=> fetchValue($unitInfo, "Cost/BuildTime")
-				)
-		,	"stats"		=> loadUnitStats($unitCode)
-		,	"tooltip"	=> fetchValue($unitInfo, "Identity/Tooltip")
-		);
+	$unit["stats"] = loadUnitStats($unitCode);
+	$unit["cost"]["population"] = fetchValue($unitInfo, "Cost/Population");
 	
 	if (isset($unitInfo["Identity"]["RequiredTechnology"])) {
 		$unit["reqTech"] = $unitInfo["Identity"]["RequiredTechnology"];
