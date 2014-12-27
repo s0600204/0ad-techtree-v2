@@ -87,7 +87,6 @@ foreach ($g_args["mods"] as $g_currentMod) {
 		$g_output["civs"][$g_currentCiv] = $civData;
 		
 		/* Load Units and Structures */
-		$g_StructureList[$g_currentCiv] = Array();
 		do {
 			
 			foreach ($g_UnitList[$g_currentCiv] as $unitCode) {

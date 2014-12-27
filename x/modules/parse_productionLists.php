@@ -87,7 +87,7 @@ foreach ($g_output["structures"] as $structCode => $structInfo) {
 			}
 		} else {
 			// hack so it works with civil centres
-			if (strpos($structCode, "civil_centre") || $structInfo["phase"] === false) {
+			if ($structInfo["phase"] === false) {
 				$phase = $g_output["phaseList"][0];
 			} else {
 				$phase = $structInfo["phase"];

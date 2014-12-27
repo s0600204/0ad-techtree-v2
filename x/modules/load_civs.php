@@ -45,6 +45,7 @@ function load_civJSON ($civ) {
 /* Iterate through and acquire needed info */
 function load_civ ($civCode) {
 	global $g_UnitList;
+	global $g_StructureList;
 	
 	$civInfo = load_civJSON($civCode);
 	
@@ -63,6 +64,7 @@ function load_civ ($civCode) {
 	foreach ($civInfo["StartEntities"] as $ents) {
 		if (substr($ents["Template"], 0, 6) == "struct") {
 			$civ["startBuilding"] = substr($ents["Template"], 11);
+			$g_StructureList[$civCode][] = $ents["Template"];
 		} else {
 			$g_UnitList[$civCode][] = $ents["Template"];
 		}
