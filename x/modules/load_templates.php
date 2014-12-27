@@ -185,6 +185,18 @@ function load_common_fromEnt ($entityData) {
 	} else if (is_string($reqTech) || count($reqTech) > 0) {
 		$entity["reqTech"] = $reqTech;
 	}
+	
+	$auras = fetchValue($entityData, "Auras");
+	if (count($auras) > 0) {
+		$entity["auras"] = Array();
+		foreach ($auras as $auraID => $aura) {
+			$entity["auras"][] = Array(
+					"name"			=> (isset($aura["AuraName"])) ? $aura["AuraName"] : "Aura"
+				,	"description"	=> (isset($aura["AuraDescription"])) ? $aura["AuraDescription"] : "?"
+				);
+		}
+	}
+	
 	return $entity;
 	
 }

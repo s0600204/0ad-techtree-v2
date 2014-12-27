@@ -701,15 +701,23 @@ SVG.UI_Tooltip = SVG.invent({
 			var nw = rcnt * 52;
 			this.w = (nw > this.w) ? nw : this.w;
 			
-			this.descr.hide();
+			this.descr.clear();
 			this.stats.clear();
 			
 			if (info.tooltip && !Array.isArray(info.tooltip)) {
-				this.descr.text(info.tooltip).show();
-				this.h += this.descr.lines.members.length * 12;
+				this.descr.text(info.tooltip);
+			}
+			if (info.auras) {
+				this.descr.build(true);
+				for (var aura in info.auras) {
+					this.descr.tspan(info.auras[aura].name+": "+info.auras[aura].description).newLine();
+				}
+				this.descr.build(false);
 			}
 			nw = this.descr.bbox().width;
+			this.h += this.descr.lines.members.length * 12;
 			this.w = (nw > this.w) ? nw : this.w;
+			
 			
 			if (info.stats) {
 				this.stats.attr('y', this.h+8);
