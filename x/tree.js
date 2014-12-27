@@ -712,35 +712,25 @@ SVG.UI_Tooltip = SVG.invent({
 			this.w = (nw > this.w) ? nw : this.w;
 			
 			if (info.stats) {
-				var statsArmour = info.stats.armour;
-				var statsAttack = info.stats.attack;
-				if (Array.isArray(info.stats)) {
-					statsArmour = info.stats[0].armour;
-					statsAttack = info.stats[0].attack;
-				}
-				
 				this.stats.attr('y', this.h+8);
 				this.stats.build(true);
+				
+				// HEALTH
 				this.stats.tspan(function (add) {
-					add.tspan("Armour:");
-					for (var stat in statsArmour)
-					{
-						add.tspan(" "+statsArmour[stat]);
-						add.tspan(" "+stat+" ").attr({
-							'font-size': "0.75em"
-						});
-					}
+					add.tspan("Health:");
+					add.tspan(" "+info.stats.health);
 				});
 				
-				if (info.stats[0] && info.stats[0].healer) {
+				// HEALER
+				if (info.stats.healer) {
 					this.stats.tspan(function (add) {
 						add.tspan("Healer:");
-						for (var stat in info.stats[0].healer)
+						for (var stat in info.stats.healer)
 						{
 							if (stat === "Rate") {
-								add.tspan(" "+(info.stats[0].healer[stat]/1000)+"s");
+								add.tspan(" "+(info.stats.healer[stat]/1000)+"s");
 							} else {
-								add.tspan(" "+info.stats[0].healer[stat]);
+								add.tspan(" "+info.stats.healer[stat]);
 							}
 							add.tspan(" "+stat+" ").attr({
 								'font-size': "0.75em"
@@ -749,6 +739,8 @@ SVG.UI_Tooltip = SVG.invent({
 					}).newLine();
 				}
 				
+				// ATTACK
+				var statsAttack = info.stats.attack;
 				if (Object.keys(statsAttack).length > 0) {
 					var attackDamages = ["Hack","Pierce","Crush","RepeatTime"];
 					for (var atkType in statsAttack) {
@@ -783,6 +775,20 @@ SVG.UI_Tooltip = SVG.invent({
 						}).newLine();
 					}
 				}
+				
+				// ARMOUR
+				var statsArmour = info.stats.armour;
+				this.stats.tspan(function (add) {
+					add.tspan("Armour:");
+					for (var stat in statsArmour)
+					{
+						add.tspan(" "+statsArmour[stat]);
+						add.tspan(" "+stat+" ").attr({
+							'font-size': "0.75em"
+						});
+					}
+				}).newLine();
+				
 				this.stats.build(false);
 				this.h += 12 * this.stats.lines.members.length;
 			}

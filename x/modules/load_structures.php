@@ -16,31 +16,13 @@ function load_structure ($structCode) {
 	$structure = load_common_fromEnt($structInfo);
 	$myCiv = $structure["civ"];
 	
-	$structure["phase"] = false;
 	$structure["production"] = Array(
 			"technology"	=> fetchValue($structInfo, "ProductionQueue/Technologies", true)
 		,	"units"			=> Array()
 		);
-	$structure["stats"] = Array(
-			"health"	=> fetchValue($structInfo, "Health/Max")
-		,	"attack"	=> fetchValue($structInfo, "Attack")
-		,	"armour"	=> fetchValue($structInfo, "Armour")
-		);
-	
-	$reqTech = fetchValue($structInfo, "Identity/RequiredTechnology");
-	if (is_string($reqTech) && substr($reqTech, 0, 5) == "phase") {
-		$structure["phase"] = $reqTech;
-	} else if (is_string($reqTech) || count($reqTech) > 0) {
-		$structure["reqTech"] = $reqTech;
-	}
 	
 	foreach (fetchValue($structInfo, "ProductionQueue/Entities", true) as $unitCode) {
 		$structure["production"]["units"][] = str_replace("{civ}", $myCiv, $unitCode);
-	}
-	
-	$foundation = array_search("Foundation", array_keys($structure["stats"]["armour"]));
-	if ($foundation) {
-		array_splice($structure["stats"]["armour"], $foundation);
 	}
 	
 	if (isset($structInfo["WallSet"])) {

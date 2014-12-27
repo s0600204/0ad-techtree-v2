@@ -18,7 +18,7 @@ foreach ($g_CivList as $civ) {
 			continue;
 		}
 		
-		if (!$g_output["structures"][$build]["phase"])
+		if ($g_output["structures"][$build]["phase"] === false)
 			$g_output["structures"][$build]["phase"] = $g_output["phaseList"][0];
 		
 		$myPhase = $g_output["structures"][$build]["phase"];

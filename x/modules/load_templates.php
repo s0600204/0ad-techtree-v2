@@ -125,11 +125,38 @@ function fetchValue ($template, $keypath, $collate = false) {
 	return $ret;
 }
 
+function getArmourValues ($entityInfo) {
+	$armours = Array();
+	$armourResists = Array( "Crush", "Hack", "Pierce" );
+	foreach ($armourResists as $resist) {
+		$armours[$resist] = (int) fetchValue($entityInfo, "Armour/".$resist);
+	}
+	return $armours;
+}
+
+function getAttackValues ($entityInfo) {
+	$attacks = Array();
+	$atkMethods = Array( "Melee", "Ranged", "Charge" );
+	$atkDamages = Array( "Crush", "Hack", "Pierce", "MinRange", "MaxRange", "RepeatTime" );
+	foreach ($atkMethods as $meth) {
+		$atk = Array();
+		$keep = false;
+		foreach ($atkDamages as $dama) {
+			$atk[$dama] = (int) fetchValue($entityInfo, "Attack/".$meth."/".$dama);
+			if ($atk[$dama] > 0)
+				$keep = true;
+		}
+		if ($keep)
+			$attacks[$meth] = $atk;
+	}
+	return $attacks;
+}
+
 function load_common_fromEnt ($entityData) {
 	
 	$myCiv = fetchValue($entityData, "Identity/Civ");
 	
-	return Array(
+	$entity = Array(
 			"name"		=> Array(
 					"generic"	=> fetchValue($entityData, "Identity/GenericName")
 				,	"specific"	=> fetchValue($entityData, "Identity/SpecificName")
@@ -144,6 +171,20 @@ function load_common_fromEnt ($entityData) {
 				,	"time"		=> fetchValue($entityData, "Cost/BuildTime")
 				)
 		,	"tooltip"	=> fetchValue($entityData, "Identity/Tooltip")
+		,	"stats"		=> Array(
+					"health"	=> fetchValue($entityData, "Health/Max")
+				,	"attack"	=> getAttackValues($entityData)
+				,	"armour"	=> getArmourValues($entityData)
+				)
+		,	"phase"		=> false
 		);
+	
+	$reqTech = fetchValue($entityData, "Identity/RequiredTechnology");
+	if (is_string($reqTech) && substr($reqTech, 0, 5) == "phase") {
+		$entity["phase"] = $reqTech;
+	} else if (is_string($reqTech) || count($reqTech) > 0) {
+		$entity["reqTech"] = $reqTech;
+	}
+	return $entity;
 	
 }

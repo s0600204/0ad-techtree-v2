@@ -66,7 +66,10 @@ foreach ($g_output["structures"] as $structCode => $structInfo) {
 		}
 		$unit = $g_output["units"][$prod];
 		
-		if (isset($unit["reqTech"])) {
+		if ($unit["phase"] !== false) {
+			$phase = $unit["phase"];
+		}
+		else if (isset($unit["reqTech"])) {
 			$reqTech = $unit["reqTech"];
 			if (is_array($reqTech)) {
 				foreach ($reqTech as $rt) {
@@ -75,12 +78,11 @@ foreach ($g_output["structures"] as $structCode => $structInfo) {
 					}
 				}
 			} else {
-				if (substr($reqTech, 0, 5) == "phase") {
-					$phase = $unit["reqTech"];
-				} else if (isset($g_output["techs"][$reqTech]["reqs"][$civ])) {
-					$phase = $g_output["techs"][$reqTech]["reqs"][$civ][0];
+				$reqs = $g_output["techs"][$reqTech]["reqs"];
+				if (isset($reqs[$civ])) {
+					$phase = $reqs[$civ][0];
 				} else {
-					$phase = $g_output["techs"][$reqTech]["reqs"]["generic"][0];
+					$phase = $reqs["generic"][0];
 				}
 			}
 		} else {
