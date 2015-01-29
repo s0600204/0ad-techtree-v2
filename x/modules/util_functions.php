@@ -67,7 +67,7 @@ function getDependencies ($modName) {
 	$modFile = JSON_decode(file_get_contents($modPath), true);
 	$modDeps = Array();
 	foreach ($modFile["dependencies"] as $mod) {
-		$mod = explode("=", $mod);
+		$mod = preg_split("/[=><]/", $mod);
 		$modDeps = array_merge($modDeps, getDependencies($mod[0]));
 		$modDeps[] = $mod[0];
 	}
