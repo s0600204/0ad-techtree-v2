@@ -37,7 +37,12 @@ foreach ($g_output["structures"] as $structCode => $structInfo) {
 		}
 		else if (isset($g_output["techs"][$prod]["reqs"]["generic"]))
 		{
-			$phase = $g_output["techs"][$prod]["reqs"]["generic"][0];
+			foreach ($g_output["techs"][$prod]["reqs"]["generic"] as $req)
+			{
+				if (substr(depath($req), 0, 5) === "phase") {
+					$phase = $req;
+				}
+			}
 		}
 		
 		if (!isset($phase) || substr(depath($phase), 0, 5) !== "phase")

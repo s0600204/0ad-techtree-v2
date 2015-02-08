@@ -64,7 +64,7 @@ function load_tech ($techCode) {
 			
 			switch ($op) {
 				case "tech":
-					$tech["reqs"]["generic"] = Array( $reqs );
+					$tech["reqs"]["generic"] = $reqs;
 					break;
 				
 				case "civ":
@@ -87,6 +87,10 @@ function load_tech ($techCode) {
 					break;
 				
 				case "all":
+					if (count($reqs[0]) < 1) {
+						$tech["reqs"]["generic"] = $reqs[1];
+						break;
+					}
 					foreach ($reqs[0] as $r) {
 						$tech["reqs"][$r] = $reqs[1];
 					}
@@ -206,8 +210,12 @@ function calcReqs ($op, $val)
 {
 	switch ($op)
 	{
-	case "civ":
 	case "tech":
+		if (substr(depath($val), 0, 4) === "pair")
+			return load_pair($val)["techs"];
+		return Array($val);
+		
+	case "civ":
 		return $val;
 	
 	case "all":
@@ -226,7 +234,7 @@ function calcReqs ($op, $val)
 					break;
 					
 				case "tech":
-					$techs[] = $reqs;
+					$techs = array_merge($techs, $reqs);
 					break;
 					
 				case "any":
