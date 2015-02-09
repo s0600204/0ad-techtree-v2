@@ -188,6 +188,8 @@ function unravel_phases ($techs) {
 			$reqPhasePos = array_search($reqPhase, $phaseList);
 			$myPhasePos = array_search($myPhase, $phaseList);
 			
+			info($reqTech ."(".$reqPhase.",".$reqPhasePos.") => ". $techCode ."(".$myPhase.",".$myPhasePos.") " . print_r($phaseList, true));
+			
 			if (count($phaseList) == 0)
 			{
 				$phaseList = Array( $reqPhase, $myPhase );
@@ -199,6 +201,11 @@ function unravel_phases ($techs) {
 			else if ($myPhasePos === false && $reqPhasePos > -1)
 			{
 				array_splice($phaseList, $reqPhasePos+1, 0, $myPhase);
+			}
+			else if ($reqPhasePos > $myPhasePos)
+			{
+				array_splice($phaseList, $reqPhasePos+1, 0, $myPhase);
+				array_splice($phaseList, $myPhasePos, 1);
 			}
 		}
 	}
