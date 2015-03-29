@@ -180,7 +180,7 @@ function load_common_fromEnt ($entityData) {
 		);
 	
 	$reqTech = fetchValue($entityData, "Identity/RequiredTechnology");
-	if (is_string($reqTech) && substr($reqTech, 0, 5) == "phase") {
+	if (is_string($reqTech) && substr(depath($reqTech), 0, 5) === "phase") {
 		$entity["phase"] = $reqTech;
 	} else if (is_string($reqTech) || count($reqTech) > 0) {
 		$entity["reqTech"] = $reqTech;

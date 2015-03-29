@@ -23,6 +23,9 @@ foreach ($g_CivList as $civ) {
 		
 		$myPhase = $g_output["structures"][$build]["phase"];
 		
+		if (in_array($myPhase, $g_output["phaseList"]) === false)
+			$myPhase = $g_output["phases"][$myPhase]["actualPhase"];
+		
 		if (!isset($buildList[$myPhase])) {
 			$buildList[$myPhase] = Array();
 		}

@@ -130,7 +130,7 @@ foreach ($g_args["mods"] as $g_currentMod) {
 		
 		$realCode = depath($techCode);
 		
-		if (substr($realCode, 0, 4) == "pair") {
+		if (substr($realCode, 0, 4) == "pair" || stripos($realCode, "_pair") !== false) {
 			$techPairs[$techCode] = load_pair($techCode);
 		} else if (substr($realCode, 0, 5) == "phase") {
 			$g_output["phases"][$techCode] = load_phase($techCode);
@@ -140,19 +140,24 @@ foreach ($g_args["mods"] as $g_currentMod) {
 	}
 	foreach ($techPairs as $pairCode => $pairInfo) {
 		foreach ($pairInfo["techs"] as $techCode) {
-			$newTech = load_tech($techCode);
+			$newTech = Array();
 			
-			if ($pairInfo["req"] !== "") {
-				if (isset($newTech["reqs"]["generic"])) {
-					$newTech["reqs"]["generic"] = array_merge($newTech["reqs"]["generic"], $techPairs[$pairInfo["req"]]["techs"]);
-				} else {
-					foreach (array_keys($newTech["reqs"]) as $civkey) {
-						$newTech["reqs"][$civkey] = array_merge($newTech["reqs"][$civkey], $techPairs[$pairInfo["req"]]["techs"]);
+			if (substr(depath($techCode), 0, 5) === "phase") {
+				$newTech = load_phase($techCode);
+				$g_output["phases"][$techCode] = $newTech;
+			} else {
+				$newTech = load_tech($techCode);
+				if ($pairInfo["req"] !== "") {
+					if (isset($newTech["reqs"]["generic"])) {
+						$newTech["reqs"]["generic"] = array_merge($newTech["reqs"]["generic"], $techPairs[$pairInfo["req"]]["techs"]);
+					} else {
+						foreach (array_keys($newTech["reqs"]) as $civkey) {
+							$newTech["reqs"][$civkey] = array_merge($newTech["reqs"][$civkey], $techPairs[$pairInfo["req"]]["techs"]);
+						}
 					}
 				}
+				$g_output["techs"][$techCode] = $newTech;
 			}
-			
-			$g_output["techs"][$techCode] = $newTech;
 		}
 	}
 }
@@ -178,8 +183,12 @@ foreach ($g_output["phaseList"] as $phaseCode) {
 					$key = array_keys($req);
 					$key = $key[0];
 					$req = $req[$key];
-					if ($key == "tech" && isset($g_output["phases"][$req])) {
-						$g_output["phases"][$req]["actualPhase"] = $phaseCode;
+					if ($key == "tech") {
+						if (isset($g_output["phases"][$req]))
+							$g_output["phases"][$req]["actualPhase"] = $phaseCode;
+						else if (isset($techPairs[$req]))
+							foreach ($techPairs[$req]["techs"] as $t)
+								$g_output["phases"][$t]["actualPhase"] = $phaseCode;
 					}
 				}
 			}

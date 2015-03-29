@@ -438,6 +438,8 @@ SVG.UI_Building = SVG.invent({
 		
 		
 		var sph = g_phaseList.indexOf(info.phase);
+		if (sph < 0)
+			sph = g_phaseList.indexOf(g_phases[info.phase].actualPhase);
 		for (var ph = sph; ph < g_phaseList.length; ph++) {
 			var phStr = g_phaseList[ph];
 			
@@ -496,7 +498,7 @@ SVG.UI_Building = SVG.invent({
 				for (var t in info.production.technology[phStr]) {
 					
 					var tStr = info.production.technology[phStr][t];
-					var tInfo = (tStr.slice(0, 5) === "phase") ? g_phases[tStr] : g_techs[tStr];
+					var tInfo = (depath(tStr).slice(0, 5) === "phase") ? g_phases[tStr] : g_techs[tStr];
 					
 					if (tInfo === undefined) {
 						console.log(tStr);
@@ -546,7 +548,7 @@ SVG.UI_Building = SVG.invent({
 		// add in depLines
 		for (var iStr in icons) {
 			
-			var iReq = (iStr.slice(0, 5) === "phase") ? g_phases[iStr].reqs : g_techs[iStr].reqs;
+			var iReq = (depath(iStr).slice(0, 5) === "phase") ? g_phases[iStr].reqs : g_techs[iStr].reqs;
 			
 			if (iReq === undefined) {
 				continue;
@@ -595,7 +597,7 @@ SVG.UI_Building = SVG.invent({
 		ui_icon.x(m);
 		
 		// set final box height
-		h += (g_phaseList.length - g_phaseList.indexOf(info.phase)) * (prodIconDimen + 6);
+		h += (g_phaseList.length - sph) * (prodIconDimen + 6);
 		frame.height(h-16);
 		this.height = h;
 	},
@@ -882,18 +884,15 @@ SVG.Icon = SVG.invent({
 			}
 		}
 });
-/*
-function dePath (techCode) {
-	var ret = "";
-	if (techCode.indexOf("/") === -1) {
-		ret = techCode;
-	} else {
-		ret = techCode.slice(techCode.indexOf("/")+1);
-	}
-	console.log(ret);
-	return ret;
+
+function depath (path)
+{
+	var pos = path.lastIndexOf("/");
+	if (pos > -1)
+		path = path.slice(pos+1);
+	return path;
 }
-*/
+
 Array.max = function (arr) {
 	var max = -Infinity;
 	for (var i in arr) {

@@ -14,7 +14,7 @@ foreach ($g_output["structures"] as $structCode => $structInfo) {
 	
 	/* Expand tech pairs */
 	foreach ($prodTech as $prod) {
-		if (substr($prod, 0, 4) == "pair" || strpos($prod, "/pair")) {
+		if (substr($prod, 0, 4) == "pair" || strpos($prod, "/pair") || strpos($prod, "_pair")) {
 			$pos = array_search($prod, $prodTech);
 			array_splice($prodTech, $pos, 1, $techPairs[$prod]["techs"]);
 		}
@@ -23,8 +23,9 @@ foreach ($g_output["structures"] as $structCode => $structInfo) {
 	/* Sort Techs by Phase */
 	$newProdTech = Array();
 	foreach ($prodTech as $prod) {
+		$phase = "";
 		
-		if (substr($prod, 0, 5) == "phase")
+		if (substr(depath($prod), 0, 5) == "phase")
 		{
 			$phase = array_search($g_output["phases"][$prod]["actualPhase"], $g_output["phaseList"]);
 			if ($phase > 0)
@@ -73,15 +74,13 @@ foreach ($g_output["structures"] as $structCode => $structInfo) {
 		
 		if ($unit["phase"] !== false) {
 			$phase = $unit["phase"];
+			if (in_array($phase, $g_output["phaseList"]) === false)
+				$phase = $g_output["phases"][$phase]["actualPhase"];
 		}
 		else if (isset($unit["reqTech"])) {
 			$reqTech = $unit["reqTech"];
-			if (is_array($reqTech)) {
-				foreach ($reqTech as $rt) {
-					if (substr($rt, 0, 5) == "phase") {
-						$phase = $rt;
-					}
-				}
+			if (isset($g_output["phases"][$reqTech])) {
+				$phase = $g_output["phases"][$reqTech]["actualPhase"];
 			} else {
 				$reqs = $g_output["techs"][$reqTech]["reqs"];
 				if (isset($reqs[$civ])) {
@@ -91,7 +90,6 @@ foreach ($g_output["structures"] as $structCode => $structInfo) {
 				}
 			}
 		} else {
-			// hack so it works with civil centres
 			if ($structInfo["phase"] === false) {
 				$phase = $g_output["phaseList"][0];
 			} else {

@@ -188,8 +188,6 @@ function unravel_phases ($techs) {
 			$reqPhasePos = array_search($reqPhase, $phaseList);
 			$myPhasePos = array_search($myPhase, $phaseList);
 			
-			info($reqTech ."(".$reqPhase.",".$reqPhasePos.") => ". $techCode ."(".$myPhase.",".$myPhasePos.") " . print_r($phaseList, true));
-			
 			if (count($phaseList) == 0)
 			{
 				$phaseList = Array( $reqPhase, $myPhase );
@@ -219,7 +217,10 @@ function calcReqs ($op, $val)
 	{
 	case "tech":
 		if (substr(depath($val), 0, 4) === "pair")
-			return load_pair($val)["techs"];
+		{
+			$val = load_pair($val)
+			return $val["techs"];
+		}
 		return Array($val);
 		
 	case "civ":
