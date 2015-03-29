@@ -18,7 +18,7 @@
   </Health>
   <Identity>
     <GenericName>Hero</GenericName>
-    <Classes datatype="tokens">Organic</Classes>
+    <Classes datatype="tokens">Organic Human</Classes>
     <VisibleClasses datatype="tokens">Hero Soldier</VisibleClasses>
     <RequiredTechnology>phase_city</RequiredTechnology>
   </Identity>
@@ -57,6 +57,6 @@
     </Run>
   </UnitMotion>
   <Vision>
-    <Range>60</Range>
+    <Range>88</Range>
   </Vision>
 </Entity>

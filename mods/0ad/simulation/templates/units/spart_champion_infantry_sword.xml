@@ -8,14 +8,8 @@
     </Entities>
   </Builder>
   <Cost>
-    <BuildTime>12</BuildTime>
-    <Resources>
-      <metal>70</metal>
-    </Resources>
+    <BuildTime>8</BuildTime>
   </Cost>
-  <Health>
-    <Max>140</Max>
-  </Health>
   <Identity>
     <Civ>spart</Civ>
 	<GenericName>Skiritai Commando</GenericName>
@@ -29,12 +23,6 @@
   <ResourceGatherer>
     <BaseSpeed>0.5</BaseSpeed>
   </ResourceGatherer>
-  <UnitMotion>
-    <WalkSpeed>13.5</WalkSpeed>
-    <Run>
-      <Speed>20.0</Speed>
-    </Run>
-  </UnitMotion>
   <VisualActor>
     <Actor>units/spartans/champion_infantry_sword.xml</Actor>
   </VisualActor>

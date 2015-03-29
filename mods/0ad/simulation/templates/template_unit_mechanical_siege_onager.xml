@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Entity parent="template_unit_mechanical_siege">
   <Armour>
-    <Hack>2</Hack>
-    <Pierce>30</Pierce>
+    <Hack>1</Hack>
+    <Pierce>35</Pierce>
     <Crush>1</Crush>
   </Armour>
   <Attack>
     <Ranged>
       <Hack>0.0</Hack>
       <Pierce>10.0</Pierce>
-      <Crush>50.0</Crush>
+      <Crush>100.0</Crush>
       <MaxRange>80</MaxRange>
       <MinRange>12.0</MinRange>
       <ProjectileSpeed>28.0</ProjectileSpeed>
@@ -38,7 +38,7 @@
     <Height>4.5</Height>
   </Footprint>
   <Health>
-    <Max>200</Max>
+    <Max>100</Max>
   </Health>
   <Identity>
     <GenericName>Siege Catapult</GenericName>

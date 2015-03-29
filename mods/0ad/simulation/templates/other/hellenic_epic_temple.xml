@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Entity parent="structures/hele_temple">
+<Entity parent="template_structure_civic_temple">
   <Cost>
     <BuildTime>500</BuildTime>
     <Resources>
@@ -25,11 +25,11 @@
     <Max>5000</Max>
   </Health>
   <Identity>
-    <Civ>hele</Civ>
+    <Civ>gaia</Civ>
     <GenericName>Epic Temple</GenericName>
     <SpecificName>Naos Parthenos</SpecificName>
     <History>The Hellenes built marvelous temples in order to honour their polytheistic pantheon. While all gods were venerated, a specific patron deity was supposed to watch over each polis.</History>
-    <Tooltip>Train healers. Garrison up to 30 units to heal them at a quick rate.</Tooltip>
+    <Tooltip>Garrison up to 30 units to heal them at a quick rate.</Tooltip>
   </Identity>
   <Loot>
     <xp>50</xp>
@@ -41,6 +41,7 @@
   <Obstruction>
     <Static width="27.0" depth="57.0"/>
   </Obstruction>
+  <ProductionQueue disable=""/>
   <TerritoryInfluence>
     <Radius>60</Radius>
     <Weight>65536</Weight>

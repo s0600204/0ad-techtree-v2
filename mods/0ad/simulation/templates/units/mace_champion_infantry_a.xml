@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Entity parent="template_unit_champion_infantry_spearman">
-  <Health>
-    <Max>135</Max>
-  </Health>
   <Identity>
     <Civ>mace</Civ>
     <GenericName>Macedonian Shield Bearer</GenericName>
@@ -16,12 +13,6 @@
     <Entity>units/mace_champion_infantry_e</Entity>
     <RequiredXp>9999</RequiredXp>
   </Promotion>
-  <UnitMotion>
-    <WalkSpeed>8.5</WalkSpeed>
-    <Run>
-      <Speed>16.5</Speed>
-    </Run>
-  </UnitMotion>
   <VisualActor>
     <Actor>units/macedonians/mace_champion_hypaspist.xml</Actor>
   </VisualActor>
