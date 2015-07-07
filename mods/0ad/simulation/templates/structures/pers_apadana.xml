@@ -43,21 +43,23 @@
   <ProductionQueue>
     <BatchTimeModifier>0.8</BatchTimeModifier>
     <Entities datatype="tokens">
-      units/pers_hero_cyrus
-      units/pers_hero_darius
-      units/pers_hero_xerxes
-      units/pers_champion_infantry
+      units/{civ}_hero_cyrus
+      units/{civ}_hero_darius
+      units/{civ}_hero_xerxes
+      units/{civ}_champion_infantry
     </Entities>
     <Technologies datatype="tokens">
       persians/immortals
     </Technologies>
   </ProductionQueue>
   <ResourceTrickle>
-	<FoodRate>1.0</FoodRate>
-	<WoodRate>1.0</WoodRate>
-	<StoneRate>0.75</StoneRate>
-	<MetalRate>0.75</MetalRate>
-	<Interval>1000</Interval>
+    <Rates>
+      <food>1.0</food>
+      <wood>1.0</wood>
+      <stone>0.75</stone>
+      <metal>0.75</metal>
+    </Rates>
+    <Interval>1000</Interval>
   </ResourceTrickle>
   <VisualActor>
     <Actor>structures/persians/sb1_new.xml</Actor>

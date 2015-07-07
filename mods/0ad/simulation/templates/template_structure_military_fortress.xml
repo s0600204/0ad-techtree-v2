@@ -26,12 +26,15 @@
       <MinDistance>80</MinDistance>
     </Distance>
   </BuildRestrictions>
+  <Capturable>
+    <CapturePoints>4000</CapturePoints>
+  </Capturable>
   <Cost>
     <PopulationBonus>10</PopulationBonus>
-    <BuildTime>300</BuildTime>
+    <BuildTime>500</BuildTime>
     <Resources>
       <wood>0</wood>
-      <stone>650</stone>
+      <stone>1000</stone>
     </Resources>
   </Cost>
   <Footprint>
@@ -74,6 +77,14 @@
   </Obstruction>
   <ProductionQueue>
     <BatchTimeModifier>0.8</BatchTimeModifier>
+    <Entities datatype="tokens">
+      units/{civ}_mechanical_siege_ballista_packed
+      units/{civ}_mechanical_siege_scorpio_packed
+      units/{civ}_mechanical_siege_oxybeles_packed
+      units/{civ}_mechanical_siege_lithobolos_packed
+      units/{civ}_mechanical_siege_ram
+      units/{civ}_mechanical_siege_tower
+    </Entities>
     <Technologies datatype="tokens">
       attack_soldiers_will
     </Technologies>

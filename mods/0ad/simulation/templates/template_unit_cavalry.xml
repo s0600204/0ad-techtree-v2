@@ -6,6 +6,11 @@
     <Crush>15</Crush>
   </Armour>
   <Attack>
+    <Capture>
+      <Value>3</Value>
+      <MaxRange>4</MaxRange>
+      <RepeatTime>1000</RepeatTime>
+    </Capture>
     <Slaughter>
       <Hack>100.0</Hack>
       <Pierce>0.0</Pierce>
@@ -25,7 +30,7 @@
     <Height>7.5</Height>
   </Footprint>
   <Health>
-    <Max>150</Max>
+    <Max>160</Max>
   </Health>
   <Identity>
     <Classes datatype="tokens">CitizenSoldier Human Organic</Classes>
@@ -50,7 +55,7 @@
     <Anchor>pitch</Anchor>
   </Position>
   <Promotion>
-    <RequiredXp>15000000</RequiredXp>
+    <RequiredXp>150</RequiredXp>
   </Promotion>
   <ResourceGatherer>
     <MaxDistance>2.0</MaxDistance>
@@ -75,10 +80,11 @@
   </Selectable>
   <Sound>
     <SoundGroups>
-      <select>voice/hellenes/civ/civ_male_select.xml</select>
-      <order_walk>voice/hellenes/civ/civ_male_ack.xml</order_walk>
-      <order_attack>voice/hellenes/civ/civ_male_attack.xml</order_attack>
-      <order_gather>voice/hellenes/civ/civ_male_ack.xml</order_gather>
+      <select>voice/{lang}/civ/civ_{gender}_select.xml</select>
+      <order_walk>voice/{lang}/civ/civ_{gender}_walk.xml</order_walk>
+      <order_attack>voice/{lang}/civ/civ_{gender}_attack.xml</order_attack>
+      <order_gather>voice/{lang}/civ/civ_{gender}_gather.xml</order_gather>
+      <order_garrison>voice/{lang}/civ/civ_{gender}_garrison.xml</order_garrison>
       <walk>actor/mounted/movement/walk.xml</walk>
       <run>actor/mounted/movement/walk.xml</run>
       <attack>attack/weapon/sword.xml</attack>

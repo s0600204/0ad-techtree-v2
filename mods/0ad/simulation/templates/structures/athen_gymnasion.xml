@@ -18,7 +18,7 @@
   <Identity>
     <Civ>athen</Civ>
     <GenericName>Gymnasium</GenericName>
-    <SpecificName>Gymnásieon</SpecificName>
+    <SpecificName>Gymnásion</SpecificName>
     <Tooltip>Train champion units.</Tooltip>
     <History>The gymnasion was a vital place in Athens, where physical exercises were performed and social contacts established.</History>
     <Icon>structures/gymnasion.png</Icon>
@@ -36,8 +36,8 @@
   <ProductionQueue>
     <BatchTimeModifier>0.7</BatchTimeModifier>
     <Entities datatype="tokens">
-      units/athen_champion_infantry
-      units/athen_champion_ranged
+      units/{civ}_champion_infantry
+      units/{civ}_champion_ranged
     </Entities>
   </ProductionQueue>
   <VisualActor>

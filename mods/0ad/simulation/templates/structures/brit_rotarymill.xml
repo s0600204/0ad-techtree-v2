@@ -20,6 +20,7 @@
       </Modifications>
       <AuraName>Farming bonus</AuraName>
       <AuraDescription>Boosts nearby farming with +25%.</AuraDescription>
+      <OverlayIcon>art/textures/ui/session/auras/farming.png</OverlayIcon>
     </Aura1>
   </Auras>
   <Footprint replace="">
@@ -28,7 +29,7 @@
   </Footprint>
   <GarrisonHolder disable=""/>
   <Identity>
-    <Civ>Brit</Civ>
+    <Civ>brit</Civ>
     <GenericName>Rotary Mill</GenericName>
     <SpecificName>Melonas</SpecificName>
     <Tooltip>Increase nearby farming output +25%.</Tooltip>

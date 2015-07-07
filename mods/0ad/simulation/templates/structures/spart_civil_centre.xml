@@ -5,14 +5,14 @@
   </Health>
   <Identity>
     <Civ>spart</Civ>
-    <SpecificName>Agorā́</SpecificName>
+    <SpecificName>Agorá</SpecificName>
     <History>The most important place in most Classical Greek poleis, the Agora served many purposes; it was a place for public speeches and was the stage for civic life and commercial interests.</History>
   </Identity>
   <ProductionQueue>
     <Entities datatype="tokens">
-      units/spart_infantry_spearman_b
-      units/spart_infantry_javelinist_b
-      units/spart_cavalry_javelinist_b
+      units/{civ}_infantry_spearman_b
+      units/{civ}_infantry_javelinist_b
+      units/{civ}_cavalry_javelinist_b
     </Entities>
   </ProductionQueue>
   <VisualActor>

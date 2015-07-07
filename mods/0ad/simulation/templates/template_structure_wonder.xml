@@ -13,6 +13,9 @@
   <BuildRestrictions>
     <Category>Wonder</Category>
   </BuildRestrictions>
+  <Capturable>
+    <CapturePoints>5000</CapturePoints>
+  </Capturable>
   <Cost>
     <BuildTime>1000</BuildTime>
     <Resources>
@@ -73,7 +76,7 @@
   <TerritoryInfluence>
     <Root>true</Root>
     <Radius>100</Radius>
-    <Weight>65536</Weight>
+    <Weight>65535</Weight>
   </TerritoryInfluence>
   <Vision>
     <Range>72</Range>

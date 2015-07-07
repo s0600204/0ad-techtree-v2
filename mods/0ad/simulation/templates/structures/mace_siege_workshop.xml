@@ -14,7 +14,7 @@
   </Health>
   <Identity>
     <Civ>mace</Civ>
-    <SpecificName>Synergeíon Poliorkías</SpecificName>
+    <SpecificName>Synergeîon Poliorkētṓn</SpecificName>
 	<GenericName>Siege Workshop</GenericName>
     <History>The Macedonians were innovators in siege craft.</History>
     <Tooltip>Build siege engines. Research siege technologies.</Tooltip>
@@ -24,10 +24,12 @@
   <ProductionQueue>
     <BatchTimeModifier>0.8</BatchTimeModifier>
     <Entities datatype="tokens">
-      units/mace_mechanical_siege_oxybeles_packed
-      units/mace_mechanical_siege_lithobolos_packed
-      units/mace_mechanical_siege_ram
-      units/mace_mechanical_siege_tower
+      units/{civ}_mechanical_siege_ballista_packed
+      units/{civ}_mechanical_siege_scorpio_packed
+      units/{civ}_mechanical_siege_oxybeles_packed
+      units/{civ}_mechanical_siege_lithobolos_packed
+      units/{civ}_mechanical_siege_ram
+      units/{civ}_mechanical_siege_tower
     </Entities>
     <Technologies datatype="tokens">
       siege_attack

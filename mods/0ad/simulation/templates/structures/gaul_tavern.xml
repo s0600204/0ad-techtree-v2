@@ -33,12 +33,12 @@
   <RallyPoint/>
   <TerritoryInfluence>
     <Radius>32</Radius>
-    <Weight>65536</Weight>
+    <Weight>65535</Weight>
   </TerritoryInfluence>
   <ProductionQueue>
     <BatchTimeModifier>0.7</BatchTimeModifier>
     <Entities datatype="tokens">
-      units/gaul_champion_fanatic
+      units/{civ}_champion_fanatic
     </Entities>
   </ProductionQueue>
   <Sound>

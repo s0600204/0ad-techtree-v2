@@ -5,14 +5,14 @@
   </Health>
   <Identity>
     <Civ>mace</Civ>
-    <SpecificName>Agorā́</SpecificName>
+    <SpecificName>Agorá</SpecificName>
     <History>The most important place in most Classical Greek poleis, the Agora served many purposes; it was a place for public speeches and was the stage for civic life and commercial interests.</History>
   </Identity>
   <ProductionQueue>
     <Entities datatype="tokens">
-      units/mace_infantry_spearman_b
-      units/mace_infantry_javelinist_b
-      units/mace_cavalry_spearman_b
+      units/{civ}_infantry_pikeman_b
+      units/{civ}_infantry_javelinist_b
+      units/{civ}_cavalry_spearman_b
     </Entities>
   </ProductionQueue>
   <VisualActor>

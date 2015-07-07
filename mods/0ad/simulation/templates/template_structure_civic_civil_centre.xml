@@ -35,6 +35,9 @@
       <MinDistance>200</MinDistance>
     </Distance>
   </BuildRestrictions>
+  <Capturable>
+    <CapturePoints>3000</CapturePoints>
+  </Capturable>
   <Cost>
     <PopulationBonus>20</PopulationBonus>
     <BuildTime>500</BuildTime>
@@ -87,8 +90,8 @@
       units/{civ}_support_female_citizen
     </Entities>
     <Technologies datatype="tokens">
-      phase_town_generic
-      phase_city_generic
+      phase_town
+      phase_city
     </Technologies>
   </ProductionQueue>
   <ResourceDropsite>

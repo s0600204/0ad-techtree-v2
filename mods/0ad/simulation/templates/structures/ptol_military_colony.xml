@@ -44,7 +44,7 @@
   <Identity>
     <Civ>ptol</Civ>
     <GenericName>Military Colony</GenericName>
-	<SpecificName>Klēroukhia</SpecificName>
+	<SpecificName>Klēroukhía</SpecificName>
     <Classes datatype="tokens">Town Colony</Classes>
     <History>The Ptolemaic kings invited Greeks, Macedonians, Galatians (Gauls), Cretans, and Thracians alike to settle within Egypt in military colonies called cleruchies (klēroukhia). Under this arrangement, the settlers were given a plot of land, or a kleros, and in return were required to serve in the great king's army when called to duty. This created a upper-middle class of military settlers who owed their livelihoods and fortunes to the Ptolemaic kings and helped grow the available manpower for the imperial Ptolemaic army. A side effect of this system was that it drained the Greek homeland of military-aged men, a contributing factor to Greece's eventual conquest by Rome.</History>
     <Tooltip>This is the Ptolemaic expansion building, similar to Civic Centers for other factions. It is weaker and carries a smaller territory influence, but is cheaper and built faster.
@@ -58,14 +58,14 @@
   </Obstruction>
   <ProductionQueue>
     <Entities datatype="tokens">
-      units/ptol_infantry_spearman_2_b
-      units/ptol_infantry_swordsman_b
-      units/ptol_cavalry_spearman_b
-      units/ptol_cavalry_javelinist_b
+      units/{civ}_infantry_spearman_merc_b
+      units/{civ}_infantry_swordsman_merc_b
+      units/{civ}_cavalry_spearman_merc_b
+      units/{civ}_cavalry_javelinist_merc_b
     </Entities>
     <Technologies datatype="tokens">
-      -phase_town_generic
-      -phase_city_generic
+      -phase_town
+      -phase_city
     </Technologies>
   </ProductionQueue>
   <Sound>
@@ -76,7 +76,7 @@
     </SoundGroups>
   </Sound>
   <TerritoryDecay>
-    <HealthDecayRate>1</HealthDecayRate>
+    <DecayRate>1</DecayRate>
   </TerritoryDecay>
   <TerritoryInfluence>
     <Radius>80</Radius>

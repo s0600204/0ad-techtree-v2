@@ -2,8 +2,9 @@
 <Entity parent="template_unit_champion_infantry_swordsman">
   <Identity>
     <Civ>athen</Civ>
+    <Lang>greek</Lang>
 	<GenericName>Athenian Marine</GenericName>
-    <SpecificName>Épibatēs Athēnaïkós</SpecificName>
+    <SpecificName>Epibátēs Athēnaîos</SpecificName>
     <History>.</History>
     <Icon>units/athen_champion_marine.png</Icon>
 	<RequiredTechnology>hellenes/special_iphicratean_reforms</RequiredTechnology>
