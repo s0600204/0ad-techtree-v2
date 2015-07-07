@@ -66,10 +66,8 @@ foreach ($g_output["structures"] as $structCode => $structInfo) {
 		
 		$prod = depath($prod);
 		
-		if (!isset($g_output["units"][$prod])) {
-			report($prod." doesn't exist! (".$structCode.")", "warn");
+		if (!isset($g_output["units"][$prod]))
 			continue;
-		}
 		$unit = $g_output["units"][$prod];
 		
 		if ($unit["phase"] !== false) {

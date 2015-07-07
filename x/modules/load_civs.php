@@ -12,7 +12,7 @@ $g_output["civs"] = Array();
 function fetch_civs () {
 	global $g_currentMod;
 	$civs = Array();
-	$path = "../mods/".$g_currentMod."/civs/";
+	$path = "../mods/".$g_currentMod."/simulation/data/civs/";
 	if (file_exists($path)) {
 		$filenames = ls($path);
 		
@@ -31,7 +31,7 @@ function load_civJSON ($civ) {
 	global $g_currentMod;
 	
 	if (!isset($g_CivData[$civ])) {
-		$path = "../mods/".$g_currentMod."/civs/";
+		$path = "../mods/".$g_currentMod."/simulation/data/civs/";
 		
 		if (file_exists($path.$civ.".json")) {
 			load_file($path, $civ.".json", $g_CivData, $g_currentMod);

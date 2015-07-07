@@ -131,7 +131,7 @@ function load_phase ($techCode) {
 					"generic"	=> $techInfo["genericName"]
 				)
 		,	"cost"			=> (isset($techInfo["cost"])) ? $techInfo["cost"] : Array()
-		,	"actualPhase"	=> ""
+		,	"actualPhase"	=> (isset($techInfo["replaces"])) ? $techInfo["replaces"][0] : $techCode
 		,	"tooltip"		=> (isset($techInfo["tooltip"])) ? $techInfo["tooltip"] : ""
 		);
 	
@@ -218,7 +218,7 @@ function calcReqs ($op, $val)
 	case "tech":
 		if (substr(depath($val), 0, 4) === "pair")
 		{
-			$val = load_pair($val)
+			$val = load_pair($val);
 			return $val["techs"];
 		}
 		return Array($val);

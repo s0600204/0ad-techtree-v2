@@ -173,27 +173,7 @@ $g_output["phaseList"] = unravel_phases($g_output["techs"]);
 
 /* Load actual phase for phases */
 foreach ($g_output["phaseList"] as $phaseCode) {
-	$phaseInfo = load_techJSON($phaseCode);
 	$g_output["phases"][$phaseCode] = load_phase($phaseCode);
-	
-	if (isset($phaseInfo["requirements"])) {
-		foreach ($phaseInfo["requirements"] as $op => $reqs) {
-			if ($op == "any") {
-				foreach ($reqs as $req) {
-					$key = array_keys($req);
-					$key = $key[0];
-					$req = $req[$key];
-					if ($key == "tech") {
-						if (isset($g_output["phases"][$req]))
-							$g_output["phases"][$req]["actualPhase"] = $phaseCode;
-						else if (isset($techPairs[$req]))
-							foreach ($techPairs[$req]["techs"] as $t)
-								$g_output["phases"][$t]["actualPhase"] = $phaseCode;
-					}
-				}
-			}
-		}
-	}
 }
 
 /* Sort production (of structures) and build lists (of civs) */
