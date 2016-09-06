@@ -7,7 +7,7 @@
   </Armour>
   <Attack>
     <Capture>
-      <Value>3</Value>
+      <Value>2</Value>
       <MaxRange>4</MaxRange>
       <RepeatTime>1000</RepeatTime>
     </Capture>
@@ -28,7 +28,7 @@
       structures/{civ}_corral
       structures/{civ}_outpost
       other/wallset_palisade
-      other/palisades_rocks_fort
+      structures/{civ}_wooden_tower
       structures/{civ}_dock
       structures/{civ}_barracks
       structures/{civ}_blacksmith

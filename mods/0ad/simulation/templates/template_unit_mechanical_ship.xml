@@ -32,9 +32,6 @@
     <GenericName>Ship</GenericName>
     <VisibleClasses datatype="tokens">Ship</VisibleClasses>
   </Identity>
-  <Obstruction>
-    <Unit radius="8.0"/>
-  </Obstruction>
   <Position>
     <Floating>true</Floating>
     <TurnRate>3.0</TurnRate>
@@ -43,7 +40,7 @@
     <MaxDistance>4.0</MaxDistance>
     <BaseSpeed>1.0</BaseSpeed>
     <Capacities>
-      <food>50</food>
+      <food>40</food>
       <wood>20</wood>
       <stone>20</stone>
       <metal>20</metal>

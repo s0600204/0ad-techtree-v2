@@ -24,8 +24,9 @@
     </Ranged>
   </Attack>
   <BuildingAI>
-    <DefaultArrowCount>3</DefaultArrowCount>
-    <GarrisonArrowMultiplier>0.5</GarrisonArrowMultiplier>
+    <DefaultArrowCount>1</DefaultArrowCount>
+    <MaxArrowCount>15</MaxArrowCount>
+    <GarrisonArrowMultiplier>1</GarrisonArrowMultiplier>
   </BuildingAI>
   <BuildRestrictions>
     <Territory>own neutral enemy</Territory>
@@ -51,7 +52,6 @@
   </GarrisonHolder>
   <Health>
     <Max>2500</Max>
-    <Repairable>true</Repairable>
     <SpawnEntityOnDeath>rubble/rubble_rome_sb</SpawnEntityOnDeath>
   </Health>
   <Identity>
@@ -59,8 +59,8 @@
     <GenericName>Entrenched Army Camp</GenericName>
     <SpecificName>Castrum Vallum</SpecificName>
     <Classes datatype="tokens">
-	  ArmyCamp
-	</Classes>
+      ArmyCamp
+    </Classes>
     <Icon>structures/roman_camp.png</Icon>
     <Tooltip>Build anywhere on the map, even in enemy territory. Construct siege weapons and train citizen-soldiers. Heal garrisoned units slowly.</Tooltip>
     <History>Sometimes it was a temporary camp built facing the route by which the army is to march, other times a defensive or offensive (for sieges) structure. Within this gate the tents of the first centuries or cohorts are pitched, and the dragons (ensigns of cohorts) and other ensigns planted. The Decumane gate is directly opposite to the Praetorian in the rear of the camp, and through this the soldiers are conducted to the place appointed for punishment or execution.</History>
@@ -76,7 +76,7 @@
     </SoundGroups>
   </Sound>
   <TerritoryDecay>
-    <DecayRate>10</DecayRate>
+    <DecayRate>37.5</DecayRate>
   </TerritoryDecay>
   <TerritoryInfluence disable=""/>
   <ProductionQueue>

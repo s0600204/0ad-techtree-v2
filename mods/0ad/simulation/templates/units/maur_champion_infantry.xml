@@ -7,21 +7,20 @@
   <Attack>
     <Melee>
       <Hack>0</Hack>
-      <Crush>12.5</Crush>
+      <Crush>10.5</Crush>
     </Melee>
     <Charge>
       <Hack>0.0</Hack>
-      <Crush>25.0</Crush>
+      <Crush>21.0</Crush>
     </Charge>
   </Attack>
   <Identity>
     <Civ>maur</Civ>
     <GenericName>Warrior</GenericName>
     <SpecificName>Yōddha</SpecificName>
-	<SelectionGroupName>units/maur_champion_infantry</SelectionGroupName>
+    <SelectionGroupName>units/maur_champion_infantry</SelectionGroupName>
     <History>.</History>
     <Icon>units/maur_champion_maceman.png</Icon>
-	<Tooltip>Classes: Champion Melee Infantry Swordsman.</Tooltip>
   </Identity>
   <VisualActor>
     <Actor>units/mauryans/champion_maceman.xml</Actor>

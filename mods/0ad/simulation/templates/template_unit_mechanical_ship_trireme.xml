@@ -15,7 +15,8 @@
   </Attack>
   <BuildingAI>
     <DefaultArrowCount>3</DefaultArrowCount>
-    <GarrisonArrowMultiplier>0.5</GarrisonArrowMultiplier>
+    <MaxArrowCount>13</MaxArrowCount>
+    <GarrisonArrowMultiplier>1</GarrisonArrowMultiplier>
 	<GarrisonArrowClasses>Infantry Ranged</GarrisonArrowClasses>
   </BuildingAI>
   <Cost>
@@ -44,8 +45,9 @@
   </Health>
   <Identity>
     <GenericName>Medium Warship</GenericName>
-    <Classes datatype="tokens">Warship Medium Ranged</Classes>
-	<RequiredTechnology>phase_town</RequiredTechnology>
+    <VisibleClasses datatype="tokens">Warship Medium Ranged</VisibleClasses>
+    <RequiredTechnology>phase_town</RequiredTechnology>
+    <Tooltip>Garrison up to 30 units for transport. Garrison increases the firepower up to 13 arrows.</Tooltip>
   </Identity>
   <ResourceGatherer disable=""/>
   <Sound>

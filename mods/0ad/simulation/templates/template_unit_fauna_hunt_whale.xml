@@ -8,26 +8,22 @@
     <Max>200</Max>
     <DeathType>remain</DeathType>
     <Unhealable>true</Unhealable>
-    <Repairable>false</Repairable>
   </Health>
   <Identity>
     <Classes datatype="tokens">SeaCreature</Classes>
     <Civ>gaia</Civ>
     <GenericName>Cetacean</GenericName>
-	<Tooltip>Kill, then collect food from this bountiful oceanic resource.</Tooltip>
+    <Tooltip>Kill, then collect food from this bountiful oceanic resource.</Tooltip>
     <Icon>gaia/fauna_fish.png</Icon>
   </Identity>
-  <Obstruction>
-    <Unit radius="4.0"/>
-  </Obstruction>
   <Position>
-	<Floating>true</Floating>
+    <Floating>true</Floating>
   </Position>
   <ResourceSupply>
     <KillBeforeGather>true</KillBeforeGather>
     <Amount>2000</Amount>
     <Type>food.fish</Type>
-	<MaxGatherers>5</MaxGatherers>
+    <MaxGatherers>5</MaxGatherers>
   </ResourceSupply>
   <Selectable>
     <Overlay>
@@ -42,6 +38,9 @@
     <BarHeight>0.666</BarHeight>
     <HeightOffset>5.0</HeightOffset>
   </StatusBars>
+  <Loot>
+    <xp>10</xp>
+  </Loot>
   <UnitAI>
     <NaturalBehaviour>skittish</NaturalBehaviour>
     <RoamDistance>60.0</RoamDistance>
@@ -52,7 +51,7 @@
     <FeedTimeMax>2</FeedTimeMax>
   </UnitAI>
   <UnitMotion>
-    <PassabilityClass>ship</PassabilityClass>
+    <PassabilityClass>ship-small</PassabilityClass>
     <WalkSpeed>11.5</WalkSpeed>
     <Run>
       <Speed>15.0</Speed>

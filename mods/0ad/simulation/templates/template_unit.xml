@@ -31,22 +31,30 @@
     <DeathType>corpse</DeathType>
     <Max>100</Max>
     <RegenRate>0</RegenRate>
+    <IdleRegenRate>0</IdleRegenRate>
+    <Undeletable>false</Undeletable>
     <Unhealable>false</Unhealable>
-    <Repairable>false</Repairable>
   </Health>
   <Identity>
     <GenericName>Unit</GenericName>
     <Classes datatype="tokens">Unit ConquestCritical</Classes>
-		<Formations datatype="tokens">
-			formations/null
-		</Formations>
+    <Formations datatype="tokens">
+      formations/null
+      formations/box
+      formations/column_closed
+      formations/line_closed
+      formations/column_open
+      formations/line_open
+      formations/flank
+      formations/battle_line
+    </Formations>
   </Identity>
   <Looter/>
   <Minimap>
     <Type>unit</Type>
   </Minimap>
   <Obstruction>
-    <Unit radius="0.8"/>
+    <Unit/>
     <Active>true</Active>
     <BlockMovement>true</BlockMovement>
     <BlockPathfinding>false</BlockPathfinding>
@@ -110,6 +118,7 @@
   <Visibility>
     <RetainInFog>false</RetainInFog>
     <AlwaysVisible>false</AlwaysVisible>
+    <Corpse>false</Corpse>
     <Preview>false</Preview>
   </Visibility>
   <Vision>

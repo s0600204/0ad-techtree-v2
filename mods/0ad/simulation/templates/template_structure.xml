@@ -21,9 +21,9 @@
     <Territory>own</Territory>
   </BuildRestrictions>
   <Capturable>
-    <CapturePoints>1000</CapturePoints>
-    <RegenRate>0</RegenRate>
-    <GarrisonRegenRate>5</GarrisonRegenRate>
+    <CapturePoints>500</CapturePoints>
+    <RegenRate>0.5</RegenRate>
+    <GarrisonRegenRate>4.0</GarrisonRegenRate>
   </Capturable>
   <Cost>
     <Population>0</Population>
@@ -47,9 +47,13 @@
   <Health>
     <DeathType>corpse</DeathType>
     <RegenRate>0</RegenRate>
+    <IdleRegenRate>0</IdleRegenRate>
+    <Undeletable>false</Undeletable>
     <Unhealable>true</Unhealable>
-    <Repairable>true</Repairable>
   </Health>
+  <Repairable>
+    <RepairTimeRatio>2.0</RepairTimeRatio>
+  </Repairable>
   <Identity>
     <GenericName>Structure</GenericName>
     <Classes datatype="tokens">Structure ConquestCritical</Classes>
@@ -104,11 +108,12 @@
     <HeightOffset>12.0</HeightOffset>
   </StatusBars>
   <TerritoryDecay>
-    <DecayRate>5</DecayRate>
+    <DecayRate>20</DecayRate>
   </TerritoryDecay>
   <Visibility>
     <RetainInFog>true</RetainInFog>
     <AlwaysVisible>false</AlwaysVisible>
+    <Corpse>false</Corpse>
     <Preview>false</Preview>
   </Visibility>
   <Vision>

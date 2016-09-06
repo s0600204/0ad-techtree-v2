@@ -45,6 +45,7 @@
   </RallyPointRenderer>
   <ResourceDropsite>
     <Types>food wood stone metal</Types>
+    <Sharable>true</Sharable>
   </ResourceDropsite>
   <Sound>
     <SoundGroups>
@@ -63,13 +64,15 @@
       units/{civ}_ship_trireme
     </Entities>
     <Technologies datatype="tokens">
+      gather_capacity_fishing
+      gather_fishing_net
       training_naval_architects
-	  armor_ship_reinforcedhull
+      armor_ship_reinforcedhull
       armor_ship_hypozomata
       armor_ship_hullsheathing
     </Technologies>
   </ProductionQueue>
-  <Vision>
+   <Vision>
     <Range>40</Range>
   </Vision>
   <VisualActor>

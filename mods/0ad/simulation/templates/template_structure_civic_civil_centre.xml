@@ -36,7 +36,8 @@
     </Distance>
   </BuildRestrictions>
   <Capturable>
-    <CapturePoints>3000</CapturePoints>
+    <CapturePoints>2000</CapturePoints>
+    <RegenRate>5.0</RegenRate>
   </Capturable>
   <Cost>
     <PopulationBonus>20</PopulationBonus>
@@ -64,13 +65,10 @@
     <Max>3000</Max>
     <SpawnEntityOnDeath>rubble/rubble_stone_6x6</SpawnEntityOnDeath>
   </Health>
-    <Identity>
+  <Identity>
     <GenericName>Civic Center</GenericName>
     <Tooltip>Build to acquire large tracts of territory. Train citizens. Garrison: 20.</Tooltip>
-    <Classes datatype="tokens">
-      Defensive
-      CivCentre
-    </Classes>
+    <Classes datatype="tokens">Defensive CivCentre</Classes>
     <VisibleClasses datatype="tokens">CivilCentre</VisibleClasses>
     <Icon>structures/civic_centre.png</Icon>
   </Identity>
@@ -96,6 +94,7 @@
   </ProductionQueue>
   <ResourceDropsite>
     <Types>food wood stone metal</Types>
+    <Sharable>true</Sharable>
   </ResourceDropsite>
   <Sound>
     <SoundGroups>
@@ -103,9 +102,9 @@
       <constructed>interface/complete/building/complete_civ_center.xml</constructed>
       <attack>attack/weapon/arrowfly.xml</attack>
       <death>attack/destruction/building_collapse_large.xml</death>
-	  <alert0>interface/alarm/alarm_alert_0.xml</alert0>
-	  <alert1>interface/alarm/alarm_alert_1.xml</alert1>
-	  <alert2>interface/alarm/alarm_alert_2.xml</alert2>
+      <alert0>interface/alarm/alarm_alert_0.xml</alert0>
+      <alert1>interface/alarm/alarm_alert_1.xml</alert1>
+      <alert2>interface/alarm/alarm_alert_2.xml</alert2>
     </SoundGroups>
   </Sound>
   <TerritoryInfluence>

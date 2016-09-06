@@ -7,7 +7,7 @@
   </Armour>
   <Attack>
     <Capture>
-      <Value>3</Value>
+      <Value>2</Value>
       <MaxRange>4</MaxRange>
       <RepeatTime>1000</RepeatTime>
     </Capture>
@@ -48,9 +48,6 @@
     <stone>0</stone>
     <metal>0</metal>
   </Loot>
-  <Obstruction>
-    <Unit radius="1.0"/>
-  </Obstruction>
   <Position>
     <Anchor>pitch</Anchor>
   </Position>
