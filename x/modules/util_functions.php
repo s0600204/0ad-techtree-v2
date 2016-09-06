@@ -44,7 +44,7 @@ function load_file ($path, $file, &$store, $sourceMod) {
 	} else if (preg_match("/.xml/i", $file) == 1) {
 		$fcontents = xml2array(file_get_contents($path.$file));
 	} else {
-		continue;
+		return;
 	}
 	$fname = substr($file, 0, strrpos($file, '.'));
 	if ($fcontents !== NULL) {

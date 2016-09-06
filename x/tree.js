@@ -616,8 +616,10 @@ SVG.UI_Title = SVG.invent({
 		
 		this.image("./ui/gui2/titlebar-middle.png").x(26);
 		this.image("./ui/gui2/titlebar-left.png");
-		this.image("./ui/gui2/titlebar-left.png").x(-(26+122)).transform({'scaleX': -1, 'x':32});
+		this.image("./ui/gui2/titlebar-left.png").x(-(26+122)).transform({'scaleX': -1}).transform({'x':32});
 		
+		if (JSON.stringify(text) == "[]")
+			text = "-";
 		this.text(text).font({
 			'anchor': 'middle'
 		}).attr(
@@ -668,7 +670,7 @@ SVG.UI_Tooltip = SVG.invent({
 		populate: function (info) {
 			var speciName = (info.name[g_selectedCiv]) ? info.name[g_selectedCiv] : info.name.specific;
 			
-			if (speciName !== undefined) {
+			if (speciName !== undefined && JSON.stringify(speciName) !== "[]") {
 				this.bname.text(speciName);
 				this.bname.build(true);
 				this.bname.tspan(" (" + info.name.generic + ")").attr('font-size', "0.7em");
@@ -717,7 +719,7 @@ SVG.UI_Tooltip = SVG.invent({
 				this.descr.build(false);
 			}
 			nw = this.descr.bbox().width;
-			this.h += this.descr.lines.members.length * 12;
+			this.h += this.descr.lines().members.length * 12;
 			this.w = (nw > this.w) ? nw : this.w;
 			
 			
@@ -800,7 +802,7 @@ SVG.UI_Tooltip = SVG.invent({
 				}).newLine();
 				
 				this.stats.build(false);
-				this.h += 12 * this.stats.lines.members.length;
+				this.h += 12 * this.stats.lines().members.length;
 			}
 			nw = this.stats.bbox().width;
 			this.w = ((nw > this.w) ? nw : this.w) + 8;
@@ -819,8 +821,8 @@ SVG.UI_Tooltip = SVG.invent({
 				y -= this.h;
 			}
 			
-			this.transform('x', x+2);
-			this.transform('y', y+2);
+			this.transform({"x": x+2});
+			this.transform({"y": y+2});
 			
 			return this;
 		}
